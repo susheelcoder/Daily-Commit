@@ -1,178 +1,225 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Work 2026</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Work Log 2026</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<style>
+:root{
+    --primary:#2563eb;
+    --dark:#0f172a;
+    --bg:#f1f5f9;
+    --card:#ffffff;
+    --success:#16a34a;
+    --danger:#dc2626;
+}
 
-        body {
-            margin: 0;
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: linear-gradient(135deg, #eef2f7, #dfe7ef);
-            color: #333;
-        }
+*{box-sizing:border-box;}
 
-        /* Header */
-        .header {
-            padding: 20px;
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            color: #fff;
-            text-align: center;
-        }
+body{
+    margin:0;
+    font-family:Segoe UI, Arial, sans-serif;
+    background:linear-gradient(135deg,#eef2ff,#f8fafc);
+    color:#111827;
+}
 
-        .header h2 {
-            margin: 0;
-            font-size: 1.6rem;
-        }
+/* Header */
+.header{
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
+    padding:25px;
+    text-align:center;
+}
+.header h1{margin:0;font-size:1.8rem;}
+.header p{margin-top:6px;opacity:.85;font-size:.95rem}
 
-        /* Card container */
-        .container {
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 15px;
-        }
+/* Dashboard cards */
+.stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:15px;
+    padding:20px;
+    max-width:1000px;
+    margin:auto;
+}
+.stat{
+    background:var(--card);
+    padding:18px;
+    border-radius:14px;
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+}
+.stat h3{margin:0;font-size:1.6rem;}
+.stat span{font-size:.9rem;color:#64748b}
 
-        .card {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            overflow: hidden;
-        }
+/* Progress bar */
+.progress-box{
+    max-width:1000px;
+    margin:0 auto 20px;
+    padding:0 20px;
+}
+.progress{
+    background:#e5e7eb;
+    height:10px;
+    border-radius:20px;
+    overflow:hidden;
+}
+.progress-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,var(--primary),#22d3ee);
+    transition:.4s;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+/* Table */
+.container{
+    max-width:1000px;
+    margin:auto;
+    padding:20px;
+}
+.card{
+    background:white;
+    border-radius:16px;
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+    overflow:hidden;
+}
+table{width:100%;border-collapse:collapse;}
+th,td{padding:14px;text-align:center;}
+th{
+    background:#020617;
+    color:white;
+    font-weight:600;
+}
+tr:nth-child(even){background:#f8fafc}
 
-        th, td {
-            padding: 14px 12px;
-            text-align: center;
-        }
+/* Links */
+.page-link{
+    color:#94a3b8;
+    pointer-events:none;
+    text-decoration:none;
+    font-weight:500;
+}
+.page-link.active{
+    color:var(--primary);
+    pointer-events:auto;
+}
+.page-link.active:hover{text-decoration:underline}
 
-        th {
-            background: #0f172a;
-            color: #fff;
-            font-weight: 600;
-        }
+/* Status badge */
+.status{
+    padding:5px 14px;
+    border-radius:30px;
+    font-size:.85rem;
+    font-weight:600;
+}
+.live{background:#dcfce7;color:#166534}
+.pending{background:#fee2e2;color:#7f1d1d}
 
-        tr:nth-child(even) {
-            background-color: #f8fafc;
-        }
+/* Footer */
+.footer{
+    text-align:center;
+    padding:15px;
+    font-size:.85rem;
+    color:#64748b;
+}
 
-        /* Links */
-        .page-link {
-            color: #94a3b8;
-            text-decoration: none;
-            pointer-events: none;
-            font-weight: 500;
-        }
-
-        .page-link.active {
-            color: #2563eb;
-            pointer-events: auto;
-            text-decoration: none;
-        }
-
-        .page-link.active:hover {
-            text-decoration: underline;
-        }
-
-        /* Status badge */
-        .status {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .status.live {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .status.pending {
-            background: #fee2e2;
-            color: #7f1d1d;
-        }
-
-        /* Mobile responsive */
-        @media (max-width: 600px) {
-            th, td {
-                padding: 12px 8px;
-                font-size: 0.9rem;
-            }
-
-            .header h2 {
-                font-size: 1.3rem;
-            }
-        }
-    </style>
+/* Mobile */
+@media(max-width:600px){
+    th,td{font-size:.9rem;padding:12px}
+    .header h1{font-size:1.4rem}
+}
+</style>
 </head>
+
 <body>
 
 <div class="header">
-    <h2>📊 My Daily Work Dashboard (2026)</h2>
+    <h1>📊 Daily Work Dashboard – 2026</h1>
+    <p>Auto-updated • No manual work • Future-ready</p>
 </div>
 
-<div class="container">
-    <div class="card">
-        <table>
-            <tr>
-                <th>Date</th>
-                <th>Report</th>
-                <th>Status</th>
-            </tr>
+<div class="stats">
+    <div class="stat"><h3 id="totalDays">0</h3><span>Total Days</span></div>
+    <div class="stat"><h3 id="liveCount">0</h3><span>Live Reports</span></div>
+    <div class="stat"><h3 id="pendingCount">0</h3><span>Pending</span></div>
+</div>
 
-            <tr>
-                <td>16-01-2026</td>
-                <td><a href="2026/16-01.html" class="page-link">Checking...</a></td>
-                <td class="status-col"></td>
-            </tr>
-
-            <tr>
-                <td>17-01-2026</td>
-                <td><a href="2026/17-01.html" class="page-link">Checking...</a></td>
-                <td class="status-col"></td>
-            </tr>
-
-            <tr>
-                <td>18-01-2026</td>
-                <td><a href="2026/18-01.html" class="page-link">Checking...</a></td>
-                <td class="status-col"></td>
-            </tr>
-        </table>
+<div class="progress-box">
+    <div class="progress">
+        <div class="progress-fill" id="progressFill"></div>
     </div>
 </div>
 
+<div class="container">
+<div class="card">
+<table>
+<tr>
+<th>Date</th><th>Report</th><th>Status</th>
+</tr>
+
+<tr data-date="16-01">
+<td>16-01-2026</td>
+<td><a href="2026/16-01.html" class="page-link">Checking...</a></td>
+<td class="status-col"></td>
+</tr>
+
+<tr data-date="17-01">
+<td>17-01-2026</td>
+<td><a href="2026/17-01.html" class="page-link">Checking...</a></td>
+<td class="status-col"></td>
+</tr>
+
+<tr data-date="18-01">
+<td>18-01-2026</td>
+<td><a href="2026/18-01.html" class="page-link">Checking...</a></td>
+<td class="status-col"></td>
+</tr>
+
+</table>
+</div>
+</div>
+
+<div class="footer">
+    ⏳ Last checked: <span id="lastCheck"></span>
+</div>
+
 <script>
-    document.querySelectorAll("tr").forEach(row => {
-        const link = row.querySelector(".page-link");
-        const statusCol = row.querySelector(".status-col");
+let total=0,live=0,pending=0;
 
-        if (!link) return;
+document.querySelectorAll("tr[data-date]").forEach(row=>{
+    total++;
+    const link=row.querySelector(".page-link");
+    const status=row.querySelector(".status-col");
 
-        fetch(link.href, { method: "HEAD" })
-            .then(res => {
-                if (res.ok) {
-                    link.classList.add("active");
-                    link.textContent = "View Page";
-                    statusCol.innerHTML = '<span class="status live">Live</span>';
-                } else {
-                    link.textContent = "Not Uploaded";
-                    statusCol.innerHTML = '<span class="status pending">Pending</span>';
-                }
-            })
-            .catch(() => {
-                link.textContent = "Not Uploaded";
-                statusCol.innerHTML = '<span class="status pending">Pending</span>';
-            });
+    fetch(link.href,{method:"HEAD"})
+    .then(res=>{
+        if(res.ok){
+            link.classList.add("active");
+            link.textContent="View";
+            status.innerHTML='<span class="status live">Live</span>';
+            live++;
+        }else{
+            status.innerHTML='<span class="status pending">Pending</span>';
+            pending++;
+        }
+        updateStats();
+    })
+    .catch(()=>{
+        status.innerHTML='<span class="status pending">Pending</span>';
+        pending++;
+        updateStats();
     });
+});
+
+function updateStats(){
+    document.getElementById("totalDays").textContent=total;
+    document.getElementById("liveCount").textContent=live;
+    document.getElementById("pendingCount").textContent=pending;
+    document.getElementById("progressFill").style.width=(live/total*100)+"%";
+}
+
+document.getElementById("lastCheck").textContent=
+new Date().toLocaleString();
 </script>
 
 </body>
