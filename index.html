@@ -9,10 +9,7 @@
 :root{
     --primary:#2563eb;
     --dark:#0f172a;
-    --bg:#f1f5f9;
     --card:#ffffff;
-    --success:#16a34a;
-    --danger:#dc2626;
 }
 
 *{box-sizing:border-box;}
@@ -34,7 +31,7 @@ body{
 .header h1{margin:0;font-size:1.8rem;}
 .header p{margin-top:6px;opacity:.85;font-size:.95rem}
 
-/* Dashboard cards */
+/* Stats */
 .stats{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
@@ -52,7 +49,7 @@ body{
 .stat h3{margin:0;font-size:1.6rem;}
 .stat span{font-size:.9rem;color:#64748b}
 
-/* Progress bar */
+/* Progress */
 .progress-box{
     max-width:1000px;
     margin:0 auto 20px;
@@ -81,7 +78,8 @@ body{
     background:white;
     border-radius:16px;
     box-shadow:0 12px 30px rgba(0,0,0,.08);
-    overflow:hidden;
+    height:50vh;          /* 🔥 FIXED HEIGHT */
+    overflow:auto;       /* 🔥 SCROLL */
 }
 table{width:100%;border-collapse:collapse;}
 th,td{padding:14px;text-align:center;}
@@ -105,7 +103,7 @@ tr:nth-child(even){background:#f8fafc}
 }
 .page-link.active:hover{text-decoration:underline}
 
-/* Status badge */
+/* Status */
 .status{
     padding:5px 14px;
     border-radius:30px;
@@ -152,29 +150,12 @@ tr:nth-child(even){background:#f8fafc}
 
 <div class="container">
 <div class="card">
-<table>
+<table id="logTable">
 <tr>
-<th>Date</th><th>Report</th><th>Status</th>
+    <th>Date</th>
+    <th>Report</th>
+    <th>Status</th>
 </tr>
-
-<tr data-date="16-01">
-<td>16-01-2026</td>
-<td><a href="2026/16-01.html" class="page-link">Checking...</a></td>
-<td class="status-col"></td>
-</tr>
-
-<tr data-date="17-01">
-<td>17-01-2026</td>
-<td><a href="2026/17-01.html" class="page-link">Checking...</a></td>
-<td class="status-col"></td>
-</tr>
-
-<tr data-date="18-01">
-<td>18-01-2026</td>
-<td><a href="2026/18-01.html" class="page-link">Checking...</a></td>
-<td class="status-col"></td>
-</tr>
-
 </table>
 </div>
 </div>
@@ -184,12 +165,36 @@ tr:nth-child(even){background:#f8fafc}
 </div>
 
 <script>
-let total=0,live=0,pending=0;
+const table = document.getElementById("logTable");
 
-document.querySelectorAll("tr[data-date]").forEach(row=>{
+/* 🔥 Start date & how many days to generate */
+const startDate = new Date(2026, 0, 16); // 16 Jan 2026
+const totalGenerateDays = 60; // aage ke 60 din
+
+let total=0, live=0, pending=0;
+
+/* Generate dates automatically */
+for(let i=0; i<totalGenerateDays; i++){
+    const d = new Date(startDate);
+    d.setDate(startDate.getDate() + i);
+
+    const dd = String(d.getDate()).padStart(2,'0');
+    const mm = String(d.getMonth()+1).padStart(2,'0');
+    const yyyy = d.getFullYear();
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+        <td>${dd}-${mm}-${yyyy}</td>
+        <td><a href="2026/${dd}-${mm}.html" class="page-link">Checking...</a></td>
+        <td class="status-col"></td>
+    `;
+    table.appendChild(row);
+}
+
+/* Check file status */
+document.querySelectorAll(".page-link").forEach(link=>{
     total++;
-    const link=row.querySelector(".page-link");
-    const status=row.querySelector(".status-col");
+    const status = link.closest("tr").querySelector(".status-col");
 
     fetch(link.href,{method:"HEAD"})
     .then(res=>{
@@ -212,13 +217,13 @@ document.querySelectorAll("tr[data-date]").forEach(row=>{
 });
 
 function updateStats(){
-    document.getElementById("totalDays").textContent=total;
-    document.getElementById("liveCount").textContent=live;
-    document.getElementById("pendingCount").textContent=pending;
-    document.getElementById("progressFill").style.width=(live/total*100)+"%";
+    document.getElementById("totalDays").textContent = total;
+    document.getElementById("liveCount").textContent = live;
+    document.getElementById("pendingCount").textContent = pending;
+    document.getElementById("progressFill").style.width = (live/total*100) + "%";
 }
 
-document.getElementById("lastCheck").textContent=
+document.getElementById("lastCheck").textContent =
 new Date().toLocaleString();
 </script>
 
