@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pro Smart Timer v4.0</title>
+    <title>Pro Smart Timer v4.1</title>
     <style>
         :root { --accent: #00ff9d; --bg: #0a0c10; --text: #ffffff; --card: #1a1d23; }
 
         /* THEMES */
-        body.theme-0 { --bg: #0a0c10; --accent: #00ff9d; --card: #1a1d23; } /* Neon Green */
-        body.theme-1 { --bg: #001219; --accent: #00d4ff; --card: #002533; } /* Ocean Blue */
-        body.theme-2 { --bg: #1a001a; --accent: #ff00ff; --card: #2d002d; } /* Cyber Pink */
-        body.theme-3 { --bg: #000000; --accent: #ffffff; --card: #111111; } /* Classic White/Black */
-        body.theme-4 { --bg: #1b1b1b; --accent: #ffaa00; --card: #2a2a2a; } /* Industrial Gold */
+        body.theme-0 { --bg: #0a0c10; --accent: #00ff9d; --card: #1a1d23; }
+        body.theme-1 { --bg: #001219; --accent: #00d4ff; --card: #002533; }
+        body.theme-2 { --bg: #1a001a; --accent: #ff00ff; --card: #2d002d; }
+        body.theme-3 { --bg: #000000; --accent: #ffffff; --card: #111111; }
+        body.theme-4 { --bg: #1b1b1b; --accent: #ffaa00; --card: #2a2a2a; }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: background 0.4s, color 0.4s; }
         
@@ -32,14 +32,18 @@
         }
         .dropdown button { background: none; color: white; padding: 12px; text-align: left; border: none; border-bottom: 1px solid #444; cursor: pointer; font-size: 0.9rem; }
 
+        /* Minimal UI Style */
         body.minimal-ui .controls-ui, body.minimal-ui .top-nav { display: none !important; }
 
+        /* LANDSCAPE SIZE FIX (Jo aapko pasand tha) */
         @media (orientation: landscape) {
             .display { font-size: 18vh !important; margin-bottom: 5px !important; }
+            body.minimal-ui .display { font-size: 35vh !important; } /* Minimal mein bada dikhega */
+            
             .controls-ui { max-width: 550px !important; flex-direction: row !important; padding: 10px 20px !important; }
-            .main-btns { grid-template-columns: repeat(3, 1fr) !important; width: 100%; }
-            .start-btn { grid-column: span 1 !important; padding: 12px !important; }
-            input { margin-bottom: 0 !important; width: 130px !important; }
+            .main-btns { grid-template-columns: repeat(3, 1fr) !important; width: 100%; gap: 10px; }
+            .start-btn { grid-column: span 1 !important; padding: 12px !important; font-size: 1rem !important; }
+            input { margin-bottom: 0 !important; width: 130px !important; font-size: 1.3rem !important; }
             .laps-box { display: none; }
         }
 
@@ -77,13 +81,13 @@
         </button>
         <div class="dropdown" id="menuBox">
             <button onclick="changeTheme()">🎨 Switch Theme</button>
-            <button onclick="alert('PWA Service Ready')">📲 Install App</button>
+            <button onclick="alert('Ready to Install')">📲 Install App</button>
             <button onclick="showAbout()">ℹ️ About</button>
             <button onclick="resetAll()">🔄 Full Reset</button>
         </div>
     </div>
 
-    <div class="display" onclick="handleDisplayClick()">
+    <div class="display" id="mainDisplay" onclick="handleDisplayClick()">
         <span id="timeDisplay">00:00:00</span><br>
         <span class="ms">.<span id="msDisplay">000</span></span>
     </div>
@@ -103,7 +107,6 @@
     let currentTheme = 0;
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-    // 1. Load Saved Settings on Start
     window.onload = () => {
         const savedTheme = localStorage.getItem('timerTheme');
         if (savedTheme !== null) {
@@ -131,13 +134,29 @@
     }
     window.onclick = () => document.getElementById('menuBox').style.display = 'none';
 
+    // DOUBLE CLICK -> LANDSCAPE & FULLSCREEN
     function toggleModes() {
         isMinimal = !isMinimal;
         document.body.classList.toggle('minimal-ui', isMinimal);
+        
         if (isMinimal) {
-            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{});
+            // Fullscreen trigger
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(()=>{});
+            }
+            // Landscape lock trigger (Mobile browsers support check)
+            if (screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('landscape').catch(()=>{});
+            }
         } else {
-            if (document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+            // Exit fullscreen
+            if (document.fullscreenElement) {
+                document.exitFullscreen().catch(()=>{});
+            }
+            // Unlock orientation
+            if (screen.orientation && screen.orientation.unlock) {
+                screen.orientation.unlock();
+            }
         }
     }
 
@@ -212,7 +231,7 @@
     }
 
     function showAbout() {
-        alert("Pro Timer v4.0\n- Auto-Save Theme & Time\n- Multi-Color Dark Themes\n- Persistent State Protection\n- Fullscreen Optimized");
+        alert("Pro Timer v4.1\n- Double Click: Landscape/Minimal Toggle\n- Tap to Stop\n- Auto-Save Mode\n- 5 Unique Color Themes");
     }
 </script>
 </body>
