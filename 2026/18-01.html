@@ -132,4 +132,29 @@
 
     function saveInput() { localStorage.setItem('timerInput', document.getElementById('timeInput').value); }
     function changeTheme() { currentTheme = (currentTheme + 1) % 5; document.body.className = `theme-${currentTheme}`; localStorage.setItem('timerTheme', currentTheme); }
-    function toggleMenu(e) { e.stopPropagation(); const m = document.getElementById('menuBox'); m.style.display = m.style.display === 'flex' ? 'none
+    function toggleMenu(e) { e.stopPropagation(); const m = document.getElementById('menuBox'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; }
+    window.onclick = () => document.getElementById('menuBox').style.display = 'none';
+
+    // Landscape Mode Logic (Timer Only)
+    function toggleModes() {
+        isMinimal = !isMinimal;
+        document.body.classList.toggle('minimal-ui', isMinimal);
+        if (isMinimal) {
+            document.documentElement.requestFullscreen().catch(()=>{});
+            if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(()=>{});
+        } else {
+            if (document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+            if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
+        }
+    }
+
+    function handleDisplayClick(e) { e.stopPropagation(); if (running) stopTimer(); else startTimer(); }
+    function format(ms) { let s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60, milli = ms % 1000; document.getElementById("timeDisplay").textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`; document.getElementById("msDisplay").textContent = String(milli).padStart(3,'0'); }
+    function startTimer(e) { if (running) { stopTimer(); return; } if(e) e.stopPropagation(); let parts = document.getElementById("timeInput").value.split(":").map(Number); let inputVal = ((parts[0]||0)*3600 + (parts[1]||0)*60 + (parts[2]||0))*1000; let mode = (inputVal > 0 && totalMs === 0) ? "down" : "up"; if(mode === "down") totalMs = inputVal; running = true; document.getElementById("startBtn").textContent = "STOP"; document.getElementById("startBtn").style.background = "#ff4d4d"; timer = setInterval(() => { if(mode === "up") totalMs += 10; else { totalMs -= 10; if(totalMs <= 0) { totalMs = 0; stopTimer(); playAlarm(); } } format(totalMs); }, 10); }
+    function stopTimer() { clearInterval(timer); running = false; document.getElementById("startBtn").textContent = "START"; document.getElementById("startBtn").style.background = "var(--accent)"; }
+    function playAlarm() { const ring = (d) => { setTimeout(() => { const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.frequency.value = 880; o.start(); setTimeout(() => o.stop(), 300); }, d); }; ring(0); ring(600); }
+    function resetAll() { stopTimer(); totalMs = 0; format(0); document.getElementById("timeInput").value = "00:00:00"; localStorage.setItem('timerInput', "00:00:00"); }
+    function addLap() { /* Lap logic */ }
+</script>
+</body>
+</html>
