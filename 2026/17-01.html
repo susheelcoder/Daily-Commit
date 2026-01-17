@@ -10,7 +10,7 @@
     <link rel="manifest" id="manifestLink">
 
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         
         body { 
             height: 100vh; 
@@ -23,10 +23,34 @@
             padding: 15px;
         }
 
-        /* Menu System */
-        .header-actions { position: absolute; top: 15px; right: 15px; z-index: 1001; }
-        .menu-btn { background: none; border: none; cursor: pointer; padding: 10px; border-radius: 50%; transition: 0.3s; }
-        .menu-btn:hover { background: rgba(255,255,255,0.1); }
+        /* Top Navigation */
+        .top-nav {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1001;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 8px;
+            border-radius: 50%;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover { background: rgba(255,255,255,0.2); }
+
+        .menu-btn { background: none; border: none; cursor: pointer; padding: 10px; border-radius: 50%; }
 
         .dropdown {
             position: absolute;
@@ -37,7 +61,7 @@
             border-radius: 12px;
             display: none;
             flex-direction: column;
-            width: 180px;
+            width: 170px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             overflow: hidden;
         }
@@ -50,34 +74,22 @@
             border: none;
             border-bottom: 1px solid #222;
             cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
-        /* Timer Display - RESPONSIVE FIX */
-        .container { 
-            width: 100%; 
-            max-width: 450px; 
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+        /* Main UI */
+        .container { width: 100%; max-width: 450px; text-align: center; }
 
         .display { 
-            /* 16vw se font screen width ke mutabiq resize hoga */
             font-size: 16vw; 
             font-weight: 800; 
             font-family: 'Courier New', monospace; 
             color: #00ff9d; 
             line-height: 1; 
             text-shadow: 0 0 20px rgba(0,255,157,0.2);
-            white-space: nowrap;
         }
 
-        /* Desktop par font ko limit karne ke liye */
-        @media (min-width: 600px) {
-            .display { font-size: 6rem; }
-        }
+        @media (min-width: 600px) { .display { font-size: 6rem; } }
 
         .ms { font-size: 0.45em; color: #fff; opacity: 0.3; }
 
@@ -94,69 +106,41 @@
             outline: none;
         }
 
-        .controls { display: flex; flex-direction: column; gap: 12px; width: 100%; }
-        
-        .start-btn { 
-            width: 100%; 
-            padding: 18px; 
-            font-size: 1.6rem; 
-            font-weight: bold; 
-            border-radius: 18px; 
-            border: none; 
-            background: #00ff9d; 
-            color: #000; 
-            cursor: pointer; 
-            transition: 0.2s;
-        }
+        .controls { display: flex; flex-direction: column; gap: 12px; }
+        .start-btn { width: 100%; padding: 18px; font-size: 1.6rem; font-weight: bold; border-radius: 18px; border: none; background: #00ff9d; color: #000; cursor: pointer; }
 
         .secondary-btns { display: flex; gap: 10px; }
-        .secondary-btns button { 
-            flex: 1; 
-            padding: 14px; 
-            font-size: 0.85rem; 
-            font-weight: bold; 
-            border-radius: 12px; 
-            border: none; 
-            cursor: pointer; 
-            color: white; 
-            text-transform: uppercase; 
-        }
+        .secondary-btns button { flex: 1; padding: 14px; font-size: 0.85rem; font-weight: bold; border-radius: 12px; border: none; cursor: pointer; color: white; }
 
         .stop { background: #ff4d4d; }
         .reset { background: #333; }
         .lap { background: #00c6ff; }
 
-        .laps-box { 
-            margin-top: 25px; 
-            max-height: 150px; 
-            overflow-y: auto; 
-            font-size: 0.9rem; 
-            color: #888; 
-            border-top: 1px solid #222; 
-            padding-top: 10px; 
-        }
-
-        .lap-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 15px;
-            border-bottom: 1px solid #111;
-        }
+        .laps-box { margin-top: 20px; max-height: 120px; overflow-y: auto; border-top: 1px solid #222; padding-top: 10px; font-size: 0.9rem; color: #888; }
+        .lap-item { display: flex; justify-content: space-between; padding: 5px 15px; border-bottom: 1px solid #111; }
     </style>
 </head>
 <body>
 
-    <div class="header-actions">
-        <button class="menu-btn" onclick="toggleMenu()">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
-                <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+    <div class="top-nav">
+        <a href="index.html" class="back-btn" title="Go to Index">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
             </svg>
-        </button>
-        <div class="dropdown" id="menuDropdown">
-            <button onclick="toggleFull()">Full Screen</button>
-            <button id="installBtn" style="display:none;" onclick="installApp()">📲 Install App</button>
-            <button onclick="resetTimer()">Reset All</button>
-            <button onclick="alert('Smart Timer Pro v2.2\nMobile Optimized')">About</button>
+        </a>
+
+        <div style="position: relative;">
+            <button class="menu-btn" onclick="toggleMenu()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                    <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                </svg>
+            </button>
+            <div class="dropdown" id="menuDropdown">
+                <button onclick="toggleFull()">Full Screen</button>
+                <button id="installBtn" onclick="installApp()">📲 Install App</button>
+                <button onclick="resetTimer()">Reset All</button>
+            </div>
         </div>
     </div>
 
@@ -181,14 +165,13 @@
     </div>
 
 <script>
-    /* --- PWA LOGIC --- */
+    /* --- AUTO INSTALL LOGIC --- */
     let deferredPrompt;
-    const installBtn = document.getElementById('installBtn');
-
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        installBtn.style.display = 'flex';
+        // Pehli baar open karte hi install prompt dikhane ki koshish
+        setTimeout(() => { installApp(); }, 2000); 
     });
 
     async function installApp() {
@@ -197,10 +180,10 @@
             const { outcome } = await deferredPrompt.userChoice;
             deferredPrompt = null;
         }
-        toggleMenu();
+        if(document.getElementById("menuDropdown").style.display === "flex") toggleMenu();
     }
 
-    /* Manifest Dynamic */
+    /* PWA Manifest */
     const myManifest = {
         "name": "Smart Timer Pro",
         "short_name": "Timer",
@@ -220,7 +203,6 @@
     const menu = document.getElementById("menuDropdown");
 
     function toggleMenu() { menu.style.display = menu.style.display === "flex" ? "none" : "flex"; }
-    window.onclick = (e) => { if (!e.target.closest('.header-actions')) menu.style.display = "none"; }
 
     function format(ms) {
         let s = Math.floor(ms / 1000);
@@ -235,8 +217,6 @@
     function startTimer() {
         if (running) return;
         let parts = document.getElementById("timeInput").value.split(":").map(Number);
-        if(parts.length < 3) parts = [0,0,0]; // Basic error handling
-        
         let inputVal = ( (parts[0]||0) * 3600 + (parts[1]||0) * 60 + (parts[2]||0) ) * 1000;
         
         if (inputVal > 0 && totalMs === 0) { mode = "down"; totalMs = inputVal; }
@@ -244,33 +224,19 @@
 
         running = true;
         document.getElementById("startBtn").style.background = "#008a55";
-        document.getElementById("startBtn").innerText = "RESUME";
 
         timer = setInterval(() => {
             if (mode === "up") totalMs += 10;
             else {
                 totalMs -= 10;
-                if (totalMs <= 0) { totalMs = 0; stopTimer(); playBeep(); }
+                if (totalMs <= 0) { totalMs = 0; stopTimer(); playDoubleBeep(); }
             }
             format(totalMs);
         }, 10);
     }
 
-    function stopTimer() { 
-        clearInterval(timer); 
-        running = false; 
-        document.getElementById("startBtn").style.background = "#00ff9d";
-        document.getElementById("startBtn").innerText = "START";
-    }
-    
-    function resetTimer() { 
-        stopTimer(); 
-        totalMs = 0; 
-        format(0); 
-        document.getElementById("lapsList").innerHTML = ""; 
-        document.getElementById("startBtn").innerText = "START";
-        menu.style.display="none"; 
-    }
+    function stopTimer() { clearInterval(timer); running = false; document.getElementById("startBtn").style.background = "#00ff9d"; }
+    function resetTimer() { stopTimer(); totalMs = 0; format(0); document.getElementById("lapsList").innerHTML = ""; }
 
     function addLap() {
         if(totalMs === 0) return;
@@ -280,24 +246,32 @@
         document.getElementById("lapsList").prepend(div);
     }
 
-    function playBeep() {
-        try {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.frequency.value = 880;
-            osc.start();
-            setTimeout(() => osc.stop(), 600);
-        } catch(e) { console.log("Audio play blocked"); }
+    /* 2 Baar Beep Bajane ka Function */
+    function playDoubleBeep() {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function beep(delay) {
+            setTimeout(() => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.frequency.value = 880; 
+                osc.start();
+                setTimeout(() => osc.stop(), 300);
+            }, delay);
+        }
+
+        beep(0);     // Pehli beep
+        beep(500);   // Dusri beep 0.5 second baad
     }
 
     function toggleFull() {
         if (!document.fullscreenElement) document.documentElement.requestFullscreen();
         else document.exitFullscreen();
-        menu.style.display = "none";
+        toggleMenu();
     }
 </script>
 </body>
 </html>
+
