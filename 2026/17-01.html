@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Timer Pro - Large</title>
+    <title>Smart Timer Pro - Compact</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
 
         body {
             height: 100vh;
-            background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%);
+            background: #090a0f;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -17,117 +17,131 @@
             overflow: hidden;
         }
 
-        /* Full Screen Button at Top Right */
+        /* Full Screen Button Top Right */
         .fullscreen-btn {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 15px;
+            right: 15px;
             background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 10px;
+            border: none;
+            padding: 8px;
             border-radius: 50%;
             cursor: pointer;
             z-index: 100;
-            transition: 0.3s;
         }
-        .fullscreen-btn:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.1); }
 
         .container {
-            width: 90%;
-            max-width: 600px;
+            width: 95%;
+            max-width: 500px;
             text-align: center;
         }
 
-        h1 { font-size: 1rem; letter-spacing: 3px; opacity: 0.6; margin-bottom: 20px; text-transform: uppercase; }
-
-        /* Very Big Timer Display */
+        /* Extra Large Timer */
         .display {
-            font-size: 6rem; /* Extra Large */
+            font-size: 7rem; 
             font-weight: 800;
-            font-family: 'Courier New', Courier, monospace;
-            text-shadow: 0 0 30px rgba(0, 255, 157, 0.3);
-            margin: 20px 0;
+            font-family: monospace;
             color: #00ff9d;
+            margin-bottom: 10px;
+            line-height: 1;
         }
 
-        .ms { font-size: 2rem; color: #fff; opacity: 0.5; }
+        .ms { font-size: 2.5rem; color: #fff; opacity: 0.4; }
 
         input[type="text"] {
-            background: transparent;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            color: #fff;
-            font-size: 1.5rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: #aaa;
+            font-size: 1.2rem;
             text-align: center;
-            padding: 10px;
-            width: 200px;
-            margin-bottom: 30px;
+            padding: 5px;
+            width: 150px;
+            margin-bottom: 40px;
         }
 
-        .buttons {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
+        .controls {
+            display: flex;
+            flex-direction: column;
             gap: 15px;
         }
 
-        button {
-            padding: 15px;
-            font-size: 1.1rem;
+        /* Big Start Button */
+        .start-btn {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.8rem;
             font-weight: bold;
+            border-radius: 15px;
             border: none;
-            border-radius: 12px;
+            background: #00ff9d;
+            color: #000;
             cursor: pointer;
             transition: 0.2s;
         }
 
-        .start { background: #00ff9d; color: #000; grid-column: span 2; font-size: 1.5rem; }
-        .stop { background: #ff4d4d; color: white; }
-        .reset { background: #555; color: white; }
-        .lap { background: #00c6ff; color: white; }
+        /* Three buttons in one line */
+        .secondary-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .secondary-btns button {
+            flex: 1;
+            padding: 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .stop { background: #ff4d4d; }
+        .reset { background: #444; }
+        .lap { background: #00c6ff; }
 
         button:active { transform: scale(0.95); }
 
-        .laps-container {
-            margin-top: 30px;
-            height: 120px;
+        .laps-box {
+            margin-top: 25px;
+            height: 100px;
             overflow-y: auto;
-            background: rgba(0,0,0,0.3);
-            border-radius: 10px;
-            padding: 10px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            color: #888;
+            border-top: 1px solid #222;
+            padding-top: 10px;
         }
-        .lap-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 5px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
+        .lap-row { display: flex; justify-content: space-between; padding: 4px 10px; }
     </style>
 </head>
 <body>
 
-    <button class="fullscreen-btn" onclick="toggleFull()" title="Full Screen">
-        <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+    <button class="fullscreen-btn" onclick="toggleFull()">
+        <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
     </button>
 
     <div class="container">
-        <h1>Smart Timer Pro</h1>
-        
         <div class="display">
-            <span id="timeDisplay">00:00:00</span><span class="ms">.<span id="msDisplay">000</span></span>
+            <span id="timeDisplay">00:00:00</span><br>
+            <span class="ms">.<span id="msDisplay">000</span></span>
         </div>
 
-        <input type="text" id="timeInput" placeholder="00:00:00" value="00:00:00">
+        <input type="text" id="timeInput" value="00:00:00">
 
-        <div class="buttons">
-            <button class="start" id="startBtn" onclick="startTimer()">START</button>
-            <button class="stop" onclick="stopTimer()">STOP</button>
-            <button class="reset" onclick="resetTimer()">RESET</button>
-            <button class="lap" onclick="addLap()">LAP</button>
+        <div class="controls">
+            <button class="start-btn" id="startBtn" onclick="startTimer()">START</button>
+            
+            <div class="secondary-btns">
+                <button class="stop" onclick="stopTimer()">Stop</button>
+                <button class="reset" onclick="resetTimer()">Reset</button>
+                <button class="lap" onclick="addLap()">Lap</button>
+            </div>
         </div>
 
-        <div class="laps-container" id="lapsList"></div>
+        <div class="laps-box" id="lapsList"></div>
     </div>
 
 <script>
@@ -147,36 +161,22 @@
         msDisplay.textContent = String(milli).padStart(3,'0');
     }
 
-    function parseInput(v) {
-        let parts = v.split(":").map(Number);
-        if (parts.length !== 3) return 0;
-        return (parts[0] * 3600 + parts[1] * 60 + parts[2]) * 1000;
-    }
-
     function startTimer() {
         if (running) return;
-        let inputVal = parseInput(timeInput.value);
+        let parts = timeInput.value.split(":").map(Number);
+        let inputVal = (parts[0] * 3600 + parts[1] * 60 + parts[2]) * 1000;
         
-        if (inputVal > 0 && totalMs === 0) {
-            totalMs = inputVal;
-            mode = "down";
-        } else if (totalMs === 0) {
-            mode = "up";
-        }
+        if (inputVal > 0 && totalMs === 0) { mode = "down"; totalMs = inputVal; }
+        else if (totalMs === 0) { mode = "up"; }
 
         running = true;
-        document.getElementById("startBtn").style.opacity = "0.5";
+        document.getElementById("startBtn").style.background = "#008a55";
 
         timer = setInterval(() => {
-            if (mode === "up") {
-                totalMs += 10;
-            } else {
+            if (mode === "up") totalMs += 10;
+            else {
                 totalMs -= 10;
-                if (totalMs <= 0) {
-                    totalMs = 0;
-                    stopTimer();
-                    playAlarm();
-                }
+                if (totalMs <= 0) { totalMs = 0; stopTimer(); playBeep(); }
             }
             format(totalMs);
         }, 10);
@@ -185,7 +185,7 @@
     function stopTimer() {
         clearInterval(timer);
         running = false;
-        document.getElementById("startBtn").style.opacity = "1";
+        document.getElementById("startBtn").style.background = "#00ff9d";
     }
 
     function resetTimer() {
@@ -198,37 +198,25 @@
 
     function addLap() {
         let div = document.createElement("div");
-        div.className = "lap-item";
+        div.className = "lap-row";
         div.innerHTML = `<span>Lap ${lapsList.children.length + 1}</span> <span>${timeDisplay.textContent}.${msDisplay.textContent}</span>`;
         lapsList.prepend(div);
     }
 
-    // Fixed Pro Tone Alarm
-    function playAlarm() {
+    function playBeep() {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const t = ctx.currentTime;
-        
-        for(let i=0; i<3; i++) {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'square';
-            osc.frequency.setValueAtTime(880, t + i*0.5);
-            gain.gain.setValueAtTime(0.2, t + i*0.5);
-            gain.gain.exponentialRampToValueAtTime(0.01, t + i*0.5 + 0.4);
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start(t + i*0.5);
-            osc.stop(t + i*0.5 + 0.4);
-        }
-        if (navigator.vibrate) navigator.vibrate([500, 200, 500]);
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = 1000;
+        osc.start();
+        setTimeout(() => osc.stop(), 500);
     }
 
     function toggleFull() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen();
-        } else {
-            if (document.exitFullscreen) document.exitFullscreen();
-        }
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+        else document.exitFullscreen();
     }
 </script>
 </body>
