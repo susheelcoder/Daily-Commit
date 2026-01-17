@@ -8,24 +8,34 @@
         :root { --accent: #00ff9d; --bg: #090a0f; --text: #fff; --panel: rgba(255,255,255,0.05); }
 
         /* THEMES */
-        body.theme-0 { --bg: #090a0f; --accent: #00ff9d; --text: #fff; } /* Neon */
-        body.theme-1 { --bg: #f0f0f0; --accent: #007bff; --text: #222; } /* Analog/Classic */
-        body.theme-2 { --bg: #1a0033; --accent: #f0f; --text: #ffe600; } /* Cyberpunk */
-        body.theme-3 { --bg: #ffffff; --accent: #000; --text: #000; } /* Minimal */
-        body.theme-4 { background: linear-gradient(135deg, #1e3c72, #2a5298); --accent: #fff; --text: #fff; } /* Glass */
+        body.theme-0 { --bg: #090a0f; --accent: #00ff9d; --text: #fff; } 
+        body.theme-1 { --bg: #f0f0f0; --accent: #007bff; --text: #222; } 
+        body.theme-2 { --bg: #1a0033; --accent: #f0f; --text: #ffe600; } 
+        body.theme-3 { --bg: #ffffff; --accent: #000; --text: #000; } 
+        body.theme-4 { background: linear-gradient(135deg, #1e3c72, #2a5298); --accent: #fff; --text: #fff; } 
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: all 0.3s ease; }
-        body { height: 100vh; background: var(--bg); display: flex; justify-content: center; align-items: center; color: var(--text); overflow: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: background 0.3s, color 0.3s; }
+        
+        body { 
+            height: 100vh; 
+            background: var(--bg); 
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            color: var(--text); 
+            overflow: hidden; 
+            position: relative;
+        }
 
-        /* Focus Mode Logic */
+        /* Focus Mode logic for Perfect Centering */
         body.focus-active .top-nav, 
-        body.focus-active .controls, 
-        body.focus-active input,
-        body.focus-active .laps-box,
-        body.focus-active #modeTag { display: none !important; }
-        body.focus-active .display { font-size: 25vw; }
+        body.focus-active .controls-ui, 
+        body.focus-active #modeTag { 
+            display: none !important; 
+        }
 
-        /* Top Nav & 3-Dot Menu */
+        /* Top Navigation */
         .top-nav { position: absolute; top: 20px; right: 20px; z-index: 1000; }
         .menu-btn { background: none; border: none; cursor: pointer; padding: 5px; }
         .dropdown { 
@@ -34,33 +44,53 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
         .dropdown button { background: none; color: white; padding: 12px; text-align: left; border: none; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.9rem; }
-        .dropdown button:hover { background: #252635; }
 
-        /* Main UI */
-        .container { width: 90%; max-width: 500px; text-align: center; }
-        #modeTag { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px; opacity: 0.6; }
-        .display { font-size: 18vw; font-weight: 800; font-family: 'Courier New', monospace; color: var(--accent); cursor: pointer; }
-        @media (min-width: 600px) { .display { font-size: 7rem; } }
+        /* Main Container */
+        .container { 
+            width: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            text-align: center; 
+        }
+
+        #modeTag { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; opacity: 0.6; }
+
+        .display { 
+            font-size: 18vw; 
+            font-weight: 800; 
+            font-family: 'Courier New', monospace; 
+            color: var(--accent); 
+            line-height: 1.1;
+            user-select: none;
+        }
+        @media (min-width: 600px) { .display { font-size: 8rem; } }
         .ms { font-size: 0.4em; opacity: 0.4; color: var(--text); }
 
         /* Analog View */
         .analog-view { 
             display: none; width: 280px; height: 280px; border: 6px solid var(--accent); 
-            border-radius: 50%; position: relative; margin: 0 auto 20px; background: var(--panel);
+            border-radius: 50%; position: relative; margin-bottom: 20px; background: var(--panel);
         }
         .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom; background: var(--accent); border-radius: 5px; }
         .hour-hand { width: 6px; height: 60px; }
         .min-hand { width: 4px; height: 90px; }
         .sec-hand { width: 2px; height: 110px; background: #ff4d4d !important; }
 
-        /* Buttons */
-        input { background: var(--panel); border: 1px solid var(--accent); color: var(--text); padding: 12px; border-radius: 10px; text-align: center; margin: 20px 0; outline: none; width: 180px; }
-        .controls { display: flex; flex-direction: column; gap: 10px; }
+        /* UI Elements (Inputs/Buttons) */
+        .controls-ui { width: 100%; max-width: 300px; margin-top: 20px; }
+        input { 
+            background: var(--panel); border: 1px solid var(--accent); color: var(--text); 
+            padding: 12px; border-radius: 10px; text-align: center; margin-bottom: 15px; 
+            outline: none; width: 100%; font-size: 1.2rem;
+        }
+        .btn-group { display: flex; flex-direction: column; gap: 10px; }
         .start-btn { padding: 18px; background: var(--accent); color: #000; border: none; border-radius: 15px; font-weight: bold; font-size: 1.4rem; cursor: pointer; }
         .secondary-btns { display: flex; gap: 10px; }
         .secondary-btns button { flex: 1; padding: 12px; border: none; border-radius: 10px; color: white; cursor: pointer; background: #333; }
         
-        .laps-box { margin-top: 20px; max-height: 80px; overflow-y: auto; font-size: 0.8rem; opacity: 0.6; }
+        .laps-box { margin-top: 20px; max-height: 80px; overflow-y: auto; font-size: 0.8rem; opacity: 0.5; width: 100%; }
     </style>
 </head>
 <body class="theme-0" onclick="handlePageClick()" ondblclick="nextTheme()">
@@ -76,14 +106,12 @@
         </div>
     </div>
 
-    <div class="container" id="mainContainer">
-        <div id="modeTag">Stopwatch Mode</div>
+    <div class="container">
+        <div id="modeTag">Stopwatch</div>
         
-        <div id="digitalArea">
-            <div class="display">
-                <span id="timeDisplay">00:00:00</span><br>
-                <span class="ms">.<span id="msDisplay">000</span></span>
-            </div>
+        <div id="digitalArea" class="display">
+            <span id="timeDisplay">00:00:00</span><br>
+            <span class="ms">.<span id="msDisplay">000</span></span>
         </div>
 
         <div id="analogArea" class="analog-view">
@@ -93,27 +121,30 @@
             <div style="position:absolute; top:50%; left:50%; width:10px; height:10px; background:var(--accent); border-radius:50%; transform:translate(-50%,-50%);"></div>
         </div>
 
-        <input type="text" id="timeInput" value="00:00:00" placeholder="HH:MM:SS">
-
-        <div class="controls">
-            <button class="start-btn" onclick="startTimer(event)">START FOCUS</button>
-            <div class="secondary-btns">
-                <button onclick="stopTimer()">STOP</button>
-                <button onclick="addLap()">LAP</button>
+        <div class="controls-ui">
+            <input type="text" id="timeInput" value="00:00:00">
+            <div class="btn-group">
+                <button class="start-btn" onclick="startTimer(event)">START FOCUS</button>
+                <div class="secondary-btns">
+                    <button onclick="resetTimer()">RESET</button>
+                    <button onclick="addLap()">LAP</button>
+                </div>
             </div>
+            <div class="laps-box" id="lapsList"></div>
         </div>
-
-        <div class="laps-box" id="lapsList"></div>
     </div>
 
 <script>
     let timer, running = false, totalMs = 0, currentTheme = 0;
 
-    // --- MENU LOGIC ---
-    function toggleMenu(e) { e.stopPropagation(); const m = document.getElementById('menuBox'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; }
+    function toggleMenu(e) { 
+        e.stopPropagation(); 
+        const m = document.getElementById('menuBox'); 
+        m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; 
+    }
+
     window.onclick = () => document.getElementById('menuBox').style.display = 'none';
 
-    // --- DESIGN LOGIC (Double Click) ---
     function nextTheme() {
         document.body.classList.remove(`theme-${currentTheme}`);
         currentTheme = (currentTheme + 1) % 5;
@@ -125,15 +156,13 @@
         document.getElementById('modeTag').textContent = isAnalog ? "Analog Mode" : "Digital Mode";
     }
 
-    // --- FOCUS MODE LOGIC (Single Tap to Stop) ---
+    // Single Tap to Stop Logic
     function handlePageClick() {
         if (running) {
             stopTimer();
-            document.body.classList.remove('focus-active');
         }
     }
 
-    // --- TIMER CORE ---
     function format(ms) {
         let s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60, milli = ms % 1000;
         document.getElementById("timeDisplay").textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
@@ -156,7 +185,7 @@
         if(mode === "down") totalMs = inputVal;
 
         running = true;
-        document.body.classList.add('focus-active'); // Focus Mode On
+        document.body.classList.add('focus-active');
 
         timer = setInterval(() => {
             if(mode === "up") totalMs += 10;
@@ -168,7 +197,11 @@
         }, 10);
     }
 
-    function stopTimer() { clearInterval(timer); running = false; document.body.classList.remove('focus-active'); }
+    function stopTimer() { 
+        clearInterval(timer); 
+        running = false; 
+        document.body.classList.remove('focus-active'); 
+    }
     
     function resetTimer() { stopTimer(); totalMs = 0; format(0); document.getElementById("lapsList").innerHTML = ""; }
 
