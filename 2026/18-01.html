@@ -3,158 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pro Smart Timer v5.2</title>
-    
+    <title>Pro Smart Timer v5.3</title>
+
     <meta name="theme-color" content="#0a0c10">
     <link rel="manifest" id="manifestLink">
 
     <style>
-        :root { --accent: #00ff9d; --bg: #0a0c10; --text: #ffffff; --card: #1a1d23; }
-        body.theme-0 { --bg: #0a0c10; --accent: #00ff9d; --card: #1a1d23; }
-        body.theme-1 { --bg: #001219; --accent: #00d4ff; --card: #002533; }
-        body.theme-2 { --bg: #1a001a; --accent: #ff00ff; --card: #2d002d; }
-        body.theme-3 { --bg: #000000; --accent: #ffffff; --card: #111111; }
-        body.theme-4 { --bg: #1b1b1b; --accent: #ffaa00; --card: #2a2a2a; }
+        :root { --accent:#00ff9d; --bg:#0a0c10; --text:#fff; --card:#1a1d23; }
+        body.theme-0{--bg:#0a0c10;--accent:#00ff9d;--card:#1a1d23;}
+        body.theme-1{--bg:#001219;--accent:#00d4ff;--card:#002533;}
+        body.theme-2{--bg:#1a001a;--accent:#ff00ff;--card:#2d002d;}
+        body.theme-3{--bg:#000;--accent:#fff;--card:#111;}
+        body.theme-4{--bg:#1b1b1b;--accent:#ffaa00;--card:#2a2a2a;}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: background 0.4s, color 0.4s; }
-        body { height: 100vh; width: 100vw; background: var(--bg); display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--text); overflow: hidden; position: relative; }
-        
-        /* Navigation Hide on Minimal */
-        body.minimal-ui .top-nav, body.minimal-ui .controls-ui { display: none !important; }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
+        body{
+            height:100vh;width:100vw;background:var(--bg);
+            display:flex;flex-direction:column;
+            justify-content:center;align-items:center;
+            color:var(--text);overflow:hidden
+        }
 
-        .top-nav { position: absolute; top: 15px; right: 15px; z-index: 2000; }
-        .menu-btn { background: var(--card); border: 1px solid #444; border-radius: 50%; padding: 10px; cursor: pointer; display: flex; }
-        
-        .dropdown { position: absolute; top: 45px; right: 0; background: var(--card); border: 1px solid #444; border-radius: 12px; display: none; flex-direction: column; width: 190px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-        .dropdown button { background: none; color: white; padding: 12px; text-align: left; border: none; border-bottom: 1px solid #444; cursor: pointer; font-size: 0.9rem; }
+        body.minimal-ui .top-nav,
+        body.minimal-ui .controls-ui,
+        body.minimal-ui .lap-box{display:none!important}
 
-        /* Timer Display Size - Minimal Mode Fix */
-        .display { font-size: 18vw; font-weight: 800; font-family: 'Courier New', monospace; color: var(--accent); text-align: center; cursor: pointer; user-select: none; z-index: 10; transition: font-size 0.3s; }
-        body.minimal-ui .display { font-size: 25vw; margin-bottom: 0; }
-        @media (orientation: landscape) { body.minimal-ui .display { font-size: 35vh; } }
-        
-        .ms { font-size: 0.4em; opacity: 0.3; }
-        
-        .controls-ui { background: var(--card); padding: 25px; border-radius: 25px; border: 1px solid #444; width: 90%; max-width: 400px; display: flex; flex-direction: column; margin-top: 20px; }
-        input { background: rgba(0,0,0,0.3); border: 1px solid var(--accent); color: var(--accent); padding: 12px; border-radius: 12px; text-align: center; width: 100%; font-size: 1.6rem; outline: none; margin-bottom: 15px; }
-        
-        .main-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .start-btn { grid-column: span 2; padding: 18px; background: var(--accent); color: #000; border: none; border-radius: 15px; font-weight: bold; font-size: 1.2rem; cursor: pointer; }
-        .reset-btn { background: #3d444d; color: white; border: none; padding: 15px; border-radius: 15px; cursor: pointer; }
-        .lap-btn { background: #1f6feb; color: white; border: none; padding: 15px; border-radius: 15px; cursor: pointer; }
-        
-        .install-info { text-align: center; font-size: 0.8rem; color: var(--accent); margin-bottom: 10px; cursor: pointer; border: 1px dashed var(--accent); padding: 6px; border-radius: 8px; font-weight: bold; }
-        @media (display-mode: standalone) { #installBtnMain { display: none; } }
+        .top-nav{position:absolute;top:15px;right:15px}
+        .menu-btn{background:var(--card);border:1px solid #444;border-radius:50%;padding:10px}
+
+        .dropdown{
+            position:absolute;top:45px;right:0;
+            background:var(--card);border:1px solid #444;
+            border-radius:12px;display:none;
+            flex-direction:column;width:190px
+        }
+        .dropdown button{
+            background:none;color:#fff;padding:12px;
+            border:none;border-bottom:1px solid #444;
+            text-align:left
+        }
+
+        .display{
+            font-size:18vw;font-weight:800;
+            font-family:Courier New,monospace;
+            color:var(--accent);text-align:center;
+            cursor:pointer
+        }
+        body.minimal-ui .display{font-size:25vw}
+        .ms{font-size:.4em;opacity:.3}
+
+        .controls-ui{
+            background:var(--card);padding:25px;
+            border-radius:25px;border:1px solid #444;
+            width:90%;max-width:400px;margin-top:20px
+        }
+
+        input{
+            width:100%;padding:12px;font-size:1.6rem;
+            text-align:center;border-radius:12px;
+            border:1px solid var(--accent);
+            background:rgba(0,0,0,.3);color:var(--accent)
+        }
+
+        .main-btns{
+            margin-top:15px;
+            display:grid;grid-template-columns:1fr 1fr;
+            gap:12px
+        }
+        .start-btn{grid-column:span 2;padding:18px;border:none;border-radius:15px;font-weight:bold}
+        .reset-btn,.lap-btn{padding:15px;border:none;border-radius:15px;color:#fff}
+        .reset-btn{background:#3d444d}
+        .lap-btn{background:#1f6feb}
+
+        .lap-box{
+            width:90%;max-width:400px;
+            max-height:120px;overflow:auto;
+            margin-top:10px;font-size:.85rem;
+            opacity:.85
+        }
+        .lap-box div{border-bottom:1px dashed #444;padding:4px}
     </style>
 </head>
+
 <body class="theme-0" ondblclick="toggleModes()">
 
-    <div class="top-nav">
-        <button class="menu-btn" onclick="toggleMenu(event)">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
-        </button>
-        <div class="dropdown" id="menuBox">
-            <button onclick="changeTheme()">🎨 Switch Theme</button>
-            <button onclick="shareApp()">🔗 Share App</button>
-            <button onclick="checkUpdate()">🔄 Update App</button>
-            <button onclick="showAbout()">ℹ️ About App</button>
-            <button onclick="resetAll()">🔄 Full Reset</button>
-        </div>
+<div class="top-nav">
+    <button class="menu-btn" onclick="toggleMenu(event)">☰</button>
+    <div class="dropdown" id="menuBox">
+        <button onclick="changeTheme()">🎨 Switch Theme</button>
+        <button onclick="shareApp()">🔗 Share App</button>
+        <button onclick="checkUpdate()">🔄 Update App</button>
+        <button onclick="showAbout()">ℹ️ About App</button>
+        <button onclick="resetAll()">🔄 Full Reset</button>
     </div>
+</div>
 
-    <div class="display" id="timerDisplay" onclick="handleDisplayClick(event)">
-        <span id="timeDisplay">00:00:00</span><br>
-        <span class="ms">.<span id="msDisplay">000</span></span>
-    </div>
+<div class="display" onclick="handleDisplayClick(event)">
+    <span id="timeDisplay">00:00:00</span><br>
+    <span class="ms">.<span id="msDisplay">000</span></span>
+</div>
 
-    <div class="controls-ui">
-        <div class="install-info" id="installBtnMain" onclick="installApp()">📲 CLICK TO INSTALL APP</div>
-        <input type="text" id="timeInput" value="00:00:00" onchange="saveInput()">
-        <div class="main-btns">
-            <button class="start-btn" id="startBtn" onclick="startTimer(event)">START</button>
-            <button class="reset-btn" onclick="resetAll()">RESET</button>
-            <button class="lap-btn" onclick="addLap()">LAP</button>
-        </div>
+<div class="controls-ui">
+    <input type="text" id="timeInput" value="00:00:00">
+    <div class="main-btns">
+        <button class="start-btn" id="startBtn" onclick="startTimer(event)">START</button>
+        <button class="reset-btn" onclick="resetAll()">RESET</button>
+        <button class="lap-btn" onclick="addLap()">LAP</button>
     </div>
+</div>
+
+<div class="lap-box" id="lapBox"></div>
 
 <script>
-    const APP_VERSION = "5.2"; 
-    let timer, running = false, totalMs = 0, isMinimal = false;
-    let currentTheme = 0;
-    let deferredPrompt;
+const APP_VERSION="5.3";
+let timer,running=false,totalMs=0,isMinimal=false;
+let currentTheme=0,lapCount=0;
 
-    // --- ABOUT & INSTRUCTIONS ---
-    function showAbout() {
-        alert("Pro Smart Timer v" + APP_VERSION + "\n\n" +
-              "Double Click: Enter/Exit landscape (Timer only)\n" +
-              "Single Tap: Start/Stop timer\n" +
-              "Update: Fetches latest icons/features\n" +
-              "Memory: Themes & inputs are auto-saved.");
-    }
+function showAbout(){
+ alert("Pro Smart Timer v"+APP_VERSION+"\n\nNew in v5.3:\n✔ Lap History\n✔ New App Icon");
+}
 
-    // Update Logic
-    function checkUpdate() {
-        if (confirm("Check for updates?")) {
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(regs => { for(let r of regs) r.unregister(); });
-            }
-            window.location.reload(true);
-        }
-    }
+function toggleMenu(e){
+ e.stopPropagation();
+ const m=document.getElementById("menuBox");
+ m.style.display=m.style.display==="flex"?"none":"flex";
+}
+window.onclick=()=>menuBox.style.display="none";
 
-    // Manifest & Icon
-    const myManifest = {
-        "name": "Pro Smart Timer",
-        "short_name": "Timer Pro",
-        "start_url": ".",
-        "display": "standalone",
-        "background_color": "#0a0c10",
-        "theme_color": "#00ff9d",
-        "icons": [{ "src": "https://img.icons8.com/color/512/stopwatch.png", "sizes": "512x512", "type": "image/png" }]
-    };
-    const blob = new Blob([JSON.stringify(myManifest)], {type: 'application/json'});
-    document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(blob));
+function toggleModes(){
+ isMinimal=!isMinimal;
+ document.body.classList.toggle("minimal-ui",isMinimal);
+}
 
-    // Install & Share
-    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
-    async function installApp() { if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; } else { alert("Use Browser Menu > Install"); } }
-    async function shareApp() { if (navigator.share) { navigator.share({ title: 'Timer Pro', url: window.location.href }); } }
+function handleDisplayClick(e){
+ e.stopPropagation();
+ running?stopTimer():startTimer();
+}
 
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    
-    window.onload = () => {
-        const savedTheme = localStorage.getItem('timerTheme');
-        if (savedTheme !== null) { document.body.className = `theme-${savedTheme}`; currentTheme = parseInt(savedTheme); }
-        const savedTime = localStorage.getItem('timerInput');
-        if (savedTime) document.getElementById('timeInput').value = savedTime;
-        if (window.matchMedia('(display-mode: standalone)').matches) document.getElementById('installBtnMain').style.display = 'none';
-    };
+function format(ms){
+ let s=Math.floor(ms/1000);
+ let h=Math.floor(s/3600);
+ let m=Math.floor((s%3600)/60);
+ let sec=s%60;
+ let milli=ms%1000;
+ timeDisplay.textContent=
+ `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
+ msDisplay.textContent=String(milli).padStart(3,"0");
+}
 
-    function saveInput() { localStorage.setItem('timerInput', document.getElementById('timeInput').value); }
-    function changeTheme() { currentTheme = (currentTheme + 1) % 5; document.body.className = `theme-${currentTheme}`; localStorage.setItem('timerTheme', currentTheme); }
-    function toggleMenu(e) { e.stopPropagation(); const m = document.getElementById('menuBox'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; }
-    window.onclick = () => document.getElementById('menuBox').style.display = 'none';
+function startTimer(e){
+ if(running){stopTimer();return;}
+ if(e)e.stopPropagation();
+ let p=timeInput.value.split(":").map(Number);
+ let input=((p[0]||0)*3600+(p[1]||0)*60+(p[2]||0))*1000;
+ let mode=(input>0&&totalMs===0)?"down":"up";
+ if(mode==="down")totalMs=input;
+ running=true;
+ startBtn.textContent="STOP";
+ startBtn.style.background="#ff4d4d";
+ timer=setInterval(()=>{
+   if(mode==="up")totalMs+=10;
+   else{totalMs-=10;if(totalMs<=0){totalMs=0;stopTimer();}}
+   format(totalMs);
+ },10);
+}
 
-    // Landscape Mode Logic (Timer Only)
-    function toggleModes() {
-        isMinimal = !isMinimal;
-        document.body.classList.toggle('minimal-ui', isMinimal);
-        if (isMinimal) {
-            document.documentElement.requestFullscreen().catch(()=>{});
-            if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(()=>{});
-        } else {
-            if (document.fullscreenElement) document.exitFullscreen().catch(()=>{});
-            if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
-        }
-    }
+function stopTimer(){
+ clearInterval(timer);
+ running=false;
+ startBtn.textContent="START";
+ startBtn.style.background="var(--accent)";
+}
 
-    function handleDisplayClick(e) { e.stopPropagation(); if (running) stopTimer(); else startTimer(); }
-    function format(ms) { let s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60, milli = ms % 1000; document.getElementById("timeDisplay").textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`; document.getElementById("msDisplay").textContent = String(milli).padStart(3,'0'); }
-    function startTimer(e) { if (running) { stopTimer(); return; } if(e) e.stopPropagation(); let parts = document.getElementById("timeInput").value.split(":").map(Number); let inputVal = ((parts[0]||0)*3600 + (parts[1]||0)*60 + (parts[2]||0))*1000; let mode = (inputVal > 0 && totalMs === 0) ? "down" : "up"; if(mode === "down") totalMs = inputVal; running = true; document.getElementById("startBtn").textContent = "STOP"; document.getElementById("startBtn").style.background = "#ff4d4d"; timer = setInterval(() => { if(mode === "up") totalMs += 10; else { totalMs -= 10; if(totalMs <= 0) { totalMs = 0; stopTimer(); playAlarm(); } } format(totalMs); }, 10); }
-    function stopTimer() { clearInterval(timer); running = false; document.getElementById("startBtn").textContent = "START"; document.getElementById("startBtn").style.background = "var(--accent)"; }
-    function playAlarm() { const ring = (d) => { setTimeout(() => { const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.frequency.value = 880; o.start(); setTimeout(() => o.stop(), 300); }, d); }; ring(0); ring(600); }
-    function resetAll() { stopTimer(); totalMs = 0; format(0); document.getElementById("timeInput").value = "00:00:00"; localStorage.setItem('timerInput', "00:00:00"); }
-    function addLap() { /* Lap logic */ }
+function resetAll(){
+ stopTimer();totalMs=0;lapCount=0;
+ lapBox.innerHTML="";
+ format(0);
+ timeInput.value="00:00:00";
+}
+
+function addLap(){
+ if(!running)return;
+ lapCount++;
+ const d=document.createElement("div");
+ d.textContent=`Lap ${lapCount} → ${timeDisplay.textContent}.${msDisplay.textContent}`;
+ lapBox.prepend(d);
+}
+
+function changeTheme(){
+ currentTheme=(currentTheme+1)%5;
+ document.body.className=`theme-${currentTheme}`;
+}
+
+function shareApp(){
+ if(navigator.share)navigator.share({title:"Timer Pro",url:location.href});
+}
+
+/* Manifest with NEW ICON */
+const manifest={
+ name:"Pro Smart Timer",
+ short_name:"Timer Pro",
+ start_url:".",
+ display:"standalone",
+ background_color:"#0a0c10",
+ theme_color:"#00ff9d",
+ icons:[{
+   src:"https://img.icons8.com/fluency/512/stopwatch.png",
+   sizes:"512x512",
+   type:"image/png"
+ }]
+};
+const blob=new Blob([JSON.stringify(manifest)],{type:"application/json"});
+manifestLink.href=URL.createObjectURL(blob);
 </script>
 </body>
 </html>
