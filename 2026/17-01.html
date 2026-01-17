@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pro Smart Timer v4.4</title>
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlBybyBTbWFydCBUaW1lciIsCiAgInNob3J0X25hbWUiOiAiVGltZXIiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBhMGMxMCIsCiAgInRoZW1lX2NvbG9yIjogIzAwZmY5ZCJ9">
+    <title>Pro Smart Timer v4.5</title>
+    <meta name="theme-color" content="#0a0c10">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
     <style>
         :root { --accent: #00ff9d; --bg: #0a0c10; --text: #ffffff; --card: #1a1d23; }
 
@@ -42,7 +45,7 @@
             .main-btns { grid-template-columns: repeat(3, 1fr) !important; width: 100%; gap: 10px; }
             .start-btn { grid-column: span 1 !important; padding: 12px !important; }
             input { margin-bottom: 0 !important; width: 130px !important; }
-            .install-link { display: none !important; }
+            .install-info { display: none !important; }
             .laps-box { display: none; }
         }
 
@@ -70,10 +73,10 @@
         .reset-btn { background: #3d444d; color: white; border: none; padding: 15px; border-radius: 15px; cursor: pointer; }
         .lap-btn { background: #1f6feb; color: white; border: none; padding: 15px; border-radius: 15px; cursor: pointer; }
 
-        .install-link {
+        .install-info {
             text-align: center; font-size: 0.8rem; color: var(--accent);
-            margin-bottom: 10px; cursor: pointer; text-decoration: underline;
-            opacity: 0.8;
+            margin-bottom: 10px; cursor: pointer; border: 1px dashed var(--accent);
+            padding: 5px; border-radius: 8px;
         }
 
         .laps-box { margin-top: 15px; max-height: 80px; overflow-y: auto; font-size: 0.85rem; opacity: 0.5; border-top: 1px solid #444; padding-top: 10px; }
@@ -87,7 +90,7 @@
         </button>
         <div class="dropdown" id="menuBox">
             <button onclick="changeTheme()">🎨 Switch Theme</button>
-            <button onclick="installApp()">📲 Install App</button>
+            <button onclick="installApp()">📲 How to Install</button>
             <button onclick="showAbout()">ℹ️ About</button>
             <button onclick="resetAll()">🔄 Full Reset</button>
         </div>
@@ -99,7 +102,7 @@
     </div>
 
     <div class="controls-ui">
-        <div class="install-link" id="installBtnMain" onclick="installApp()">📲 Click to Install App</div>
+        <div class="install-info" id="installMsg" onclick="installApp()">📲 Install as App (Click here)</div>
         <input type="text" id="timeInput" value="00:00:00" onchange="saveInput()">
         <div class="main-btns">
             <button class="start-btn" id="startBtn" onclick="startTimer(event)">START</button>
@@ -115,25 +118,23 @@
     let deferredPrompt;
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-    // Installation Logic
+    // Installation Helper
+    function installApp() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choice) => {
+                if (choice.outcome === 'accepted') document.getElementById('installMsg').style.display = 'none';
+                deferredPrompt = null;
+            });
+        } else {
+            alert("To Install:\n1. Open Chrome/Browser Menu (3 dots)\n2. Click 'Install App' or 'Add to Home Screen'\n\nYeh abhi local file hai, isliye automatic popup nahi aayega.");
+        }
+    }
+
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        document.getElementById('installBtnMain').style.display = 'block';
     });
-
-    async function installApp() {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                document.getElementById('installBtnMain').style.display = 'none';
-            }
-            deferredPrompt = null;
-        } else {
-            alert("Open this in Chrome/Edge and use 'Add to Home Screen'");
-        }
-    }
 
     window.onload = () => {
         const savedTheme = localStorage.getItem('timerTheme');
@@ -143,6 +144,11 @@
         }
         const savedTime = localStorage.getItem('timerInput');
         if (savedTime) document.getElementById('timeInput').value = savedTime;
+        
+        // Register Dummy Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('data:text/javascript;base64,c2VsZi.JhZGRFdmVudExpc3RlbmVyKCdmZXRjaCcsIGV2ID0+IHsgfSk7').catch(()=>{});
+        }
     };
 
     function saveInput() { localStorage.setItem('timerInput', document.getElementById('timeInput').value); }
@@ -237,7 +243,7 @@
     }
 
     function showAbout() {
-        alert("Pro Timer v4.4\n- Installable PWA App\n- Display Tap: Start/Stop\n- Orientation Lock Feature");
+        alert("Pro Timer v4.5\n\n1. Double Click: Fullscreen/Landscape\n2. Single Tap: Start/Stop\n3. Colors & Time auto-saved");
     }
 </script>
 </body>
