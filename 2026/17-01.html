@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dual Timer</title>
+<title>Smart Timer</title>
 
 <style>
 *{
@@ -16,64 +16,48 @@
 body{
     height:100vh;
     overflow:hidden;
-    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    background:linear-gradient(135deg,#141e30,#243b55);
     color:#fff;
 }
 
-/* PAGE */
-.wrapper{
+.container{
     height:100vh;
     display:flex;
-}
-
-/* TIMER BOX */
-.timer-box{
-    flex:1;
-    display:flex;
     flex-direction:column;
-    justify-content:center;
     align-items:center;
-    border-right:1px solid rgba(255,255,255,0.2);
-}
-
-.timer-box:last-child{
-    border:none;
-}
-
-h2{
-    margin-bottom:15px;
+    justify-content:center;
 }
 
 /* DISPLAY */
 .display{
-    font-size:3.5rem;
-    margin-bottom:15px;
+    font-size:4rem;
     font-weight:700;
+    margin-bottom:20px;
 }
 
 /* INPUT */
 input{
-    width:120px;
-    padding:8px;
-    border:none;
-    border-radius:8px;
-    font-size:1rem;
+    width:180px;
+    padding:10px;
+    font-size:1.2rem;
     text-align:center;
+    border:none;
+    border-radius:10px;
+    outline:none;
+    margin-bottom:20px;
 }
 
 /* BUTTONS */
 .buttons{
     display:flex;
-    gap:10px;
-    margin-top:15px;
-    flex-wrap:wrap;
-    justify-content:center;
+    gap:15px;
 }
 
 button{
-    padding:10px 20px;
+    padding:12px 25px;
     border:none;
-    border-radius:20px;
+    border-radius:25px;
+    font-size:1rem;
     font-weight:600;
     cursor:pointer;
     transition:0.3s;
@@ -82,146 +66,96 @@ button{
 .start{background:#00ff9d;}
 .stop{background:#ff4d4d;color:#fff;}
 .reset{background:#ffd633;}
-.record{background:#00c6ff;}
 
 button:hover{
     transform:scale(1.1);
-}
-
-/* RECORD */
-.records{
-    margin-top:15px;
-    width:80%;
-    max-height:150px;
-    overflow:auto;
-    background:rgba(0,0,0,0.3);
-    border-radius:10px;
-    padding:10px;
-}
-
-.records p{
-    font-size:0.9rem;
-    border-bottom:1px solid rgba(255,255,255,0.2);
-    padding:5px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="wrapper">
+<div class="container">
 
-<!-- STOPWATCH -->
-<div class="timer-box">
-    <h2>Stopwatch</h2>
-    <div class="display" id="swDisplay">00:00:00</div>
+    <!-- TIME INPUT -->
+    <input type="text" id="timeInput" value="00:00:00">
 
+    <!-- DISPLAY -->
+    <div class="display" id="display">00:00:00</div>
+
+    <!-- BUTTONS -->
     <div class="buttons">
-        <button class="start" onclick="startSW()">Start</button>
-        <button class="stop" onclick="stopSW()">Stop</button>
-        <button class="reset" onclick="resetSW()">Restart</button>
-        <button class="record" onclick="recordSW()">Record</button>
+        <button class="start" onclick="startTimer()">Start</button>
+        <button class="stop" onclick="stopTimer()">Stop</button>
+        <button class="reset" onclick="resetTimer()">Restart</button>
     </div>
-
-    <div class="records" id="swRecords"></div>
-</div>
-
-<!-- COUNTDOWN -->
-<div class="timer-box">
-    <h2>Countdown Timer</h2>
-    <input type="number" id="cdInput" placeholder="Seconds">
-
-    <div class="display" id="cdDisplay">00:00</div>
-
-    <div class="buttons">
-        <button class="start" onclick="startCD()">Start</button>
-        <button class="stop" onclick="stopCD()">Stop</button>
-        <button class="reset" onclick="resetCD()">Restart</button>
-        <button class="record" onclick="recordCD()">Record</button>
-    </div>
-
-    <div class="records" id="cdRecords"></div>
-</div>
 
 </div>
 
 <script>
-/* -------- STOPWATCH -------- */
-let swTime = 0, swTimer, swRunning = false;
+let timer;
+let time = 0;
+let mode = "up"; // up = stopwatch, down = countdown
+let running = false;
 
-function formatSW(t){
+/* FORMAT */
+function format(t){
     let h = Math.floor(t / 3600);
     let m = Math.floor((t % 3600) / 60);
     let s = t % 60;
     return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
 
-function startSW(){
-    if(swRunning) return;
-    swRunning = true;
-    swTimer = setInterval(()=>{
-        swTime++;
-        swDisplay.innerText = formatSW(swTime);
-    },1000);
+/* PARSE HH:MM:SS */
+function parseTime(str){
+    let parts = str.split(":").map(Number);
+    if(parts.length !== 3) return 0;
+    return parts[0]*3600 + parts[1]*60 + parts[2];
 }
 
-function stopSW(){
-    clearInterval(swTimer);
-    swRunning = false;
-}
+/* START */
+function startTimer(){
+    if(running) return;
 
-function resetSW(){
-    stopSW();
-    swTime = 0;
-    swDisplay.innerText = "00:00:00";
-}
+    let inputVal = document.getElementById("timeInput").value;
+    let parsed = parseTime(inputVal);
 
-function recordSW(){
-    swRecords.innerHTML = `<p>${formatSW(swTime)}</p>` + swRecords.innerHTML;
-}
-
-/* -------- COUNTDOWN -------- */
-let cdTime = 0, cdTimer, cdRunning = false;
-
-function formatCD(t){
-    let m = Math.floor(t / 60);
-    let s = t % 60;
-    return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-}
-
-function startCD(){
-    if(cdRunning) return;
-    if(cdTime === 0){
-        cdTime = parseInt(cdInput.value);
-        if(isNaN(cdTime) || cdTime <= 0){
-            alert("Enter valid seconds");
-            return;
-        }
+    if(parsed > 0){
+        time = parsed;
+        mode = "down"; // countdown
+    }else{
+        time = time || 0;
+        mode = "up"; // stopwatch
     }
-    cdRunning = true;
-    cdTimer = setInterval(()=>{
-        if(cdTime <= 0){
-            stopCD();
-            return;
+
+    running = true;
+
+    timer = setInterval(()=>{
+        if(mode === "up"){
+            time++;
+        }else{
+            if(time <= 0){
+                stopTimer();
+                return;
+            }
+            time--;
         }
-        cdTime--;
-        cdDisplay.innerText = formatCD(cdTime);
+        display.innerText = format(time);
     },1000);
 }
 
-function stopCD(){
-    clearInterval(cdTimer);
-    cdRunning = false;
+/* STOP */
+function stopTimer(){
+    clearInterval(timer);
+    running = false;
 }
 
-function resetCD(){
-    stopCD();
-    cdTime = parseInt(cdInput.value) || 0;
-    cdDisplay.innerText = formatCD(cdTime);
-}
-
-function recordCD(){
-    cdRecords.innerHTML = `<p>${formatCD(cdTime)}</p>` + cdRecords.innerHTML;
+/* RESET */
+function resetTimer(){
+    stopTimer();
+    time = 0;
+    display.innerText = "00:00:00";
+    document.getElementById("timeInput").value = "00:00:00";
 }
 </script>
 
