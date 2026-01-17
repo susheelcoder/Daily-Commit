@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pro Smart Timer v4.1</title>
+    <title>Pro Smart Timer v4.2</title>
     <style>
         :root { --accent: #00ff9d; --bg: #0a0c10; --text: #ffffff; --card: #1a1d23; }
 
@@ -32,13 +32,11 @@
         }
         .dropdown button { background: none; color: white; padding: 12px; text-align: left; border: none; border-bottom: 1px solid #444; cursor: pointer; font-size: 0.9rem; }
 
-        /* Minimal UI Style */
         body.minimal-ui .controls-ui, body.minimal-ui .top-nav { display: none !important; }
 
-        /* LANDSCAPE SIZE FIX (Jo aapko pasand tha) */
         @media (orientation: landscape) {
             .display { font-size: 18vh !important; margin-bottom: 5px !important; }
-            body.minimal-ui .display { font-size: 35vh !important; } /* Minimal mein bada dikhega */
+            body.minimal-ui .display { font-size: 35vh !important; }
             
             .controls-ui { max-width: 550px !important; flex-direction: row !important; padding: 10px 20px !important; }
             .main-btns { grid-template-columns: repeat(3, 1fr) !important; width: 100%; gap: 10px; }
@@ -87,7 +85,7 @@
         </div>
     </div>
 
-    <div class="display" id="mainDisplay" onclick="handleDisplayClick()">
+    <div class="display" onclick="handleDisplayClick()">
         <span id="timeDisplay">00:00:00</span><br>
         <span class="ms">.<span id="msDisplay">000</span></span>
     </div>
@@ -134,29 +132,15 @@
     }
     window.onclick = () => document.getElementById('menuBox').style.display = 'none';
 
-    // DOUBLE CLICK -> LANDSCAPE & FULLSCREEN
     function toggleModes() {
         isMinimal = !isMinimal;
         document.body.classList.toggle('minimal-ui', isMinimal);
-        
         if (isMinimal) {
-            // Fullscreen trigger
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(()=>{});
-            }
-            // Landscape lock trigger (Mobile browsers support check)
-            if (screen.orientation && screen.orientation.lock) {
-                screen.orientation.lock('landscape').catch(()=>{});
-            }
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{});
+            if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(()=>{});
         } else {
-            // Exit fullscreen
-            if (document.fullscreenElement) {
-                document.exitFullscreen().catch(()=>{});
-            }
-            // Unlock orientation
-            if (screen.orientation && screen.orientation.unlock) {
-                screen.orientation.unlock();
-            }
+            if (document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+            if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
         }
     }
 
@@ -207,7 +191,7 @@
                 totalMs -= 10; 
                 if(totalMs <= 0) { 
                     totalMs = 0; stopTimer(); playAlarm(); 
-                    setTimeout(() => alert("Time Up!"), 500);
+                    // No more alert("Time Up!");
                 } 
             }
             format(totalMs);
@@ -231,7 +215,7 @@
     }
 
     function showAbout() {
-        alert("Pro Timer v4.1\n- Double Click: Landscape/Minimal Toggle\n- Tap to Stop\n- Auto-Save Mode\n- 5 Unique Color Themes");
+        alert("Pro Timer v4.2\n- Landscape & Fullscreen Optimized\n- No Alert Mode Enabled\n- Auto-Save Feature");
     }
 </script>
 </body>
