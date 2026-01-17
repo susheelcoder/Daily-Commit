@@ -10,142 +10,90 @@
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { height: 100vh; background: #090a0f; display: flex; justify-content: center; align-items: center; color: #fff; overflow: hidden; }
 
-        body {
-            height: 100vh;
-            background: #090a0f;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
-            overflow: hidden;
-        }
-
-        /* 3-Dot Menu Styling */
-        .header-actions {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .menu-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 5px;
-            z-index: 101;
-        }
+        /* Menu System */
+        .header-actions { position: absolute; top: 15px; right: 15px; }
+        .menu-btn { background: none; border: none; cursor: pointer; padding: 10px; z-index: 101; border-radius: 50%; transition: 0.3s; }
+        .menu-btn:hover { background: rgba(255,255,255,0.1); }
 
         .dropdown {
             position: absolute;
-            top: 40px;
+            top: 45px;
             right: 0;
             background: #1a1b26;
             border: 1px solid #333;
-            border-radius: 8px;
+            border-radius: 12px;
             display: none;
             flex-direction: column;
-            width: 150px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            width: 180px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            overflow: hidden;
+            z-index: 1000;
         }
 
         .dropdown button {
             background: none;
             color: white;
-            padding: 12px;
+            padding: 14px;
             text-align: left;
             border: none;
             border-bottom: 1px solid #222;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .dropdown button:hover { background: #2a2c3d; }
+        .dropdown button:last-child { border-bottom: none; }
 
-        .container {
-            width: 95%;
-            max-width: 500px;
-            text-align: center;
-        }
-
-        .display {
-            font-size: 7rem; 
-            font-weight: 800;
-            font-family: monospace;
-            color: #00ff9d;
-            line-height: 1;
-        }
-
-        .ms { font-size: 2.5rem; color: #fff; opacity: 0.4; }
+        /* Timer Display */
+        .container { width: 95%; max-width: 500px; text-align: center; }
+        .display { font-size: 7.5rem; font-weight: 800; font-family: 'Courier New', monospace; color: #00ff9d; line-height: 1; text-shadow: 0 0 20px rgba(0,255,157,0.2); }
+        .ms { font-size: 2.8rem; color: #fff; opacity: 0.3; }
 
         input[type="text"] {
             background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 8px;
-            color: #888;
-            font-size: 1.1rem;
+            color: #555;
+            font-size: 1.2rem;
             text-align: center;
-            padding: 5px;
-            width: 140px;
-            margin: 20px 0 40px 0;
+            padding: 6px;
+            width: 150px;
+            margin: 30px 0;
         }
 
-        .controls { display: flex; flex-direction: column; gap: 15px; }
+        .controls { display: flex; flex-direction: column; gap: 12px; }
+        .start-btn { width: 100%; padding: 20px; font-size: 1.8rem; font-weight: bold; border-radius: 18px; border: none; background: #00ff9d; color: #000; cursor: pointer; transition: 0.2s; box-shadow: 0 5px 15px rgba(0,255,157,0.2); }
+        .start-btn:active { transform: scale(0.98); }
 
-        .start-btn {
-            width: 100%;
-            padding: 18px;
-            font-size: 1.6rem;
-            font-weight: bold;
-            border-radius: 15px;
-            border: none;
-            background: #00ff9d;
-            color: #000;
-            cursor: pointer;
-        }
-
-        .secondary-btns { display: flex; gap: 10px; }
-
-        .secondary-btns button {
-            flex: 1;
-            padding: 12px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            color: white;
-        }
+        .secondary-btns { display: flex; gap: 8px; }
+        .secondary-btns button { flex: 1; padding: 14px; font-size: 0.9rem; font-weight: bold; border-radius: 12px; border: none; cursor: pointer; color: white; text-transform: uppercase; }
 
         .stop { background: #ff4d4d; }
         .reset { background: #333; }
         .lap { background: #00c6ff; }
 
-        .laps-box {
-            margin-top: 25px;
-            height: 80px;
-            overflow-y: auto;
-            font-size: 0.8rem;
-            color: #666;
-            border-top: 1px solid #111;
-        }
+        .laps-box { margin-top: 25px; height: 90px; overflow-y: auto; font-size: 0.85rem; color: #555; border-top: 1px solid #111; padding-top: 10px; }
     </style>
 </head>
 <body>
 
     <div class="header-actions">
         <button class="menu-btn" onclick="toggleMenu()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
                 <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
             </svg>
         </button>
         <div class="dropdown" id="menuDropdown">
             <button onclick="toggleFull()">Full Screen</button>
-            <button onclick="resetTimer()">Reset Timer</button>
-            <button onclick="alert('Smart Timer Pro v2.0')">About</button>
-            </div>
+            <button id="installBtn" style="display:none;" onclick="installApp()">📲 Install App</button>
+            <button onclick="resetTimer()">Reset All</button>
+            <button onclick="alert('Smart Timer Pro v2.1\nDesign by AI')">About</button>
+        </div>
     </div>
 
     <div class="container">
@@ -169,28 +117,43 @@
     </div>
 
 <script>
-    /* PWA Manifest Setup (Add to Home Screen) */
+    /* --- PWA INSTALL LOGIC --- */
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBtn.style.display = 'flex'; // Menu me button dikhao
+    });
+
+    async function installApp() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                console.log('User installed the app');
+                installBtn.style.display = 'none';
+            }
+            deferredPrompt = null;
+        }
+        toggleMenu();
+    }
+
+    /* PWA Manifest Dynamic Generation */
     const myManifest = {
         "name": "Smart Timer Pro",
         "short_name": "Timer",
         "start_url": ".",
         "display": "standalone",
         "background_color": "#090a0f",
-        "theme_color": "#090a0f",
+        "theme_color": "#00ff9d",
         "icons": [{ "src": "https://cdn-icons-png.flaticon.com/512/2972/2972353.png", "sizes": "512x512", "type": "image/png" }]
     };
     const blob = new Blob([JSON.stringify(myManifest)], {type: 'application/json'});
     document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(blob));
 
-    /* Service Worker for Install Prompt */
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            const swCode = `self.addEventListener('fetch', function(e) {});`;
-            const swBlob = new Blob([swCode], {type: 'text/javascript'});
-            navigator.serviceWorker.register(URL.createObjectURL(swBlob));
-        });
-    }
-
+    /* --- TIMER LOGIC --- */
     let timer, running = false, totalMs = 0, mode = "up";
     const timeDisplay = document.getElementById("timeDisplay");
     const msDisplay = document.getElementById("msDisplay");
@@ -218,7 +181,7 @@
         else if (totalMs === 0) { mode = "up"; }
 
         running = true;
-        document.getElementById("startBtn").style.opacity = "0.6";
+        document.getElementById("startBtn").style.background = "#008a55";
 
         timer = setInterval(() => {
             if (mode === "up") totalMs += 10;
@@ -230,23 +193,26 @@
         }, 10);
     }
 
-    function stopTimer() { clearInterval(timer); running = false; document.getElementById("startBtn").style.opacity = "1"; }
+    function stopTimer() { clearInterval(timer); running = false; document.getElementById("startBtn").style.background = "#00ff9d"; }
     
-    function resetTimer() { stopTimer(); totalMs = 0; format(0); document.getElementById("lapsList").innerHTML = ""; }
+    function resetTimer() { stopTimer(); totalMs = 0; format(0); document.getElementById("lapsList").innerHTML = ""; menu.style.display="none"; }
 
     function addLap() {
         let div = document.createElement("div");
-        div.style.padding = "2px";
-        div.textContent = `Lap ${document.getElementById("lapsList").children.length + 1}: ${timeDisplay.textContent}.${msDisplay.textContent}`;
+        div.style.display = "flex";
+        div.style.justifyContent = "space-between";
+        div.style.padding = "4px 20px";
+        div.innerHTML = `<span>Lap ${document.getElementById("lapsList").children.length + 1}</span> <span>${timeDisplay.textContent}.${msDisplay.textContent}</span>`;
         document.getElementById("lapsList").prepend(div);
     }
 
     function playBeep() {
-        const ctx = new AudioContext();
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = ctx.createOscillator();
         osc.connect(ctx.destination);
+        osc.frequency.value = 880;
         osc.start();
-        setTimeout(() => osc.stop(), 500);
+        setTimeout(() => osc.stop(), 600);
     }
 
     function toggleFull() {
