@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +15,7 @@
         body.theme-3 { --bg: #ffffff; --accent: #000; --text: #000; } 
         body.theme-4 { background: linear-gradient(135deg, #1e3c72, #2a5298); --accent: #fff; --text: #fff; } 
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: background 0.3s, color 0.3s, font-size 0.2s; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: all 0.3s ease; }
         
         body { 
             height: 100vh; width: 100vw;
@@ -25,23 +26,26 @@
             padding: 10px;
         }
 
-        /* Focus Mode logic */
+        /* --- LANDSCAPE OPTIMIZATION --- */
+        body.is-landscape .top-nav, 
+        body.is-landscape #modeTag,
         body.focus-active .top-nav, 
-        body.focus-active .controls-ui, 
         body.focus-active #modeTag { display: none !important; }
 
-        /* --- RESPONSIVE FIX FOR LOW HEIGHT (Landscape) --- */
-        @media (max-height: 450px) {
-            .display { font-size: 15vh !important; }
-            .ms { font-size: 0.3em; }
-            .analog-view { width: 160px !important; height: 160px !important; margin-bottom: 5px !important; }
-            .controls-ui { margin-top: 5px !important; max-width: 500px !important; display: flex; flex-direction: row; gap: 10px; align-items: center; }
-            input { margin-bottom: 0 !important; width: 120px !important; padding: 8px !important; }
-            .btn-group { flex-direction: row !important; width: auto !important; }
-            .start-btn { padding: 10px 20px !important; font-size: 1rem !important; }
-            .laps-box { display: none; } /* Chhoti screen par laps chhupa dete hain space ke liye */
-            #modeTag { margin-bottom: 5px; font-size: 0.6rem; }
+        body.is-landscape .display { font-size: 25vh !important; }
+        
+        /* Landscape me buttons ko adjust karne ke liye */
+        body.is-landscape .controls-ui { 
+            max-width: 90% !important; 
+            flex-direction: row !important; 
+            display: flex; 
+            gap: 15px; 
+            justify-content: center;
+            margin-top: 10px;
         }
+        body.is-landscape .btn-group { flex-direction: row !important; align-items: center; }
+        body.is-landscape input { width: 140px !important; margin-bottom: 0 !important; }
+        body.is-landscape .laps-box { display: none; }
 
         /* Top Navigation */
         .top-nav { position: absolute; top: 15px; right: 15px; z-index: 1000; }
@@ -51,32 +55,21 @@
             border-radius: 10px; display: none; flex-direction: column; width: 160px; overflow: hidden;
             box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
-        .dropdown button { background: none; color: white; padding: 12px; text-align: left; border: none; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.85rem; }
+        .dropdown button { background: none; color: white; padding: 12px; text-align: left; border: none; border-bottom: 1px solid #222; cursor: pointer; }
 
-        /* Main Display */
         .container { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-        #modeTag { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; opacity: 0.6; }
-        .display { font-size: 18vw; font-weight: 800; font-family: 'Courier New', monospace; color: var(--accent); line-height: 1.1; user-select: none; }
+        .display { font-size: 18vw; font-weight: 800; font-family: 'Courier New', monospace; color: var(--accent); line-height: 1.1; }
         .ms { font-size: 0.4em; opacity: 0.4; color: var(--text); }
 
-        /* Analog View */
-        .analog-view { 
-            display: none; width: 280px; height: 280px; border: 6px solid var(--accent); 
-            border-radius: 50%; position: relative; margin-bottom: 20px; background: var(--panel);
-        }
-        .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom; background: var(--accent); border-radius: 5px; }
-        .hour-hand { width: 6px; height: 35%; }
-        .min-hand { width: 4px; height: 42%; }
-        .sec-hand { width: 2px; height: 45%; background: #ff4d4d !important; }
-
         /* UI Elements */
-        .controls-ui { width: 100%; max-width: 320px; margin-top: 20px; }
-        input { background: var(--panel); border: 1px solid var(--accent); color: var(--text); padding: 12px; border-radius: 10px; text-align: center; margin-bottom: 15px; outline: none; width: 100%; font-size: 1.2rem; }
+        .controls-ui { width: 100%; max-width: 320px; margin-top: 20px; display: flex; flex-direction: column; }
+        input { background: var(--panel); border: 1px solid var(--accent); color: var(--text); padding: 12px; border-radius: 10px; text-align: center; margin-bottom: 15px; outline: none; font-size: 1.2rem; }
         .btn-group { display: flex; flex-direction: column; gap: 10px; }
-        .start-btn { padding: 15px; background: var(--accent); color: #000; border: none; border-radius: 12px; font-weight: bold; font-size: 1.3rem; cursor: pointer; }
+        .start-btn { padding: 15px 30px; background: var(--accent); color: #000; border: none; border-radius: 12px; font-weight: bold; font-size: 1.2rem; cursor: pointer; }
         .secondary-btns { display: flex; gap: 10px; }
-        .secondary-btns button { flex: 1; padding: 10px; border: none; border-radius: 8px; color: white; cursor: pointer; background: #333; font-size: 0.9rem; }
-        .laps-box { margin-top: 15px; max-height: 60px; overflow-y: auto; font-size: 0.75rem; opacity: 0.5; width: 100%; }
+        .secondary-btns button { flex: 1; padding: 12px; border: none; border-radius: 10px; color: white; cursor: pointer; background: #333; }
+
+        .laps-box { margin-top: 15px; max-height: 60px; overflow-y: auto; font-size: 0.75rem; opacity: 0.5; }
     </style>
 </head>
 <body class="theme-0" onclick="handlePageClick()" ondblclick="nextTheme()">
@@ -87,58 +80,61 @@
         </button>
         <div class="dropdown" id="menuBox">
             <button onclick="nextTheme()">🎨 Change Design</button>
-            <button onclick="toggleFull()">🖥️ Full Screen</button>
+            <button onclick="toggleFull()">🖥️ Manual Fullscreen</button>
             <button onclick="resetTimer()">🔄 Reset All</button>
         </div>
     </div>
 
     <div class="container">
         <div id="modeTag">Stopwatch</div>
-        <div id="digitalArea" class="display">
+        <div class="display">
             <span id="timeDisplay">00:00:00</span><br>
             <span class="ms">.<span id="msDisplay">000</span></span>
-        </div>
-
-        <div id="analogArea" class="analog-view">
-            <div id="h-hand" class="hand hour-hand"></div>
-            <div id="m-hand" class="hand min-hand"></div>
-            <div id="s-hand" class="hand sec-hand"></div>
-            <div style="position:absolute; top:50%; left:50%; width:8px; height:8px; background:var(--accent); border-radius:50%; transform:translate(-50%,-50%);"></div>
         </div>
 
         <div class="controls-ui">
             <input type="text" id="timeInput" value="00:00:00">
             <div class="btn-group">
-                <button class="start-btn" onclick="startTimer(event)">START FOCUS</button>
+                <button class="start-btn" onclick="startTimer(event)">START</button>
                 <div class="secondary-btns">
                     <button onclick="resetTimer()">RESET</button>
                     <button onclick="addLap()">LAP</button>
                 </div>
             </div>
-            <div class="laps-box" id="lapsList"></div>
         </div>
+        <div class="laps-box" id="lapsList"></div>
     </div>
 
 <script>
     let timer, running = false, totalMs = 0, currentTheme = 0;
 
-    function toggleMenu(e) { 
-        e.stopPropagation(); 
-        const m = document.getElementById('menuBox'); 
-        m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; 
+    /* --- AUTO FULLSCREEN & LANDSCAPE LOGIC --- */
+    function checkOrientation() {
+        if (window.innerWidth > window.innerHeight) {
+            document.body.classList.add('is-landscape');
+            // Auto Fullscreen request (Note: Browsers need 1st click to allow this)
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {
+                    console.log("Fullscreen needs user gesture");
+                });
+            }
+        } else {
+            document.body.classList.remove('is-landscape');
+            if (document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+        }
     }
 
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', checkOrientation);
+
+    /* --- TIMER LOGIC --- */
+    function toggleMenu(e) { e.stopPropagation(); const m = document.getElementById('menuBox'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; }
     window.onclick = () => document.getElementById('menuBox').style.display = 'none';
 
     function nextTheme() {
         document.body.classList.remove(`theme-${currentTheme}`);
         currentTheme = (currentTheme + 1) % 5;
         document.body.classList.add(`theme-${currentTheme}`);
-        
-        const isAnalog = (currentTheme === 1);
-        document.getElementById('analogArea').style.display = isAnalog ? "block" : "none";
-        document.getElementById('digitalArea').style.display = isAnalog ? "none" : "block";
-        document.getElementById('modeTag').textContent = isAnalog ? "Analog Mode" : "Digital Mode";
     }
 
     function handlePageClick() { if (running) stopTimer(); }
@@ -147,28 +143,20 @@
         let s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60, milli = ms % 1000;
         document.getElementById("timeDisplay").textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
         document.getElementById("msDisplay").textContent = String(milli).padStart(3,'0');
-
-        if(currentTheme === 1) {
-            document.getElementById("s-hand").style.transform = `translateX(-50%) rotate(${sec * 6}deg)`;
-            document.getElementById("m-hand").style.transform = `translateX(-50%) rotate(${m * 6}deg)`;
-            document.getElementById("h-hand").style.transform = `translateX(-50%) rotate(${(h % 12) * 30 + m * 0.5}deg)`;
-        }
     }
 
     function startTimer(e) {
         if (running) return;
         if(e) e.stopPropagation();
-
         let parts = document.getElementById("timeInput").value.split(":").map(Number);
         let inputVal = ((parts[0]||0)*3600 + (parts[1]||0)*60 + (parts[2]||0))*1000;
         let mode = (inputVal > 0 && totalMs === 0) ? "down" : "up";
         if(mode === "down") totalMs = inputVal;
-
         running = true;
         document.body.classList.add('focus-active');
         timer = setInterval(() => {
             if(mode === "up") totalMs += 10;
-            else { totalMs -= 10; if(totalMs <= 0) { totalMs = 0; stopTimer(); playBeep(); } }
+            else { totalMs -= 10; if(totalMs <= 0) { totalMs = 0; stopTimer(); alert("Time Up!"); } }
             format(totalMs);
         }, 10);
     }
@@ -182,7 +170,6 @@
         document.getElementById("lapsList").prepend(l);
     }
     function toggleFull() { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
-    function playBeep() { const a = new (window.AudioContext || window.webkitAudioContext)(); const o = a.createOscillator(); o.connect(a.destination); o.start(); setTimeout(()=>o.stop(), 500); }
 </script>
 </body>
 </html>
