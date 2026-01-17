@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pro Smart Timer v4.2</title>
+    <title>Pro Smart Timer v4.3</title>
     <style>
         :root { --accent: #00ff9d; --bg: #0a0c10; --text: #ffffff; --card: #1a1d23; }
 
@@ -48,7 +48,7 @@
         .display { 
             font-size: 18vw; font-weight: 800; font-family: 'Courier New', monospace; 
             color: var(--accent); margin-bottom: 20px; text-align: center; 
-            cursor: pointer; user-select: none;
+            cursor: pointer; user-select: none; z-index: 10;
         }
         .ms { font-size: 0.4em; opacity: 0.3; }
 
@@ -85,7 +85,7 @@
         </div>
     </div>
 
-    <div class="display" onclick="handleDisplayClick()">
+    <div class="display" id="timerDisplay" onclick="handleDisplayClick(event)">
         <span id="timeDisplay">00:00:00</span><br>
         <span class="ms">.<span id="msDisplay">000</span></span>
     </div>
@@ -144,7 +144,15 @@
         }
     }
 
-    function handleDisplayClick() { if (running) stopTimer(); }
+    // CLICK ON DISPLAY LOGIC (Toggle Start/Stop)
+    function handleDisplayClick(e) {
+        e.stopPropagation();
+        if (running) {
+            stopTimer();
+        } else {
+            startTimer();
+        }
+    }
 
     function resetAll() {
         stopTimer(); totalMs = 0; format(0);
@@ -191,7 +199,6 @@
                 totalMs -= 10; 
                 if(totalMs <= 0) { 
                     totalMs = 0; stopTimer(); playAlarm(); 
-                    // No more alert("Time Up!");
                 } 
             }
             format(totalMs);
@@ -215,7 +222,7 @@
     }
 
     function showAbout() {
-        alert("Pro Timer v4.2\n- Landscape & Fullscreen Optimized\n- No Alert Mode Enabled\n- Auto-Save Feature");
+        alert("Pro Timer v4.3\n- Click Display to Start/Stop\n- Double Click: Landscape/Minimal Toggle\n- Auto-Save Feature");
     }
 </script>
 </body>
