@@ -1,25 +1,36 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Smart Timer Pro</title>
     
     <meta name="theme-color" content="#090a0f">
     <link rel="manifest" id="manifestLink">
 
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { height: 100vh; background: #090a0f; display: flex; justify-content: center; align-items: center; color: #fff; overflow: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body { 
+            height: 100vh; 
+            background: #090a0f; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            color: #fff; 
+            overflow: hidden; 
+            padding: 15px;
+        }
 
         /* Menu System */
-        .header-actions { position: absolute; top: 15px; right: 15px; }
-        .menu-btn { background: none; border: none; cursor: pointer; padding: 10px; z-index: 101; border-radius: 50%; transition: 0.3s; }
+        .header-actions { position: absolute; top: 15px; right: 15px; z-index: 1001; }
+        .menu-btn { background: none; border: none; cursor: pointer; padding: 10px; border-radius: 50%; transition: 0.3s; }
         .menu-btn:hover { background: rgba(255,255,255,0.1); }
 
         .dropdown {
             position: absolute;
-            top: 45px;
+            top: 50px;
             right: 0;
             background: #1a1b26;
             border: 1px solid #333;
@@ -29,7 +40,6 @@
             width: 180px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             overflow: hidden;
-            z-index: 1000;
         }
 
         .dropdown button {
@@ -41,43 +51,97 @@
             border-bottom: 1px solid #222;
             cursor: pointer;
             font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
-        .dropdown button:hover { background: #2a2c3d; }
-        .dropdown button:last-child { border-bottom: none; }
+        /* Timer Display - RESPONSIVE FIX */
+        .container { 
+            width: 100%; 
+            max-width: 450px; 
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
-        /* Timer Display */
-        .container { width: 95%; max-width: 500px; text-align: center; }
-        .display { font-size: 7.5rem; font-weight: 800; font-family: 'Courier New', monospace; color: #00ff9d; line-height: 1; text-shadow: 0 0 20px rgba(0,255,157,0.2); }
-        .ms { font-size: 2.8rem; color: #fff; opacity: 0.3; }
+        .display { 
+            /* 16vw se font screen width ke mutabiq resize hoga */
+            font-size: 16vw; 
+            font-weight: 800; 
+            font-family: 'Courier New', monospace; 
+            color: #00ff9d; 
+            line-height: 1; 
+            text-shadow: 0 0 20px rgba(0,255,157,0.2);
+            white-space: nowrap;
+        }
+
+        /* Desktop par font ko limit karne ke liye */
+        @media (min-width: 600px) {
+            .display { font-size: 6rem; }
+        }
+
+        .ms { font-size: 0.45em; color: #fff; opacity: 0.3; }
 
         input[type="text"] {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
-            color: #555;
-            font-size: 1.2rem;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(0,255,157,0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.5rem;
             text-align: center;
-            padding: 6px;
-            width: 150px;
-            margin: 30px 0;
+            padding: 12px;
+            width: 180px;
+            margin: 25px auto;
+            outline: none;
         }
 
-        .controls { display: flex; flex-direction: column; gap: 12px; }
-        .start-btn { width: 100%; padding: 20px; font-size: 1.8rem; font-weight: bold; border-radius: 18px; border: none; background: #00ff9d; color: #000; cursor: pointer; transition: 0.2s; box-shadow: 0 5px 15px rgba(0,255,157,0.2); }
-        .start-btn:active { transform: scale(0.98); }
+        .controls { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+        
+        .start-btn { 
+            width: 100%; 
+            padding: 18px; 
+            font-size: 1.6rem; 
+            font-weight: bold; 
+            border-radius: 18px; 
+            border: none; 
+            background: #00ff9d; 
+            color: #000; 
+            cursor: pointer; 
+            transition: 0.2s;
+        }
 
-        .secondary-btns { display: flex; gap: 8px; }
-        .secondary-btns button { flex: 1; padding: 14px; font-size: 0.9rem; font-weight: bold; border-radius: 12px; border: none; cursor: pointer; color: white; text-transform: uppercase; }
+        .secondary-btns { display: flex; gap: 10px; }
+        .secondary-btns button { 
+            flex: 1; 
+            padding: 14px; 
+            font-size: 0.85rem; 
+            font-weight: bold; 
+            border-radius: 12px; 
+            border: none; 
+            cursor: pointer; 
+            color: white; 
+            text-transform: uppercase; 
+        }
 
         .stop { background: #ff4d4d; }
         .reset { background: #333; }
         .lap { background: #00c6ff; }
 
-        .laps-box { margin-top: 25px; height: 90px; overflow-y: auto; font-size: 0.85rem; color: #555; border-top: 1px solid #111; padding-top: 10px; }
+        .laps-box { 
+            margin-top: 25px; 
+            max-height: 150px; 
+            overflow-y: auto; 
+            font-size: 0.9rem; 
+            color: #888; 
+            border-top: 1px solid #222; 
+            padding-top: 10px; 
+        }
+
+        .lap-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 15px;
+            border-bottom: 1px solid #111;
+        }
     </style>
 </head>
 <body>
@@ -92,7 +156,7 @@
             <button onclick="toggleFull()">Full Screen</button>
             <button id="installBtn" style="display:none;" onclick="installApp()">📲 Install App</button>
             <button onclick="resetTimer()">Reset All</button>
-            <button onclick="alert('Smart Timer Pro v2.1\nDesign by AI')">About</button>
+            <button onclick="alert('Smart Timer Pro v2.2\nMobile Optimized')">About</button>
         </div>
     </div>
 
@@ -102,7 +166,7 @@
             <span class="ms">.<span id="msDisplay">000</span></span>
         </div>
 
-        <input type="text" id="timeInput" value="00:00:00">
+        <input type="text" id="timeInput" value="00:00:00" placeholder="HH:MM:SS">
 
         <div class="controls">
             <button class="start-btn" id="startBtn" onclick="startTimer()">START</button>
@@ -117,30 +181,26 @@
     </div>
 
 <script>
-    /* --- PWA INSTALL LOGIC --- */
+    /* --- PWA LOGIC --- */
     let deferredPrompt;
     const installBtn = document.getElementById('installBtn');
 
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        installBtn.style.display = 'flex'; // Menu me button dikhao
+        installBtn.style.display = 'flex';
     });
 
     async function installApp() {
         if (deferredPrompt) {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                console.log('User installed the app');
-                installBtn.style.display = 'none';
-            }
             deferredPrompt = null;
         }
         toggleMenu();
     }
 
-    /* PWA Manifest Dynamic Generation */
+    /* Manifest Dynamic */
     const myManifest = {
         "name": "Smart Timer Pro",
         "short_name": "Timer",
@@ -175,13 +235,16 @@
     function startTimer() {
         if (running) return;
         let parts = document.getElementById("timeInput").value.split(":").map(Number);
-        let inputVal = (parts[0] * 3600 + parts[1] * 60 + parts[2]) * 1000;
+        if(parts.length < 3) parts = [0,0,0]; // Basic error handling
+        
+        let inputVal = ( (parts[0]||0) * 3600 + (parts[1]||0) * 60 + (parts[2]||0) ) * 1000;
         
         if (inputVal > 0 && totalMs === 0) { mode = "down"; totalMs = inputVal; }
         else if (totalMs === 0) { mode = "up"; }
 
         running = true;
         document.getElementById("startBtn").style.background = "#008a55";
+        document.getElementById("startBtn").innerText = "RESUME";
 
         timer = setInterval(() => {
             if (mode === "up") totalMs += 10;
@@ -193,26 +256,41 @@
         }, 10);
     }
 
-    function stopTimer() { clearInterval(timer); running = false; document.getElementById("startBtn").style.background = "#00ff9d"; }
+    function stopTimer() { 
+        clearInterval(timer); 
+        running = false; 
+        document.getElementById("startBtn").style.background = "#00ff9d";
+        document.getElementById("startBtn").innerText = "START";
+    }
     
-    function resetTimer() { stopTimer(); totalMs = 0; format(0); document.getElementById("lapsList").innerHTML = ""; menu.style.display="none"; }
+    function resetTimer() { 
+        stopTimer(); 
+        totalMs = 0; 
+        format(0); 
+        document.getElementById("lapsList").innerHTML = ""; 
+        document.getElementById("startBtn").innerText = "START";
+        menu.style.display="none"; 
+    }
 
     function addLap() {
+        if(totalMs === 0) return;
         let div = document.createElement("div");
-        div.style.display = "flex";
-        div.style.justifyContent = "space-between";
-        div.style.padding = "4px 20px";
+        div.className = "lap-item";
         div.innerHTML = `<span>Lap ${document.getElementById("lapsList").children.length + 1}</span> <span>${timeDisplay.textContent}.${msDisplay.textContent}</span>`;
         document.getElementById("lapsList").prepend(div);
     }
 
     function playBeep() {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        osc.connect(ctx.destination);
-        osc.frequency.value = 880;
-        osc.start();
-        setTimeout(() => osc.stop(), 600);
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.frequency.value = 880;
+            osc.start();
+            setTimeout(() => osc.stop(), 600);
+        } catch(e) { console.log("Audio play blocked"); }
     }
 
     function toggleFull() {
