@@ -161,142 +161,238 @@
     </div>  
 </div>
 </main>
-<script>  
-    const APP_VERSION = "5.2";   
-    let timer, running = false, totalMs = 0, isMinimal = false;  
-    let currentTheme = 0;  
-    let deferredPrompt;  
-  
-    // --- ABOUT & INSTRUCTIONS ---  
-    function showAbout() {  
-        alert("Pro Smart Timer v" + APP_VERSION + "\n\n" +  
-              "Double Click: Enter/Exit landscape (Timer only)\n" +  
-              "Single Tap: Start/Stop timer\n" +  
-              "Update: Fetches latest icons/features\n" +  
-              "Memory: Themes & inputs are auto-saved.");  
-    }  
-  
-    // Update Logic  
-    function checkUpdate() {  
-        if (confirm("Check for updates?")) {  
-            if ('serviceWorker' in navigator) {  
-                navigator.serviceWorker.getRegistrations().then(regs => { for(let r of regs) r.unregister(); });  
-            }  
-            window.location.reload(true);  
-        }  
-    }  
-  
-    // Manifest & Icon  
-    const myManifest = {  
-        "name": "Pro Smart Timer",  
-        "short_name": "Timer Pro",  
-        "start_url": ".",  
-        "display": "standalone",  
-        "background_color": "#0a0c10",  
-        "theme_color": "#00ff9d",  
-        "icons": [{ "src": "https://img.icons8.com/color/512/stopwatch.png", "sizes": "512x512", "type": "image/png" }]  
-    };  
-    const blob = new Blob([JSON.stringify(myManifest)], {type: 'application/json'});  
-    document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(blob));  
-  
-    // Install & Share  
-    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });  
-    async function installApp() { if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; } else { alert("Use Browser Menu > Install"); } }  
-    async function shareApp() { if (navigator.share) { navigator.share({ title: 'Timer Pro', url: window.location.href }); } }  
-  
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();  
-      
-    window.onload = () => {  
-        const savedTheme = localStorage.getItem('timerTheme');  
-        if (savedTheme !== null) { document.body.className = `theme-${savedTheme}`; currentTheme = parseInt(savedTheme); }  
-        const savedTime = localStorage.getItem('timerInput');  
-        if (savedTime) document.getElementById('timeInput').value = savedTime;  
-        if (window.matchMedia('(display-mode: standalone)').matches) document.getElementById('installBtnMain').style.display = 'none';  
-    };  
-  
-    function saveInput() { localStorage.setItem('timerInput', document.getElementById('timeInput').value); }  
-    function changeTheme() { currentTheme = (currentTheme + 1) % 5; document.body.className = `theme-${currentTheme}`; localStorage.setItem('timerTheme', currentTheme); }  
-    function toggleMenu(e) { e.stopPropagation(); const m = document.getElementById('menuBox'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; }  
-    window.onclick = () => document.getElementById('menuBox').style.display = 'none';  
-  
-    // Landscape Mode Logic (Timer Only)  
-    function toggleModes() {  
-        isMinimal = !isMinimal;  
-        document.body.classList.toggle('minimal-ui', isMinimal);  
-        if (isMinimal) {  
-            document.documentElement.requestFullscreen().catch(()=>{});  
-            if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(()=>{});  
-        } else {  
-            if (document.fullscreenElement) document.exitFullscreen().catch(()=>{});  
-            if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();  
-        }  
-    }  
-  
-    function handleDisplayClick(e) { e.stopPropagation(); if (running) stopTimer(); else startTimer(); }  
-    function format(ms) { let s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60, milli = ms % 1000; document.getElementById("timeDisplay").textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`; document.getElementById("msDisplay").textContent = String(milli).padStart(3,'0'); }  
-    function startTimer(e) { if (running) { stopTimer(); return; } if(e) e.stopPropagation(); let parts = document.getElementById("timeInput").value.split(":").map(Number); let inputVal = ((parts[0]||0)*3600 + (parts[1]||0)*60 + (parts[2]||0))*1000; let mode = (inputVal > 0 && totalMs === 0) ? "down" : "up"; if(mode === "down") totalMs = inputVal; running = true; document.getElementById("startBtn").textContent = "STOP"; document.getElementById("startBtn").style.background = "#ff4d4d"; timer = setInterval(() => { if(mode === "up") totalMs += 10; else { totalMs -= 10; if(totalMs <= 0) { totalMs = 0; stopTimer(); playAlarm(); } } format(totalMs); }, 10); }  
-    function stopTimer() { clearInterval(timer); running = false; document.getElementById("startBtn").textContent = "START"; document.getElementById("startBtn").style.background = "var(--accent)"; }  
-    function playAlarm() { const ring = (d) => { setTimeout(() => { const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.frequency.value = 880; o.start(); setTimeout(() => o.stop(), 300); }, d); }; ring(0); ring(600); }  
-    function resetAll() { stopTimer(); totalMs = 0; format(0); document.getElementById("timeInput").value = "00:00:00"; localStorage.setItem('timerInput', "00:00:00"); }  
-    function addLap() { /* Lap logic */ }  
+<script>
+const APP_VERSION = "5.2";
+let timer, running = false, totalMs = 0, isMinimal = false;
+let currentTheme = 0;
+let deferredPrompt;
 
-
-
-
-
-
-
-
-
-
-// --- Replace your existing addLap function with this ---
-function addLap() {
-    // Agar timer 0 par hai toh lap add karne ka koi fayda nahi
-    if (totalMs === 0) return;
-
-    // Lap container check karein ya banayein
-    let lapContainer = document.getElementById('lapList');
-    if (!lapContainer) {
-        lapContainer = document.createElement('div');
-        lapContainer.id = 'lapList';
-        lapContainer.style.marginTop = '15px';
-        lapContainer.style.maxHeight = '120px';
-        lapContainer.style.overflowY = 'auto';
-        // lapContainer.style.width = '100%';
-        lapContainer.style.fontSize = '0.9rem';
-        document.querySelector('.controls-ui').appendChild(lapContainer);
-    }
-
-    // Time format karein
-    const currentTime = document.getElementById("timeDisplay").textContent + "." + document.getElementById("msDisplay").textContent;
-    
-    // Naya lap element banayein
-    const lapEntry = document.createElement('div');
-    lapEntry.style.padding = '8px';
-    lapEntry.style.borderBottom = '1px solid #444';
-    lapEntry.style.display = 'flex';
-    lapEntry.style.justifyContent = 'space-between';
-    
-    const lapCount = lapContainer.children.length + 1;
-    lapEntry.innerHTML = `<span>Lap ${lapCount}</span> <span style="color:var(--accent)">${currentTime}</span>`;
-    
-    // List mein sabse upar add karein
-    lapContainer.insertBefore(lapEntry, lapContainer.firstChild);
+/* ---------------- ABOUT ---------------- */
+function showAbout() {
+    alert(
+        "Pro Smart Timer v" + APP_VERSION + "\n\n" +
+        "Double Click: Enter/Exit landscape (Timer only)\n" +
+        "Single Tap: Start/Stop timer\n" +
+        "Update: Fetches latest icons/features\n" +
+        "Memory: Themes & inputs are auto-saved."
+    );
 }
 
-// --- resetAll mein ye ek line zaroor update karein taaki laps bhi clear ho jayein ---
+/* ---------------- UPDATE ---------------- */
+function checkUpdate() {
+    if (confirm("Check for updates?")) {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations()
+                .then(regs => regs.forEach(r => r.unregister()));
+        }
+        location.reload(true);
+    }
+}
+
+/* ---------------- MANIFEST ---------------- */
+const myManifest = {
+    name: "Pro Smart Timer",
+    short_name: "Timer Pro",
+    start_url: ".",
+    display: "standalone",
+    background_color: "#0a0c10",
+    theme_color: "#00ff9d",
+    icons: [{
+        src: "https://img.icons8.com/color/512/stopwatch.png",
+        sizes: "512x512",
+        type: "image/png"
+    }]
+};
+const blob = new Blob([JSON.stringify(myManifest)], { type: 'application/json' });
+document.getElementById('manifestLink').href = URL.createObjectURL(blob);
+
+/* ---------------- INSTALL & SHARE ---------------- */
+window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+});
+async function installApp() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt = null;
+    } else {
+        alert("Use Browser Menu > Install");
+    }
+}
+async function shareApp() {
+    if (navigator.share) {
+        navigator.share({ title: "Timer Pro", url: location.href });
+    }
+}
+
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+/* ---------------- LOAD SAVED DATA ---------------- */
+window.onload = () => {
+    const savedTheme = localStorage.getItem("timerTheme");
+    if (savedTheme !== null) {
+        document.body.className = `theme-${savedTheme}`;
+        currentTheme = +savedTheme;
+    }
+
+    const savedTime = localStorage.getItem("timerInput");
+    if (savedTime) timeInput.value = savedTime;
+
+    if (matchMedia('(display-mode: standalone)').matches) {
+        installBtnMain.style.display = "none";
+    }
+};
+
+/* ---------------- BASIC UI ---------------- */
+function saveInput() {
+    localStorage.setItem("timerInput", timeInput.value);
+}
+function changeTheme() {
+    currentTheme = (currentTheme + 1) % 5;
+    document.body.className = `theme-${currentTheme}`;
+    localStorage.setItem("timerTheme", currentTheme);
+}
+function toggleMenu(e) {
+    e.stopPropagation();
+    menuBox.style.display = menuBox.style.display === "flex" ? "none" : "flex";
+}
+window.onclick = () => menuBox.style.display = "none";
+
+/* ---------------- FULLSCREEN ---------------- */
+function toggleModes() {
+    isMinimal = !isMinimal;
+    document.body.classList.toggle("minimal-ui", isMinimal);
+
+    if (isMinimal) {
+        document.documentElement.requestFullscreen().catch(()=>{});
+        screen.orientation?.lock("landscape").catch(()=>{});
+    } else {
+        document.exitFullscreen?.();
+        screen.orientation?.unlock();
+    }
+}
+
+/* ---------------- TIMER CORE ---------------- */
+function handleDisplayClick(e) {
+    e.stopPropagation();
+    running ? stopTimer() : startTimer();
+}
+
+function format(ms) {
+    let s = Math.floor(ms / 1000);
+    let h = Math.floor(s / 3600);
+    let m = Math.floor((s % 3600) / 60);
+    let sec = s % 60;
+    let milli = ms % 1000;
+
+    const timeText =
+        `${String(h).padStart(2, '0')}:` +
+        `${String(m).padStart(2, '0')}:` +
+        `${String(sec).padStart(2, '0')}`;
+
+    timeDisplay.textContent = timeText;
+    msDisplay.textContent = String(milli).padStart(3, '0');
+
+    /* LIVE TAB TITLE */
+    document.title = `${timeText}.${String(milli).padStart(3,'0')} | Haproven Timer`;
+}
+
+function startTimer(e) {
+    if (running) return stopTimer();
+    if (e) e.stopPropagation();
+
+    let parts = timeInput.value.split(":").map(Number);
+    let inputVal =
+        ((parts[0]||0)*3600 +
+         (parts[1]||0)*60 +
+         (parts[2]||0)) * 1000;
+
+    let mode = (inputVal > 0 && totalMs === 0) ? "down" : "up";
+    if (mode === "down") totalMs = inputVal;
+
+    running = true;
+    startBtn.textContent = "STOP";
+    startBtn.style.background = "#ff4d4d";
+
+    timer = setInterval(() => {
+        if (mode === "up") totalMs += 10;
+        else {
+            totalMs -= 10;
+            if (totalMs <= 0) {
+                totalMs = 0;
+                stopTimer();
+                playAlarm();
+            }
+        }
+        format(totalMs);
+    }, 10);
+}
+
+function stopTimer() {
+    clearInterval(timer);
+    running = false;
+    startBtn.textContent = "START";
+    startBtn.style.background = "var(--accent)";
+}
+
+function playAlarm() {
+    [0, 600].forEach(d => setTimeout(() => {
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.connect(g);
+        g.connect(audioCtx.destination);
+        o.frequency.value = 880;
+        o.start();
+        setTimeout(() => o.stop(), 300);
+    }, d));
+}
+
+/* ---------------- RESET ---------------- */
 function resetAll() {
     stopTimer();
     totalMs = 0;
     format(0);
-    document.getElementById("timeInput").value = "00:00:00";
-    localStorage.setItem('timerInput', "00:00:00");
-    
-    // Laps clear karne ke liye:
-    const lapContainer = document.getElementById('lapList');
-    if (lapContainer) lapContainer.innerHTML = '';
+    timeInput.value = "00:00:00";
+    localStorage.setItem("timerInput", "00:00:00");
+
+    document.title = "Haproven Timer | #1 Pro Precision Stopwatch";
+
+    const lapContainer = document.getElementById("lapList");
+    if (lapContainer) lapContainer.innerHTML = "";
 }
 
-</script> 
+/* ---------------- LAPS ---------------- */
+function addLap() {
+    if (totalMs === 0) return;
+
+    let lapContainer = document.getElementById("lapList");
+    if (!lapContainer) {
+        lapContainer = document.createElement("div");
+        lapContainer.id = "lapList";
+        lapContainer.style.marginTop = "15px";
+        lapContainer.style.maxHeight = "120px";
+        lapContainer.style.overflowY = "auto";
+        lapContainer.style.fontSize = "0.9rem";
+        document.querySelector(".controls-ui").appendChild(lapContainer);
+    }
+
+    const currentTime =
+        timeDisplay.textContent + "." + msDisplay.textContent;
+
+    const lapEntry = document.createElement("div");
+    lapEntry.style.padding = "8px";
+    lapEntry.style.borderBottom = "1px solid #444";
+    lapEntry.style.display = "flex";
+    lapEntry.style.justifyContent = "space-between";
+
+    const lapCount = lapContainer.children.length + 1;
+    lapEntry.innerHTML =
+        `<span>Lap ${lapCount}</span>
+         <span style="color:var(--accent)">${currentTime}</span>`;
+
+    lapContainer.prepend(lapEntry);
+}
+</script>
+
 </body>  
 </html>  
