@@ -1,135 +1,125 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smart Timer Pro</title>
-    <link rel="manifest" id="manifestLink">
+    <title>Smart Timer Pro Fix</title>
     <style>
         :root { --accent: #00ff9d; --bg: #0b0e14; --text: #ffffff; --card: #161b22; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; transition: all 0.2s ease; }
         
         body { 
             height: 100vh; width: 100vw; background: var(--bg); 
             display: flex; flex-direction: column; justify-content: center; 
             align-items: center; color: var(--text); overflow: hidden;
+            position: relative;
         }
 
-        /* --- MODES LOGIC --- */
-        /* Minimal Mode (Sirf Timer) */
+        /* --- MODE SWITCHING LOGIC --- */
         body.minimal-mode .controls-ui, 
         body.minimal-mode .top-nav, 
         body.minimal-mode #modeTitle { display: none !important; }
-        body.minimal-mode .display { font-size: 30vw !important; cursor: pointer; }
+        body.minimal-mode .display { font-size: 28vw !important; margin: 0; }
+
+        /* --- LANDSCAPE FIX --- */
+        @media (orientation: landscape) {
+            .display { font-size: 22vh !important; }
+            .controls-ui { max-width: 600px !important; display: flex !important; flex-direction: row !important; gap: 20px; align-items: center; padding: 15px !important; }
+            .main-btns { grid-template-columns: 1fr 1fr 1fr !important; width: 100%; margin: 0 !important; }
+            .start-btn { grid-column: span 1 !important; }
+            .laps-box { display: none; }
+            input { margin-bottom: 0 !important; width: 150px !important; }
+        }
 
         /* Navigation */
         .top-nav { position: absolute; top: 20px; right: 20px; z-index: 1000; }
-        .menu-btn { background: var(--card); border: 1px solid #30363d; border-radius: 50%; padding: 10px; cursor: pointer; display: flex; }
+        .menu-btn { background: var(--card); border: 1px solid #333; border-radius: 50%; padding: 10px; cursor: pointer; }
         
         .dropdown { 
             position: absolute; top: 50px; right: 0; background: #1c2128; border: 1px solid #444; 
-            border-radius: 12px; display: none; flex-direction: column; width: 180px; overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-radius: 12px; display: none; flex-direction: column; width: 200px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
-        .dropdown button { background: none; color: white; padding: 14px; text-align: left; border: none; border-bottom: 1px solid #30363d; cursor: pointer; font-size: 0.9rem; }
-        .dropdown button:hover { background: #2d333b; }
+        .dropdown button { background: none; color: white; padding: 15px; text-align: left; border: none; border-bottom: 1px solid #333; cursor: pointer; }
 
         /* Main Dashboard */
-        .container { width: 90%; max-width: 400px; text-align: center; }
-        #modeTitle { font-size: 0.9rem; font-weight: 600; color: var(--accent); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
+        .container { width: 100%; display: flex; flex-direction: column; align-items: center; z-index: 10; }
+        #modeTitle { font-size: 0.8rem; color: var(--accent); letter-spacing: 2px; margin-bottom: 10px; }
         
-        .display { font-size: 18vw; font-weight: 800; font-family: 'Monaco', monospace; line-height: 1; margin-bottom: 20px; transition: 0.3s; }
-        .ms { font-size: 0.45em; opacity: 0.3; }
+        .display { font-size: 18vw; font-weight: 800; font-family: monospace; color: var(--accent); margin-bottom: 20px; text-align: center; cursor: pointer; }
+        .ms { font-size: 0.4em; opacity: 0.3; color: #fff; }
 
-        /* Input & Controls */
-        .controls-ui { background: var(--card); padding: 25px; border-radius: 24px; border: 1px solid #30363d; width: 100%; }
-        
-        .time-input-box { margin-bottom: 20px; }
-        input { 
-            background: #0d1117; border: 1px solid #30363d; color: var(--accent); 
-            padding: 12px; border-radius: 12px; text-align: center; width: 100%; 
-            font-size: 1.5rem; outline: none; font-family: monospace;
-        }
+        /* UI Box */
+        .controls-ui { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #333; width: 90%; max-width: 380px; }
+        input { background: #000; border: 1px solid var(--accent); color: var(--accent); padding: 12px; border-radius: 10px; text-align: center; width: 100%; font-size: 1.5rem; outline: none; margin-bottom: 20px; }
 
-        .main-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
-        .start-btn { grid-column: span 2; padding: 18px; background: var(--accent); color: #000; border: none; border-radius: 16px; font-weight: 800; font-size: 1.2rem; cursor: pointer; }
-        .reset-btn { background: #30363d; color: white; border: none; padding: 14px; border-radius: 14px; font-weight: 600; cursor: pointer; }
-        .lap-btn { background: #1f6feb; color: white; border: none; padding: 14px; border-radius: 14px; font-weight: 600; cursor: pointer; }
+        .main-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .start-btn { grid-column: span 2; padding: 18px; background: var(--accent); color: #000; border: none; border-radius: 12px; font-weight: bold; font-size: 1.2rem; cursor: pointer; }
+        .reset-btn { background: #333; color: white; border: none; padding: 15px; border-radius: 12px; cursor: pointer; }
+        .lap-btn { background: #1f6feb; color: white; border: none; padding: 15px; border-radius: 12px; cursor: pointer; }
 
-        .laps-box { margin-top: 15px; max-height: 100px; overflow-y: auto; text-align: left; padding-right: 5px; }
-        .lap-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #30363d; font-size: 0.85rem; opacity: 0.7; }
+        .laps-box { margin-top: 15px; max-height: 80px; overflow-y: auto; width: 100%; font-size: 0.8rem; opacity: 0.6; }
+        .lap-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #333; }
     </style>
 </head>
 <body ondblclick="toggleLayout()">
 
     <div class="top-nav">
         <button class="menu-btn" onclick="toggleMenu(event)">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--text)"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
         </button>
         <div class="dropdown" id="menuBox">
             <button onclick="toggleLayout()">🔄 Switch Mode (Clean/Full)</button>
-            <button onclick="installApp()">📲 Install App</button>
-            <button onclick="toggleFull()">🖥️ Fullscreen</button>
-            <button onclick="resetTimer()">🔄 Reset All</button>
+            <button onclick="toggleFull()">🖥️ Fullscreen Mode</button>
+            <button onclick="resetTimer()">🔄 Reset Everything</button>
+            <button onclick="alert('Installation prompt will appear shortly.')">📲 Install App</button>
         </div>
     </div>
 
-    <div class="container">
-        <div id="modeTitle">Timer Dashboard</div>
-        <div class="display" onclick="handleTimerClick()">
+    <div class="container" id="mainBody">
+        <div id="modeTitle">PRO TIMER v2.0</div>
+        
+        <div class="display" onclick="handleStopClick()">
             <span id="timeDisplay">00:00:00</span><br>
             <span class="ms">.<span id="msDisplay">000</span></span>
         </div>
 
         <div class="controls-ui">
-            <div class="time-input-box">
-                <input type="text" id="timeInput" value="00:00:00" placeholder="HH:MM:SS">
-            </div>
-            
+            <input type="text" id="timeInput" value="00:00:00" placeholder="HH:MM:SS">
             <div class="main-btns">
-                <button class="start-btn" id="startBtn" onclick="startTimer(event)">START TIMER</button>
+                <button class="start-btn" id="startBtn" onclick="startTimer(event)">START</button>
                 <button class="reset-btn" onclick="resetTimer()">RESET</button>
                 <button class="lap-btn" onclick="addLap()">LAP</button>
             </div>
-
             <div class="laps-box" id="lapsList"></div>
         </div>
     </div>
 
 <script>
-    let timer, running = false, totalMs = 0, isMinimal = false, deferredPrompt;
+    let timer, running = false, totalMs = 0, isMinimal = false;
 
-    /* --- PWA INSTALL LOGIC --- */
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        setTimeout(() => { if(!running) installApp(); }, 3000); 
-    });
-
-    async function installApp() {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt = null;
+    // --- STOP LOGIC (Main Fix) ---
+    function handleStopClick() {
+        if (running) {
+            stopTimer();
         }
     }
 
-    /* --- UI LOGIC --- */
-    function toggleMenu(e) { e.stopPropagation(); const m = document.getElementById('menuBox'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; }
+    function toggleMenu(e) { 
+        e.stopPropagation(); 
+        const m = document.getElementById('menuBox'); 
+        m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; 
+    }
+
     window.onclick = () => document.getElementById('menuBox').style.display = 'none';
 
     function toggleLayout() {
         isMinimal = !isMinimal;
-        if(isMinimal) document.body.classList.add('minimal-mode');
-        else document.body.classList.remove('minimal-mode');
+        document.body.classList.toggle('minimal-mode', isMinimal);
     }
 
-    function handleTimerClick() {
-        if (running) stopTimer();
-        else if(isMinimal) startTimer();
-    }
-
-    /* --- TIMER CORE --- */
+    // --- TIMER ENGINE ---
     function format(ms) {
         let s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60, milli = ms % 1000;
         document.getElementById("timeDisplay").textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
@@ -153,7 +143,7 @@
             if(mode === "up") totalMs += 10;
             else {
                 totalMs -= 10;
-                if(totalMs <= 0) { totalMs = 0; stopTimer(); alert("Time Up!"); }
+                if(totalMs <= 0) { totalMs = 0; stopTimer(); alert("Time Finished!"); }
             }
             format(totalMs);
         }, 10);
@@ -162,7 +152,7 @@
     function stopTimer() { 
         clearInterval(timer); 
         running = false; 
-        document.getElementById("startBtn").textContent = "START TIMER";
+        document.getElementById("startBtn").textContent = "START";
         document.getElementById("startBtn").style.background = "var(--accent)";
     }
     
@@ -170,18 +160,27 @@
 
     function addLap() {
         if(totalMs === 0) return;
-        const lapList = document.getElementById("lapsList");
+        const list = document.getElementById("lapsList");
         const item = document.createElement("div");
         item.className = "lap-item";
-        item.innerHTML = `<span>Lap ${lapList.children.length + 1}</span> <span>${document.getElementById("timeDisplay").textContent}</span>`;
-        lapList.prepend(item);
+        item.innerHTML = `<span>Lap ${list.children.length + 1}</span> <span>${document.getElementById("timeDisplay").textContent}</span>`;
+        list.prepend(item);
     }
 
-    function toggleFull() { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
+    function toggleFull() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(e => alert("Fullscreen error"));
+        } else {
+            document.exitFullscreen();
+        }
+    }
 
-    // Manifest dynamically
-    const myManifest = { "name": "Smart Timer Pro", "short_name": "Timer", "start_url": ".", "display": "standalone", "background_color": "#0b0e14", "theme_color": "#00ff9d", "icons": [{ "src": "https://cdn-icons-png.flaticon.com/512/2972/2972353.png", "sizes": "512x512", "type": "image/png" }] };
-    document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(new Blob([JSON.stringify(myManifest)], {type: 'application/json'})));
+    // Auto Landscape Fullscreen Detector
+    window.addEventListener('orientationchange', () => {
+        if (window.orientation === 90 || window.orientation === -90) {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{});
+        }
+    });
 </script>
 </body>
 </html>
