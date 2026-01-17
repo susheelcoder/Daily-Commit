@@ -1,229 +1,223 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Timer Pro</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Timer Pro</title>
+    
+    <meta name="theme-color" content="#090a0f">
+    <link rel="manifest" id="manifestLink">
 
-<meta name="theme-color" content="#090a0f">
-<link rel="manifest" id="manifestLink">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { height: 100vh; background: #090a0f; display: flex; justify-content: center; align-items: center; color: #fff; overflow: hidden; }
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
-html,body{height:100%;}
-body{
-    min-height:100svh;
-    background:#090a0f;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    color:#fff;
-    overflow:hidden;
-}
+        /* 3-Dot Menu Positioning */
+        .header-menu { position: absolute; top: 20px; right: 20px; }
+        .dot-btn { background: none; border: none; cursor: pointer; padding: 5px; z-index: 1000; border-radius: 50%; }
+        .dot-btn:hover { background: rgba(255,255,255,0.1); }
 
-/* Menu */
-.header-actions{position:absolute;top:15px;right:15px;}
-.menu-btn{
-    background:none;border:none;cursor:pointer;
-    padding:10px;border-radius:50%;
-}
-.menu-btn:hover{background:rgba(255,255,255,.1);}
+        .dropdown-content {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background: #1c1c21;
+            border: 1px solid #333;
+            border-radius: 12px;
+            display: none;
+            flex-direction: column;
+            width: 170px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+            overflow: hidden;
+            z-index: 999;
+        }
 
-.dropdown{
-    position:absolute;
-    top:45px;right:0;
-    background:#1a1b26;
-    border-radius:12px;
-    display:none;
-    flex-direction:column;
-    width:180px;
-    overflow:hidden;
-    box-shadow:0 10px 30px rgba(0,0,0,.7);
-    z-index:1000;
-}
-.dropdown button{
-    background:none;
-    color:white;
-    padding:14px;
-    border:none;
-    border-bottom:1px solid #222;
-    cursor:pointer;
-    text-align:left;
-}
-.dropdown button:hover{background:#2a2c3d;}
-.dropdown button:last-child{border-bottom:none}
+        .dropdown-content button {
+            background: none;
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            border: none;
+            border-bottom: 1px solid #2a2a2a;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
 
-/* Timer */
-.container{width:95%;max-width:500px;text-align:center;}
-.display{
-    font-size:7rem;
-    font-weight:800;
-    font-family:'Courier New',monospace;
-    color:#00ff9d;
-}
-.ms{font-size:2.5rem;opacity:.4}
+        .dropdown-content button:hover { background: #333; }
+        .dropdown-content button:last-child { border-bottom: none; }
 
-input{
-    background:#111;
-    border:1px solid #333;
-    border-radius:8px;
-    color:#00ff9d;
-    font-size:1.2rem;
-    text-align:center;
-    padding:8px;
-    width:160px;
-    margin:25px 0;
-}
+        /* Timer UI */
+        .container { width: 95%; max-width: 600px; text-align: center; }
+        
+        /* Bada Timer Display */
+        .display { 
+            font-size: 8rem; 
+            font-weight: 800; 
+            font-family: 'Courier New', monospace; 
+            color: #00ff9d; 
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+        .ms { font-size: 3rem; color: #fff; opacity: 0.3; }
 
-.controls{display:flex;flex-direction:column;gap:12px;}
-.start-btn{
-    padding:18px;
-    font-size:1.8rem;
-    border-radius:18px;
-    border:none;
-    background:#00ff9d;
-    color:#000;
-    cursor:pointer;
-}
-.start-btn:active{transform:scale(.97)}
+        input[type="text"] {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #555;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 5px;
+            width: 150px;
+            margin-bottom: 40px;
+        }
 
-.secondary-btns{display:flex;gap:8px}
-.secondary-btns button{
-    flex:1;
-    padding:14px;
-    border:none;
-    border-radius:12px;
-    color:#fff;
-    font-weight:bold;
-    cursor:pointer;
-}
-.stop{background:#ff4d4d}
-.reset{background:#333}
-.lap{background:#00c6ff}
+        .controls { display: flex; flex-direction: column; gap: 15px; }
 
-.laps-box{
-    margin-top:20px;
-    max-height:120px;
-    overflow-y:auto;
-    font-size:.85rem;
-    border-top:1px solid #111;
-    padding-top:10px;
-}
-</style>
+        /* START Button */
+        .start-btn { 
+            width: 100%; 
+            padding: 22px; 
+            font-size: 1.8rem; 
+            font-weight: bold; 
+            border-radius: 18px; 
+            border: none; 
+            background: #00ff9d; 
+            color: #000; 
+            cursor: pointer;
+        }
+
+        /* Chhote buttons ek hi line mein */
+        .btn-row { display: flex; gap: 10px; }
+        .btn-row button { 
+            flex: 1; 
+            padding: 14px; 
+            font-size: 0.85rem; 
+            font-weight: bold; 
+            border-radius: 12px; 
+            border: none; 
+            color: white;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .stop { background: #ff4d4d; }
+        .reset { background: #444; }
+        .lap { background: #00c6ff; }
+
+        .laps-area { margin-top: 25px; height: 80px; overflow-y: auto; color: #555; font-size: 0.8rem; border-top: 1px solid #111; padding-top: 10px; }
+    </style>
 </head>
-
 <body>
 
-<div class="header-actions">
-<button class="menu-btn" onclick="toggleMenu()">⋮</button>
-<div class="dropdown" id="menu">
-<button onclick="toggleFull()">Full Screen</button>
-<button id="installBtn" style="display:none" onclick="installApp()">📲 Install App</button>
-<button onclick="resetTimer()">Reset All</button>
-<button onclick="alert('Smart Timer Pro v2.1')">About</button>
-</div>
-</div>
+    <div class="header-menu">
+        <button class="dot-btn" onclick="toggleMenu()">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="white">
+                <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+            </svg>
+        </button>
+        <div class="dropdown-content" id="myDropdown">
+            <button id="installApp" style="display:none;" onclick="handleInstall()">📲 Install App</button>
+            <button onclick="toggleFull()">Full Screen</button>
+            <button onclick="resetTimer()">Reset All</button>
+            <button onclick="alert('Smart Timer Pro v2.5')">Settings</button>
+        </div>
+    </div>
 
-<div class="container">
-<div class="display">
-<span id="time">00:00:00</span><br>
-<span class="ms">.<span id="ms">000</span></span>
-</div>
+    <div class="container">
+        <div class="display">
+            <span id="timeDisplay">00:00:00</span><br>
+            <span class="ms">.<span id="msDisplay">000</span></span>
+        </div>
 
-<input id="input" value="00:00:00">
+        <input type="text" id="timeInput" value="00:00:00">
 
-<div class="controls">
-<button class="start-btn" id="start" onclick="startPause()">START</button>
-<div class="secondary-btns">
-<button class="stop" onclick="pause()">STOP</button>
-<button class="reset" onclick="resetTimer()">RESET</button>
-<button class="lap" onclick="lap()">LAP</button>
-</div>
-</div>
+        <div class="controls">
+            <button class="start-btn" id="startBtn" onclick="startTimer()">START</button>
+            
+            <div class="btn-row">
+                <button class="stop" onclick="stopTimer()">Stop</button>
+                <button class="reset" onclick="resetTimer()">Reset</button>
+                <button class="lap" onclick="addLap()">Lap</button>
+            </div>
+        </div>
 
-<div class="laps-box" id="laps"></div>
-</div>
+        <div class="laps-area" id="lapsList"></div>
+    </div>
 
 <script>
-let t=null,running=false,ms=0,mode="up";
+    /* PWA & Install Logic */
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('installApp').style.display = 'block';
+    });
 
-const timeEl=time=document.getElementById("time");
-const msEl=document.getElementById("ms");
-const input=document.getElementById("input");
-const startBtn=document.getElementById("start");
-const menu=document.getElementById("menu");
+    async function handleInstall() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt = null;
+        }
+        toggleMenu();
+    }
 
-function toggleMenu(){menu.style.display=menu.style.display==="flex"?"none":"flex"}
-document.onclick=e=>{if(!e.target.closest(".header-actions"))menu.style.display="none"}
+    /* Timer Logic */
+    let timer, running = false, totalMs = 0, mode = "up";
+    const timeDisplay = document.getElementById("timeDisplay");
+    const msDisplay = document.getElementById("msDisplay");
+    const dropdown = document.getElementById("myDropdown");
 
-function format(v){
-let s=Math.floor(v/1000);
-let h=Math.floor(s/3600);
-let m=Math.floor((s%3600)/60);
-let se=s%60;
-timeEl.textContent=`${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(se).padStart(2,"0")}`;
-msEl.textContent=String(v%1000).padStart(3,"0");
-}
+    function toggleMenu() { dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex"; }
+    window.onclick = (e) => { if (!e.target.closest('.header-menu')) dropdown.style.display = "none"; }
 
-function startPause(){
-if(running)return;
-let p=input.value.split(":").map(Number);
-if(ms===0 && p.length===3 && p.some(v=>v>0)){
-ms=(p[0]*3600+p[1]*60+p[2])*1000;
-mode="down";
-}else if(ms===0){mode="up"}
+    function format(ms) {
+        let s = Math.floor(ms / 1000);
+        let h = Math.floor(s / 3600);
+        let m = Math.floor((s % 3600) / 60);
+        let sec = s % 60;
+        let milli = ms % 1000;
+        timeDisplay.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+        msDisplay.textContent = String(milli).padStart(3,'0');
+    }
 
-running=true;
-startBtn.textContent="RUNNING";
+    function startTimer() {
+        if (running) return;
+        let parts = document.getElementById("timeInput").value.split(":").map(Number);
+        let val = (parts[0] * 3600 + parts[1] * 60 + parts[2]) * 1000;
+        if (val > 0 && totalMs === 0) { mode = "down"; totalMs = val; }
+        else if (totalMs === 0) { mode = "up"; }
+        running = true;
+        document.getElementById("startBtn").style.opacity = "0.7";
+        timer = setInterval(() => {
+            if (mode === "up") totalMs += 10;
+            else { totalMs -= 10; if (totalMs <= 0) { totalMs = 0; stopTimer(); playBeep(); } }
+            format(totalMs);
+        }, 10);
+    }
 
-t=setInterval(()=>{
-if(mode==="up")ms+=10;
-else{
-ms-=10;
-if(ms<=0){ms=0;beep();pause()}
-}
-format(ms);
-},10);
-}
+    function stopTimer() { clearInterval(timer); running = false; document.getElementById("startBtn").style.opacity = "1"; }
+    
+    function resetTimer() { stopTimer(); totalMs = 0; format(0); document.getElementById("lapsList").innerHTML = ""; dropdown.style.display="none"; }
 
-function pause(){
-clearInterval(t);
-running=false;
-startBtn.textContent="START";
-}
+    function addLap() {
+        let div = document.createElement("div");
+        div.innerHTML = `Lap ${document.getElementById("lapsList").children.length + 1}: ${timeDisplay.textContent}.${msDisplay.textContent}`;
+        document.getElementById("lapsList").prepend(div);
+    }
 
-function resetTimer(){
-pause();
-ms=0;
-format(0);
-input.value="00:00:00";
-document.getElementById("laps").innerHTML="";
-menu.style.display="none";
-}
+    function playBeep() {
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        osc.connect(ctx.destination);
+        osc.start(); setTimeout(() => osc.stop(), 500);
+    }
 
-function lap(){
-let l=document.createElement("div");
-l.style.display="flex";
-l.style.justifyContent="space-between";
-l.innerHTML=`<span>Lap ${laps.children.length+1}</span><span>${timeEl.textContent}.${msEl.textContent}</span>`;
-laps.prepend(l);
-}
-
-function beep(){
-let a=new AudioContext();
-let o=a.createOscillator();
-o.frequency.value=900;
-o.connect(a.destination);
-o.start();
-setTimeout(()=>o.stop(),500);
-}
-
-function toggleFull(){
-document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();
-menu.style.display="none";
-}
+    function toggleFull() {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+        else document.exitFullscreen();
+        dropdown.style.display = "none";
+    }
 </script>
-
 </body>
 </html>
