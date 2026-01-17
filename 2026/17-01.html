@@ -17,22 +17,27 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: background 0.3s, color 0.3s; }
         
         body { 
-            height: 100vh; 
+            height: 100vh; width: 100vw;
             background: var(--bg); 
-            display: flex; 
-            flex-direction: column;
-            justify-content: center; 
-            align-items: center; 
-            color: var(--text); 
-            overflow: hidden; 
-            position: relative;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center; 
+            color: var(--text); overflow: hidden; position: relative;
         }
 
-        /* Focus Mode logic for Perfect Centering */
+        /* --- LANDSCAPE / FOCUS UI --- */
+        /* Jab mobile tilt ho ya focus active ho */
+        body.landscape-mode .top-nav, 
+        body.landscape-mode .controls-ui, 
+        body.landscape-mode #modeTag,
         body.focus-active .top-nav, 
         body.focus-active .controls-ui, 
         body.focus-active #modeTag { 
             display: none !important; 
+        }
+
+        body.landscape-mode .display,
+        body.focus-active .display { 
+            font-size: 30vw; /* Landscape me bada time */
         }
 
         /* Top Navigation */
@@ -45,41 +50,22 @@
         }
         .dropdown button { background: none; color: white; padding: 12px; text-align: left; border: none; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.9rem; }
 
-        /* Main Container */
         .container { 
-            width: 100%; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center;
-            text-align: center; 
+            width: 100%; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; text-align: center; 
         }
 
         #modeTag { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; opacity: 0.6; }
 
         .display { 
-            font-size: 18vw; 
-            font-weight: 800; 
-            font-family: 'Courier New', monospace; 
-            color: var(--accent); 
-            line-height: 1.1;
-            user-select: none;
+            font-size: 18vw; font-weight: 800; font-family: 'Courier New', monospace; 
+            color: var(--accent); line-height: 1.1; user-select: none;
         }
         @media (min-width: 600px) { .display { font-size: 8rem; } }
         .ms { font-size: 0.4em; opacity: 0.4; color: var(--text); }
 
-        /* Analog View */
-        .analog-view { 
-            display: none; width: 280px; height: 280px; border: 6px solid var(--accent); 
-            border-radius: 50%; position: relative; margin-bottom: 20px; background: var(--panel);
-        }
-        .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom; background: var(--accent); border-radius: 5px; }
-        .hour-hand { width: 6px; height: 60px; }
-        .min-hand { width: 4px; height: 90px; }
-        .sec-hand { width: 2px; height: 110px; background: #ff4d4d !important; }
-
-        /* UI Elements (Inputs/Buttons) */
-        .controls-ui { width: 100%; max-width: 300px; margin-top: 20px; }
+        /* UI Elements */
+        .controls-ui { width: 90%; max-width: 320px; margin-top: 20px; }
         input { 
             background: var(--panel); border: 1px solid var(--accent); color: var(--text); 
             padding: 12px; border-radius: 10px; text-align: center; margin-bottom: 15px; 
@@ -90,6 +76,16 @@
         .secondary-btns { display: flex; gap: 10px; }
         .secondary-btns button { flex: 1; padding: 12px; border: none; border-radius: 10px; color: white; cursor: pointer; background: #333; }
         
+        /* Analog View */
+        .analog-view { 
+            display: none; width: 280px; height: 280px; border: 6px solid var(--accent); 
+            border-radius: 50%; position: relative; margin-bottom: 20px; background: var(--panel);
+        }
+        .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom; background: var(--accent); border-radius: 5px; }
+        .hour-hand { width: 6px; height: 60px; }
+        .min-hand { width: 4px; height: 90px; }
+        .sec-hand { width: 2px; height: 110px; background: #ff4d4d !important; }
+
         .laps-box { margin-top: 20px; max-height: 80px; overflow-y: auto; font-size: 0.8rem; opacity: 0.5; width: 100%; }
     </style>
 </head>
@@ -108,7 +104,6 @@
 
     <div class="container">
         <div id="modeTag">Stopwatch</div>
-        
         <div id="digitalArea" class="display">
             <span id="timeDisplay">00:00:00</span><br>
             <span class="ms">.<span id="msDisplay">000</span></span>
@@ -137,6 +132,22 @@
 <script>
     let timer, running = false, totalMs = 0, currentTheme = 0;
 
+    // --- AUTO TILT LOGIC ---
+    window.addEventListener("orientationchange", function() {
+        if (window.orientation === 90 || window.orientation === -90) {
+            // Mobile is Landscape
+            document.body.classList.add('landscape-mode');
+            // Landscape me auto fullscreen try karein (User interaction required sometimes)
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(e=>{});
+        } else {
+            // Mobile is Portrait
+            document.body.classList.remove('landscape-mode');
+        }
+    });
+
+    // Pehli baar load par check karein
+    if (window.innerWidth > window.innerHeight) document.body.classList.add('landscape-mode');
+
     function toggleMenu(e) { 
         e.stopPropagation(); 
         const m = document.getElementById('menuBox'); 
@@ -156,11 +167,8 @@
         document.getElementById('modeTag').textContent = isAnalog ? "Analog Mode" : "Digital Mode";
     }
 
-    // Single Tap to Stop Logic
     function handlePageClick() {
-        if (running) {
-            stopTimer();
-        }
+        if (running) stopTimer();
     }
 
     function format(ms) {
