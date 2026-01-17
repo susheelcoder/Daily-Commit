@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pro Smart Timer v4.3</title>
+    <title>Pro Smart Timer v4.4</title>
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlBybyBTbWFydCBUaW1lciIsCiAgInNob3J0X25hbWUiOiAiVGltZXIiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBhMGMxMCIsCiAgInRoZW1lX2NvbG9yIjogIzAwZmY5ZCJ9">
     <style>
         :root { --accent: #00ff9d; --bg: #0a0c10; --text: #ffffff; --card: #1a1d23; }
 
@@ -37,11 +38,11 @@
         @media (orientation: landscape) {
             .display { font-size: 18vh !important; margin-bottom: 5px !important; }
             body.minimal-ui .display { font-size: 35vh !important; }
-            
             .controls-ui { max-width: 550px !important; flex-direction: row !important; padding: 10px 20px !important; }
             .main-btns { grid-template-columns: repeat(3, 1fr) !important; width: 100%; gap: 10px; }
-            .start-btn { grid-column: span 1 !important; padding: 12px !important; font-size: 1rem !important; }
-            input { margin-bottom: 0 !important; width: 130px !important; font-size: 1.3rem !important; }
+            .start-btn { grid-column: span 1 !important; padding: 12px !important; }
+            input { margin-bottom: 0 !important; width: 130px !important; }
+            .install-link { display: none !important; }
             .laps-box { display: none; }
         }
 
@@ -68,6 +69,13 @@
         .start-btn { grid-column: span 2; padding: 18px; background: var(--accent); color: #000; border: none; border-radius: 15px; font-weight: bold; font-size: 1.2rem; cursor: pointer; }
         .reset-btn { background: #3d444d; color: white; border: none; padding: 15px; border-radius: 15px; cursor: pointer; }
         .lap-btn { background: #1f6feb; color: white; border: none; padding: 15px; border-radius: 15px; cursor: pointer; }
+
+        .install-link {
+            text-align: center; font-size: 0.8rem; color: var(--accent);
+            margin-bottom: 10px; cursor: pointer; text-decoration: underline;
+            opacity: 0.8;
+        }
+
         .laps-box { margin-top: 15px; max-height: 80px; overflow-y: auto; font-size: 0.85rem; opacity: 0.5; border-top: 1px solid #444; padding-top: 10px; }
     </style>
 </head>
@@ -79,7 +87,7 @@
         </button>
         <div class="dropdown" id="menuBox">
             <button onclick="changeTheme()">🎨 Switch Theme</button>
-            <button onclick="alert('Ready to Install')">📲 Install App</button>
+            <button onclick="installApp()">📲 Install App</button>
             <button onclick="showAbout()">ℹ️ About</button>
             <button onclick="resetAll()">🔄 Full Reset</button>
         </div>
@@ -91,6 +99,7 @@
     </div>
 
     <div class="controls-ui">
+        <div class="install-link" id="installBtnMain" onclick="installApp()">📲 Click to Install App</div>
         <input type="text" id="timeInput" value="00:00:00" onchange="saveInput()">
         <div class="main-btns">
             <button class="start-btn" id="startBtn" onclick="startTimer(event)">START</button>
@@ -103,7 +112,28 @@
 <script>
     let timer, running = false, totalMs = 0, isMinimal = false;
     let currentTheme = 0;
+    let deferredPrompt;
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    // Installation Logic
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('installBtnMain').style.display = 'block';
+    });
+
+    async function installApp() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                document.getElementById('installBtnMain').style.display = 'none';
+            }
+            deferredPrompt = null;
+        } else {
+            alert("Open this in Chrome/Edge and use 'Add to Home Screen'");
+        }
+    }
 
     window.onload = () => {
         const savedTheme = localStorage.getItem('timerTheme');
@@ -115,9 +145,7 @@
         if (savedTime) document.getElementById('timeInput').value = savedTime;
     };
 
-    function saveInput() {
-        localStorage.setItem('timerInput', document.getElementById('timeInput').value);
-    }
+    function saveInput() { localStorage.setItem('timerInput', document.getElementById('timeInput').value); }
 
     function changeTheme() {
         currentTheme = (currentTheme + 1) % 5;
@@ -144,14 +172,9 @@
         }
     }
 
-    // CLICK ON DISPLAY LOGIC (Toggle Start/Stop)
     function handleDisplayClick(e) {
         e.stopPropagation();
-        if (running) {
-            stopTimer();
-        } else {
-            startTimer();
-        }
+        if (running) stopTimer(); else startTimer();
     }
 
     function resetAll() {
@@ -183,24 +206,16 @@
     function startTimer(e) {
         if (running) { stopTimer(); return; }
         if(e) e.stopPropagation();
-        
         let parts = document.getElementById("timeInput").value.split(":").map(Number);
         let inputVal = ((parts[0]||0)*3600 + (parts[1]||0)*60 + (parts[2]||0))*1000;
         let mode = (inputVal > 0 && totalMs === 0) ? "down" : "up";
         if(mode === "down") totalMs = inputVal;
-
         running = true;
         document.getElementById("startBtn").textContent = "STOP";
         document.getElementById("startBtn").style.background = "#ff4d4d";
-        
         timer = setInterval(() => {
             if(mode === "up") totalMs += 10;
-            else { 
-                totalMs -= 10; 
-                if(totalMs <= 0) { 
-                    totalMs = 0; stopTimer(); playAlarm(); 
-                } 
-            }
+            else { totalMs -= 10; if(totalMs <= 0) { totalMs = 0; stopTimer(); playAlarm(); } }
             format(totalMs);
         }, 10);
     }
@@ -222,7 +237,7 @@
     }
 
     function showAbout() {
-        alert("Pro Timer v4.3\n- Click Display to Start/Stop\n- Double Click: Landscape/Minimal Toggle\n- Auto-Save Feature");
+        alert("Pro Timer v4.4\n- Installable PWA App\n- Display Tap: Start/Stop\n- Orientation Lock Feature");
     }
 </script>
 </body>
