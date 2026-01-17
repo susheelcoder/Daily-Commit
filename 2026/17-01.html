@@ -14,7 +14,7 @@
         body.theme-3 { --bg: #ffffff; --accent: #000; --text: #000; } 
         body.theme-4 { background: linear-gradient(135deg, #1e3c72, #2a5298); --accent: #fff; --text: #fff; } 
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: background 0.3s, color 0.3s; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: background 0.3s, color 0.3s, font-size 0.2s; }
         
         body { 
             height: 100vh; width: 100vw;
@@ -22,71 +22,61 @@
             display: flex; flex-direction: column;
             justify-content: center; align-items: center; 
             color: var(--text); overflow: hidden; position: relative;
+            padding: 10px;
         }
 
-        /* --- LANDSCAPE / FOCUS UI --- */
-        /* Jab mobile tilt ho ya focus active ho */
-        body.landscape-mode .top-nav, 
-        body.landscape-mode .controls-ui, 
-        body.landscape-mode #modeTag,
+        /* Focus Mode logic */
         body.focus-active .top-nav, 
         body.focus-active .controls-ui, 
-        body.focus-active #modeTag { 
-            display: none !important; 
-        }
+        body.focus-active #modeTag { display: none !important; }
 
-        body.landscape-mode .display,
-        body.focus-active .display { 
-            font-size: 30vw; /* Landscape me bada time */
+        /* --- RESPONSIVE FIX FOR LOW HEIGHT (Landscape) --- */
+        @media (max-height: 450px) {
+            .display { font-size: 15vh !important; }
+            .ms { font-size: 0.3em; }
+            .analog-view { width: 160px !important; height: 160px !important; margin-bottom: 5px !important; }
+            .controls-ui { margin-top: 5px !important; max-width: 500px !important; display: flex; flex-direction: row; gap: 10px; align-items: center; }
+            input { margin-bottom: 0 !important; width: 120px !important; padding: 8px !important; }
+            .btn-group { flex-direction: row !important; width: auto !important; }
+            .start-btn { padding: 10px 20px !important; font-size: 1rem !important; }
+            .laps-box { display: none; } /* Chhoti screen par laps chhupa dete hain space ke liye */
+            #modeTag { margin-bottom: 5px; font-size: 0.6rem; }
         }
 
         /* Top Navigation */
-        .top-nav { position: absolute; top: 20px; right: 20px; z-index: 1000; }
+        .top-nav { position: absolute; top: 15px; right: 15px; z-index: 1000; }
         .menu-btn { background: none; border: none; cursor: pointer; padding: 5px; }
         .dropdown { 
             position: absolute; top: 40px; right: 0; background: #1a1b26; border: 1px solid #333; 
             border-radius: 10px; display: none; flex-direction: column; width: 160px; overflow: hidden;
             box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
-        .dropdown button { background: none; color: white; padding: 12px; text-align: left; border: none; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.9rem; }
+        .dropdown button { background: none; color: white; padding: 12px; text-align: left; border: none; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.85rem; }
 
-        .container { 
-            width: 100%; display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; text-align: center; 
-        }
-
+        /* Main Display */
+        .container { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         #modeTag { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; opacity: 0.6; }
-
-        .display { 
-            font-size: 18vw; font-weight: 800; font-family: 'Courier New', monospace; 
-            color: var(--accent); line-height: 1.1; user-select: none;
-        }
-        @media (min-width: 600px) { .display { font-size: 8rem; } }
+        .display { font-size: 18vw; font-weight: 800; font-family: 'Courier New', monospace; color: var(--accent); line-height: 1.1; user-select: none; }
         .ms { font-size: 0.4em; opacity: 0.4; color: var(--text); }
 
-        /* UI Elements */
-        .controls-ui { width: 90%; max-width: 320px; margin-top: 20px; }
-        input { 
-            background: var(--panel); border: 1px solid var(--accent); color: var(--text); 
-            padding: 12px; border-radius: 10px; text-align: center; margin-bottom: 15px; 
-            outline: none; width: 100%; font-size: 1.2rem;
-        }
-        .btn-group { display: flex; flex-direction: column; gap: 10px; }
-        .start-btn { padding: 18px; background: var(--accent); color: #000; border: none; border-radius: 15px; font-weight: bold; font-size: 1.4rem; cursor: pointer; }
-        .secondary-btns { display: flex; gap: 10px; }
-        .secondary-btns button { flex: 1; padding: 12px; border: none; border-radius: 10px; color: white; cursor: pointer; background: #333; }
-        
         /* Analog View */
         .analog-view { 
             display: none; width: 280px; height: 280px; border: 6px solid var(--accent); 
             border-radius: 50%; position: relative; margin-bottom: 20px; background: var(--panel);
         }
         .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom; background: var(--accent); border-radius: 5px; }
-        .hour-hand { width: 6px; height: 60px; }
-        .min-hand { width: 4px; height: 90px; }
-        .sec-hand { width: 2px; height: 110px; background: #ff4d4d !important; }
+        .hour-hand { width: 6px; height: 35%; }
+        .min-hand { width: 4px; height: 42%; }
+        .sec-hand { width: 2px; height: 45%; background: #ff4d4d !important; }
 
-        .laps-box { margin-top: 20px; max-height: 80px; overflow-y: auto; font-size: 0.8rem; opacity: 0.5; width: 100%; }
+        /* UI Elements */
+        .controls-ui { width: 100%; max-width: 320px; margin-top: 20px; }
+        input { background: var(--panel); border: 1px solid var(--accent); color: var(--text); padding: 12px; border-radius: 10px; text-align: center; margin-bottom: 15px; outline: none; width: 100%; font-size: 1.2rem; }
+        .btn-group { display: flex; flex-direction: column; gap: 10px; }
+        .start-btn { padding: 15px; background: var(--accent); color: #000; border: none; border-radius: 12px; font-weight: bold; font-size: 1.3rem; cursor: pointer; }
+        .secondary-btns { display: flex; gap: 10px; }
+        .secondary-btns button { flex: 1; padding: 10px; border: none; border-radius: 8px; color: white; cursor: pointer; background: #333; font-size: 0.9rem; }
+        .laps-box { margin-top: 15px; max-height: 60px; overflow-y: auto; font-size: 0.75rem; opacity: 0.5; width: 100%; }
     </style>
 </head>
 <body class="theme-0" onclick="handlePageClick()" ondblclick="nextTheme()">
@@ -113,7 +103,7 @@
             <div id="h-hand" class="hand hour-hand"></div>
             <div id="m-hand" class="hand min-hand"></div>
             <div id="s-hand" class="hand sec-hand"></div>
-            <div style="position:absolute; top:50%; left:50%; width:10px; height:10px; background:var(--accent); border-radius:50%; transform:translate(-50%,-50%);"></div>
+            <div style="position:absolute; top:50%; left:50%; width:8px; height:8px; background:var(--accent); border-radius:50%; transform:translate(-50%,-50%);"></div>
         </div>
 
         <div class="controls-ui">
@@ -131,22 +121,6 @@
 
 <script>
     let timer, running = false, totalMs = 0, currentTheme = 0;
-
-    // --- AUTO TILT LOGIC ---
-    window.addEventListener("orientationchange", function() {
-        if (window.orientation === 90 || window.orientation === -90) {
-            // Mobile is Landscape
-            document.body.classList.add('landscape-mode');
-            // Landscape me auto fullscreen try karein (User interaction required sometimes)
-            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(e=>{});
-        } else {
-            // Mobile is Portrait
-            document.body.classList.remove('landscape-mode');
-        }
-    });
-
-    // Pehli baar load par check karein
-    if (window.innerWidth > window.innerHeight) document.body.classList.add('landscape-mode');
 
     function toggleMenu(e) { 
         e.stopPropagation(); 
@@ -167,9 +141,7 @@
         document.getElementById('modeTag').textContent = isAnalog ? "Analog Mode" : "Digital Mode";
     }
 
-    function handlePageClick() {
-        if (running) stopTimer();
-    }
+    function handlePageClick() { if (running) stopTimer(); }
 
     function format(ms) {
         let s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60, milli = ms % 1000;
@@ -194,38 +166,23 @@
 
         running = true;
         document.body.classList.add('focus-active');
-
         timer = setInterval(() => {
             if(mode === "up") totalMs += 10;
-            else {
-                totalMs -= 10;
-                if(totalMs <= 0) { totalMs = 0; stopTimer(); playBeep(); }
-            }
+            else { totalMs -= 10; if(totalMs <= 0) { totalMs = 0; stopTimer(); playBeep(); } }
             format(totalMs);
         }, 10);
     }
 
-    function stopTimer() { 
-        clearInterval(timer); 
-        running = false; 
-        document.body.classList.remove('focus-active'); 
-    }
-    
+    function stopTimer() { clearInterval(timer); running = false; document.body.classList.remove('focus-active'); }
     function resetTimer() { stopTimer(); totalMs = 0; format(0); document.getElementById("lapsList").innerHTML = ""; }
-
     function addLap() {
         if(totalMs === 0) return;
         let l = document.createElement("div");
         l.textContent = `Lap: ${document.getElementById("timeDisplay").textContent}`;
         document.getElementById("lapsList").prepend(l);
     }
-
     function toggleFull() { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
-    
-    function playBeep() {
-        const a = new (window.AudioContext || window.webkitAudioContext)();
-        const o = a.createOscillator(); o.connect(a.destination); o.start(); setTimeout(()=>o.stop(), 500);
-    }
+    function playBeep() { const a = new (window.AudioContext || window.webkitAudioContext)(); const o = a.createOscillator(); o.connect(a.destination); o.start(); setTimeout(()=>o.stop(), 500); }
 </script>
 </body>
 </html>
