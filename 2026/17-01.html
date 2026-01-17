@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Countdown Timer</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body{
+    height:100vh;
+    overflow:hidden;
+    background: radial-gradient(circle at top, #1e3c72, #2a5298);
+    color:#fff;
+}
+
+/* MAIN CONTAINER */
+.timer-app{
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+
+/* TIMER DISPLAY */
+.timer-display{
+    font-size:4rem;
+    font-weight:700;
+    margin-bottom:20px;
+    letter-spacing:3px;
+}
+
+/* INPUT */
+input{
+    width:120px;
+    padding:10px;
+    font-size:1.2rem;
+    text-align:center;
+    border:none;
+    border-radius:10px;
+    outline:none;
+}
+
+/* BUTTONS */
+.buttons{
+    margin-top:20px;
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+button{
+    padding:12px 25px;
+    font-size:1rem;
+    border:none;
+    border-radius:25px;
+    cursor:pointer;
+    font-weight:600;
+    transition:0.3s;
+}
+
+.start{background:#00ff9d;color:#000;}
+.stop{background:#ff4d4d;color:#fff;}
+.restart{background:#ffd633;color:#000;}
+.record{background:#00c6ff;color:#000;}
+
+button:hover{
+    transform:scale(1.08);
+    opacity:0.9;
+}
+
+/* RECORD SECTION */
+.records{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    max-height:35vh;
+    overflow:auto;
+    background:rgba(0,0,0,0.25);
+    padding:15px;
+}
+
+.records h3{
+    text-align:center;
+    margin-bottom:10px;
+}
+
+.records ul{
+    list-style:none;
+}
+
+.records li{
+    padding:6px;
+    border-bottom:1px solid rgba(255,255,255,0.2);
+    font-size:1rem;
+}
+</style>
+</head>
+
+<body>
+
+<div class="timer-app">
+
+    <h2>Online Countdown Timer</h2>
+
+    <!-- TIME INPUT -->
+    <input type="number" id="timeInput" placeholder="Seconds">
+
+    <!-- DISPLAY -->
+    <div class="timer-display" id="display">00:00</div>
+
+    <!-- BUTTONS -->
+    <div class="buttons">
+        <button class="start" onclick="startTimer()">Start</button>
+        <button class="stop" onclick="stopTimer()">Stop</button>
+        <button class="restart" onclick="restartTimer()">Restart</button>
+        <button class="record" onclick="recordTime()">Record</button>
+    </div>
+
+</div>
+
+<!-- RECORD LIST -->
+<div class="records">
+    <h3>Recorded Times</h3>
+    <ul id="recordList"></ul>
+</div>
+
+<script>
+let timer;
+let remainingTime = 0;
+let isRunning = false;
+
+/* FORMAT TIME */
+function formatTime(seconds){
+    let min = Math.floor(seconds / 60);
+    let sec = seconds % 60;
+    return `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+/* START */
+function startTimer(){
+    if(isRunning) return;
+
+    if(remainingTime === 0){
+        remainingTime = parseInt(document.getElementById("timeInput").value);
+        if(isNaN(remainingTime) || remainingTime <= 0){
+            alert("Enter valid seconds");
+            return;
+        }
+    }
+
+    isRunning = true;
+    timer = setInterval(()=>{
+        if(remainingTime <= 0){
+            clearInterval(timer);
+            isRunning = false;
+            return;
+        }
+        remainingTime--;
+        document.getElementById("display").innerText = formatTime(remainingTime);
+    },1000);
+}
+
+/* STOP */
+function stopTimer(){
+    clearInterval(timer);
+    isRunning = false;
+}
+
+/* RESTART */
+function restartTimer(){
+    clearInterval(timer);
+    isRunning = false;
+    remainingTime = parseInt(document.getElementById("timeInput").value) || 0;
+    document.getElementById("display").innerText = formatTime(remainingTime);
+}
+
+/* RECORD */
+function recordTime(){
+    let list = document.getElementById("recordList");
+    let li = document.createElement("li");
+    li.innerText = "Recorded at: " + formatTime(remainingTime);
+    list.prepend(li);
+}
+</script>
+
+</body>
+</html>
