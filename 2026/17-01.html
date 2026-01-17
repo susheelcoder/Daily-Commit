@@ -1,75 +1,152 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Smart Timer Pro</title>
+
+    <meta name="theme-color" content="#090a0f">
+    <link rel="manifest" id="manifestLink">
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { height: 100vh; background: #090a0f; display: flex; justify-content: center; align-items: center; color: #fff; overflow: hidden; padding: 15px; }
 
-        /* --- ANALOG CLOCK STYLE --- */
-        .analog-container {
-            display: none; /* Default hidden */
-            width: 250px;
-            height: 250px;
-            border: 8px solid #333;
+        body { 
+            height: 100vh; 
+            background: #090a0f; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            color: #fff; 
+            overflow: hidden; 
+            padding: 15px;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1001;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 8px;
             border-radius: 50%;
-            position: relative;
-            margin: 20px auto;
-            background: radial-gradient(circle, #1a1b26 0%, #090a0f 100%);
-            box-shadow: 0 0 30px rgba(0,255,157,0.1);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
         }
-        .analog-container::after { /* Center Dot */
-            content: ''; position: absolute; width: 12px; height: 12px; background: #00ff9d; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10;
-        }
-        .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom; border-radius: 10px; transition: transform 0.05s linear; }
-        .hour-hand { width: 6px; height: 60px; background: #fff; margin-left: -3px; }
-        .min-hand { width: 4px; height: 90px; background: #aaa; margin-left: -2px; }
-        .sec-hand { width: 2px; height: 100px; background: #00ff9d; margin-left: -1px; }
 
-        /* Clock Numbers */
-        .number { position: absolute; width: 100%; height: 100%; text-align: center; font-weight: bold; font-size: 1.2rem; color: #444; padding: 10px; }
-        
-        /* Rest of your existing styles */
-        .top-nav { position: absolute; top: 15px; left: 15px; right: 15px; display: flex; justify-content: space-between; z-index: 1001; }
+        .back-btn:hover { background: rgba(255,255,255,0.2); }
+
+        .menu-btn { background: none; border: none; cursor: pointer; padding: 10px; border-radius: 50%; }
+
+        .dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: #1a1b26;
+            border: 1px solid #333;
+            border-radius: 12px;
+            display: none;
+            flex-direction: column;
+            width: 170px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            overflow: hidden;
+        }
+
+        .dropdown button {
+            background: none;
+            color: white;
+            padding: 14px;
+            text-align: left;
+            border: none;
+            border-bottom: 1px solid #222;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        /* Main UI */
         .container { width: 100%; max-width: 450px; text-align: center; }
-        .display { font-size: 16vw; font-weight: 800; font-family: 'Courier New', monospace; color: #00ff9d; line-height: 1; }
+
+        .display { 
+            font-size: 16vw; 
+            font-weight: 800; 
+            font-family: 'Courier New', monospace; 
+            color: #00ff9d; 
+            line-height: 1; 
+            text-shadow: 0 0 20px rgba(0,255,157,0.2);
+        }
+
         @media (min-width: 600px) { .display { font-size: 6rem; } }
+
         .ms { font-size: 0.45em; color: #fff; opacity: 0.3; }
-        input[type="text"] { background: rgba(255,255,255,0.08); border: 1px solid rgba(0,255,157,0.3); border-radius: 10px; color: #fff; font-size: 1.5rem; text-align: center; padding: 12px; width: 180px; margin: 25px auto; outline: none; }
+
+        input[type="text"] {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(0,255,157,0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.5rem;
+            text-align: center;
+            padding: 12px;
+            width: 180px;
+            margin: 25px auto;
+            outline: none;
+        }
+
         .controls { display: flex; flex-direction: column; gap: 12px; }
         .start-btn { width: 100%; padding: 18px; font-size: 1.6rem; font-weight: bold; border-radius: 18px; border: none; background: #00ff9d; color: #000; cursor: pointer; }
+
         .secondary-btns { display: flex; gap: 10px; }
         .secondary-btns button { flex: 1; padding: 14px; font-size: 0.85rem; font-weight: bold; border-radius: 12px; border: none; cursor: pointer; color: white; }
-        .stop { background: #ff4d4d; } .reset { background: #333; } .lap { background: #00c6ff; }
+
+        .stop { background: #ff4d4d; }
+        .reset { background: #333; }
+        .lap { background: #00c6ff; }
+
         .laps-box { margin-top: 20px; max-height: 120px; overflow-y: auto; border-top: 1px solid #222; padding-top: 10px; font-size: 0.9rem; color: #888; }
         .lap-item { display: flex; justify-content: space-between; padding: 5px 15px; border-bottom: 1px solid #111; }
     </style>
 </head>
-<body ondblclick="toggleView()">
+<body>
 
     <div class="top-nav">
-        <div style="color: #444; font-size: 0.7rem;">Double Tap to Switch View</div>
+        <a href="/" class="back-btn" title="Go to Index">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+        </a>
+
+        <div style="position: relative;">
+            <button class="menu-btn" onclick="toggleMenu()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                    <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                </svg>
+            </button>
+            <div class="dropdown" id="menuDropdown">
+                <button onclick="toggleFull()">Full Screen</button>
+                <button id="installBtn" onclick="installApp()">📲 Install App</button>
+                <button onclick="resetTimer()">Reset All</button>
+            </div>
+        </div>
     </div>
 
     <div class="container">
-        <div id="digitalView">
-            <div class="display">
-                <span id="timeDisplay">00:00:00</span><br>
-                <span class="ms">.<span id="msDisplay">000</span></span>
-            </div>
-        </div>
-
-        <div id="analogView" class="analog-container">
-            <div class="number" style="transform: rotate(0deg)">12</div>
-            <div class="number" style="transform: rotate(90deg)">3</div>
-            <div class="number" style="transform: rotate(180deg)">6</div>
-            <div class="number" style="transform: rotate(270deg)">9</div>
-            <div id="h-hand" class="hand hour-hand"></div>
-            <div id="m-hand" class="hand min-hand"></div>
-            <div id="s-hand" class="hand sec-hand"></div>
+        <div class="display">
+            <span id="timeDisplay">00:00:00</span><br>
+            <span class="ms">.<span id="msDisplay">000</span></span>
         </div>
 
         <input type="text" id="timeInput" value="00:00:00" placeholder="HH:MM:SS">
@@ -82,26 +159,49 @@
                 <button class="lap" onclick="addLap()">LAP</button>
             </div>
         </div>
+
         <div class="laps-box" id="lapsList"></div>
     </div>
 
 <script>
+    /* --- AUTO INSTALL LOGIC --- */
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        // Pehli baar open karte hi install prompt dikhane ki koshish
+        setTimeout(() => { installApp(); }, 2000); 
+    });
+
+    async function installApp() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            deferredPrompt = null;
+        }
+        if(document.getElementById("menuDropdown").style.display === "flex") toggleMenu();
+    }
+
+    /* PWA Manifest */
+    const myManifest = {
+        "name": "Smart Timer Pro",
+        "short_name": "Timer",
+        "start_url": ".",
+        "display": "standalone",
+        "background_color": "#090a0f",
+        "theme_color": "#00ff9d",
+        "icons": [{ "src": "https://cdn-icons-png.flaticon.com/512/2972/2972353.png", "sizes": "512x512", "type": "image/png" }]
+    };
+    const blob = new Blob([JSON.stringify(myManifest)], {type: 'application/json'});
+    document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(blob));
+
+    /* --- TIMER LOGIC --- */
     let timer, running = false, totalMs = 0, mode = "up";
     const timeDisplay = document.getElementById("timeDisplay");
     const msDisplay = document.getElementById("msDisplay");
+    const menu = document.getElementById("menuDropdown");
 
-    // Double Tap Function
-    function toggleView() {
-        const digital = document.getElementById("digitalView");
-        const analog = document.getElementById("analogView");
-        if (digital.style.display === "none") {
-            digital.style.display = "block";
-            analog.style.display = "none";
-        } else {
-            digital.style.display = "none";
-            analog.style.display = "block";
-        }
-    }
+    function toggleMenu() { menu.style.display = menu.style.display === "flex" ? "none" : "flex"; }
 
     function format(ms) {
         let s = Math.floor(ms / 1000);
@@ -109,17 +209,8 @@
         let m = Math.floor((s % 3600) / 60);
         let sec = s % 60;
         let milli = ms % 1000;
-        
         timeDisplay.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
         msDisplay.textContent = String(milli).padStart(3,'0');
-
-        // Update Analog Hands
-        const sDeg = (sec * 6) + (milli * 0.006);
-        const mDeg = (m * 6) + (sec * 0.1);
-        const hDeg = (h * 30) + (m * 0.5);
-        document.getElementById("s-hand").style.transform = `translateX(-50%) rotate(${sDeg}deg)`;
-        document.getElementById("m-hand").style.transform = `translateX(-50%) rotate(${mDeg}deg)`;
-        document.getElementById("h-hand").style.transform = `translateX(-50%) rotate(${hDeg}deg)`;
     }
 
     function startTimer() {
@@ -132,38 +223,53 @@
 
         running = true;
         document.getElementById("startBtn").style.background = "#008a55";
+
         timer = setInterval(() => {
-            if (mode === "up") totalMs += 50; // Performance optimize for analog
+            if (mode === "up") totalMs += 10;
             else {
-                totalMs -= 50;
+                totalMs -= 10;
                 if (totalMs <= 0) { totalMs = 0; stopTimer(); playDoubleBeep(); }
             }
             format(totalMs);
-        }, 50);
+        }, 10);
     }
 
     function stopTimer() { clearInterval(timer); running = false; document.getElementById("startBtn").style.background = "#00ff9d"; }
     function resetTimer() { stopTimer(); totalMs = 0; format(0); document.getElementById("lapsList").innerHTML = ""; }
-    
+
     function addLap() {
         if(totalMs === 0) return;
         let div = document.createElement("div");
         div.className = "lap-item";
-        div.innerHTML = `<span>Lap ${document.getElementById("lapsList").children.length + 1}</span> <span>${timeDisplay.textContent}</span>`;
+        div.innerHTML = `<span>Lap ${document.getElementById("lapsList").children.length + 1}</span> <span>${timeDisplay.textContent}.${msDisplay.textContent}</span>`;
         document.getElementById("lapsList").prepend(div);
     }
 
+    /* 2 Baar Beep Bajane ka Function */
     function playDoubleBeep() {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const beep = (d) => setTimeout(() => {
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            o.connect(g); g.connect(audioCtx.destination);
-            o.frequency.value = 880; o.start(); setTimeout(() => o.stop(), 300);
-        }, d);
-        beep(0); beep(500);
+
+        function beep(delay) {
+            setTimeout(() => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.frequency.value = 880; 
+                osc.start();
+                setTimeout(() => osc.stop(), 300);
+            }, delay);
+        }
+
+        beep(0);     // Pehli beep
+        beep(500);   // Dusri beep 0.5 second baad
+    }
+
+    function toggleFull() {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+        else document.exitFullscreen();
+        toggleMenu();
     }
 </script>
 </body>
-</html>
-
+</html> 
