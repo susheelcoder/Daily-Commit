@@ -151,5 +151,63 @@
     function playAlarm() { const ring = (d) => { setTimeout(() => { const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.frequency.value = 880; o.start(); setTimeout(() => o.stop(), 300); }, d); }; ring(0); ring(600); }  
     function resetAll() { stopTimer(); totalMs = 0; format(0); document.getElementById("timeInput").value = "00:00:00"; localStorage.setItem('timerInput', "00:00:00"); }  
     function addLap() { /* Lap logic */ }  
+
+
+
+
+
+
+
+
+
+
+// --- Replace your existing addLap function with this ---
+function addLap() {
+    // Agar timer 0 par hai toh lap add karne ka koi fayda nahi
+    if (totalMs === 0) return;
+
+    // Lap container check karein ya banayein
+    let lapContainer = document.getElementById('lapList');
+    if (!lapContainer) {
+        lapContainer = document.createElement('div');
+        lapContainer.id = 'lapList';
+        lapContainer.style.marginTop = '15px';
+        lapContainer.style.maxHeight = '120px';
+        lapContainer.style.overflowY = 'auto';
+        lapContainer.style.width = '100%';
+        lapContainer.style.fontSize = '0.9rem';
+        document.querySelector('.controls-ui').appendChild(lapContainer);
+    }
+
+    // Time format karein
+    const currentTime = document.getElementById("timeDisplay").textContent + "." + document.getElementById("msDisplay").textContent;
+    
+    // Naya lap element banayein
+    const lapEntry = document.createElement('div');
+    lapEntry.style.padding = '8px';
+    lapEntry.style.borderBottom = '1px solid #444';
+    lapEntry.style.display = 'flex';
+    lapEntry.style.justifyContent = 'space-between';
+    
+    const lapCount = lapContainer.children.length + 1;
+    lapEntry.innerHTML = `<span>Lap ${lapCount}</span> <span style="color:var(--accent)">${currentTime}</span>`;
+    
+    // List mein sabse upar add karein
+    lapContainer.insertBefore(lapEntry, lapContainer.firstChild);
+}
+
+// --- resetAll mein ye ek line zaroor update karein taaki laps bhi clear ho jayein ---
+function resetAll() {
+    stopTimer();
+    totalMs = 0;
+    format(0);
+    document.getElementById("timeInput").value = "00:00:00";
+    localStorage.setItem('timerInput', "00:00:00");
+    
+    // Laps clear karne ke liye:
+    const lapContainer = document.getElementById('lapList');
+    if (lapContainer) lapContainer.innerHTML = '';
+}
+
 </script>  </body>  
 </html>  
