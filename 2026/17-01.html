@@ -10,138 +10,173 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Poppins, sans-serif;
+    font-family:'Poppins', sans-serif;
 }
 
 body{
     height:100vh;
     overflow:hidden;
-    background:linear-gradient(135deg,#141e30,#243b55);
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    display:flex;
+    align-items:center;
+    justify-content:center;
     color:#fff;
 }
 
-.container{
-    height:100vh;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
+/* GLASS CARD */
+.card{
+    width:360px;
+    padding:35px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.1);
+    backdrop-filter:blur(15px);
+    box-shadow:0 20px 40px rgba(0,0,0,0.4);
+    text-align:center;
 }
 
-/* DISPLAY */
-.display{
-    font-size:4rem;
-    font-weight:700;
-    margin-bottom:20px;
+/* TITLE */
+h1{
+    font-size:1.4rem;
+    margin-bottom:15px;
+    letter-spacing:1px;
 }
 
 /* INPUT */
 input{
-    width:180px;
-    padding:10px;
+    width:200px;
+    padding:12px;
     font-size:1.2rem;
     text-align:center;
     border:none;
-    border-radius:10px;
+    border-radius:12px;
     outline:none;
     margin-bottom:20px;
+    background:rgba(255,255,255,0.2);
+    color:#fff;
+}
+
+input::placeholder{
+    color:#ddd;
+}
+
+/* DISPLAY */
+.display{
+    font-size:2.8rem;
+    font-weight:700;
+    letter-spacing:2px;
+    margin-bottom:25px;
+}
+
+.ms{
+    font-size:1.2rem;
+    opacity:0.8;
 }
 
 /* BUTTONS */
 .buttons{
     display:flex;
-    gap:15px;
+    gap:12px;
+    justify-content:center;
 }
 
 button{
-    padding:12px 25px;
+    padding:12px 22px;
     border:none;
     border-radius:25px;
-    font-size:1rem;
+    font-size:0.95rem;
     font-weight:600;
     cursor:pointer;
     transition:0.3s;
 }
 
-.start{background:#00ff9d;}
+.start{background:#00ff9d;color:#000;}
 .stop{background:#ff4d4d;color:#fff;}
-.reset{background:#ffd633;}
+.reset{background:#ffd633;color:#000;}
 
 button:hover{
-    transform:scale(1.1);
+    transform:scale(1.12);
+    box-shadow:0 0 15px rgba(255,255,255,0.4);
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="card">
+    <h1>SMART TIMER</h1>
 
-    <!-- TIME INPUT -->
     <input type="text" id="timeInput" value="00:00:00">
 
-    <!-- DISPLAY -->
-    <div class="display" id="display">00:00:00</div>
+    <div class="display">
+        <span id="time">00:00:00</span>
+        <span class="ms">.<span id="ms">000</span></span>
+    </div>
 
-    <!-- BUTTONS -->
     <div class="buttons">
         <button class="start" onclick="startTimer()">Start</button>
         <button class="stop" onclick="stopTimer()">Stop</button>
         <button class="reset" onclick="resetTimer()">Restart</button>
     </div>
-
 </div>
 
 <script>
 let timer;
-let time = 0;
-let mode = "up"; // up = stopwatch, down = countdown
 let running = false;
+let mode = "up"; // up or down
+let totalMs = 0;
 
 /* FORMAT */
-function format(t){
-    let h = Math.floor(t / 3600);
-    let m = Math.floor((t % 3600) / 60);
-    let s = t % 60;
-    return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+function formatTime(ms){
+    let totalSeconds = Math.floor(ms / 1000);
+    let h = Math.floor(totalSeconds / 3600);
+    let m = Math.floor((totalSeconds % 3600) / 60);
+    let s = totalSeconds % 60;
+    let milli = ms % 1000;
+
+    time.innerText =
+        `${String(h).padStart(2,'0')}:`+
+        `${String(m).padStart(2,'0')}:`+
+        `${String(s).padStart(2,'0')}`;
+    document.getElementById("ms").innerText =
+        String(milli).padStart(3,'0');
 }
 
-/* PARSE HH:MM:SS */
-function parseTime(str){
-    let parts = str.split(":").map(Number);
-    if(parts.length !== 3) return 0;
-    return parts[0]*3600 + parts[1]*60 + parts[2];
+/* PARSE INPUT HH:MM:SS */
+function parseInput(str){
+    let p = str.split(":").map(Number);
+    if(p.length !== 3) return 0;
+    return ((p[0]*3600)+(p[1]*60)+p[2]) * 1000;
 }
 
 /* START */
 function startTimer(){
     if(running) return;
 
-    let inputVal = document.getElementById("timeInput").value;
-    let parsed = parseTime(inputVal);
+    let input = timeInput.value;
+    let parsed = parseInput(input);
 
     if(parsed > 0){
-        time = parsed;
-        mode = "down"; // countdown
+        totalMs = parsed;
+        mode = "down";
     }else{
-        time = time || 0;
-        mode = "up"; // stopwatch
+        totalMs = totalMs || 0;
+        mode = "up";
     }
 
     running = true;
 
     timer = setInterval(()=>{
         if(mode === "up"){
-            time++;
+            totalMs += 10;
         }else{
-            if(time <= 0){
+            if(totalMs <= 0){
                 stopTimer();
                 return;
             }
-            time--;
+            totalMs -= 10;
         }
-        display.innerText = format(time);
-    },1000);
+        formatTime(totalMs);
+    },10);
 }
 
 /* STOP */
@@ -153,9 +188,9 @@ function stopTimer(){
 /* RESET */
 function resetTimer(){
     stopTimer();
-    time = 0;
-    display.innerText = "00:00:00";
-    document.getElementById("timeInput").value = "00:00:00";
+    totalMs = 0;
+    formatTime(0);
+    timeInput.value = "00:00:00";
 }
 </script>
 
