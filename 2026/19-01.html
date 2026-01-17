@@ -1,0 +1,398 @@
+<!DOCTYPE html> 
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, ">
+    
+    <title>Haproven Timer | #1 Pro Precision Stopwatch</title>
+    
+    <meta name="title" content="Haproven Timer | #1 Pro Precision Stopwatch">
+    <meta name="description" content="Haproven Timer (v5.2) is the ultimate high-precision stopwatch for Laptop, PC, and Mobile. Fast, free, and pro-grade with Laps, 5+ Dark Themes, and Fullscreen mode.">
+    
+    <meta name="keywords" content="Haproven Timer, Haproven, Pro Smart Timer, Professional Stopwatch, Online Stopwatch with Laps, Precision Timer, Millisecond Timer, Online Timer for Laptop, Desktop Stopwatch PC, Fullscreen Timer for Desktop, iPad Stopwatch, Tablet Timer, Best Gym Timer, Workout Stopwatch, Study Timer for Students, Pomodoro Timer, Speedcubing Timer, Rubiks Cube Stopwatch, Dark Mode Timer, Tab Timer, Accurate Online Timer, Sports Timer, Cooking Timer, Focus Timer, Productivity Stopwatch, Best Free Timer 2026, Minimalist Timer Online, Haproven App, Stopwatch PWA, Gaming Timer, Countdown Timer PC">
+    
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="googlebot" content="index, follow">
+    <meta name="author" content="Haproven">
+    <link rel="canonical" href="https://yourdomain.com/">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Haproven Timer - Precision Timing for Pro Users">
+    <meta property="og:description" content="The cleanest, fastest stopwatch for any device. Lap tracking, dark themes, and millisecond accuracy.">
+    <meta property="og:image" content="https://img.icons8.com/color/512/stopwatch.png">
+
+    <meta name="theme-color" content="#0a0c10">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" id="manifestLink">
+    <link rel="icon" type="image/png" href="https://img.icons8.com/color/512/stopwatch.png">
+
+
+
+
+<style>  
+    :root { --accent: #00ff9d; --bg: #0a0c10; --text: #ffffff; --card: #1a1d23; }  
+    body.theme-0 { --bg: #0a0c10; --accent: #00ff9d; --card: #1a1d23; }  
+    body.theme-1 { --bg: #001219; --accent: #00d4ff; --card: #002533; }  
+    body.theme-2 { --bg: #1a001a; --accent: #ff00ff; --card: #2d002d; }  
+    body.theme-3 { --bg: #000000; --accent: #ffffff; --card: #111111; }  
+    body.theme-4 { --bg: #1b1b1b; --accent: #ffaa00; --card: #2a2a2a; }  
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: background 0.4s, color 0.4s; }  
+    main { height: 100vh; width: 100vw; background: var(--bg); display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--text); overflow: hidden; position: relative; }  
+      
+    /* Navigation Hide on Minimal */  
+    body.minimal-ui .top-nav, body.minimal-ui .controls-ui { display: none !important; }  
+
+    .top-nav { position: absolute; top: 15px; right: 15px; z-index: 2000; }  
+    .menu-btn { background: var(--card); border: 1px solid #444; border-radius: 50%; padding: 10px; cursor: pointer; display: flex; }  
+      
+    .dropdown { position: absolute; top: 45px; right: 0; background: var(--card); border: 1px solid #444; border-radius: 12px; display: none; flex-direction: column; width: 190px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }  
+    .dropdown button { background: none; color: white; padding: 12px; text-align: left; border: none; border-bottom: 1px solid #444; cursor: pointer; font-size: 0.9rem; }  
+
+    /* Timer Display Size - Minimal Mode Fix */  
+    .display { font-size: 18vw; font-weight: 800; font-family: 'Courier New', monospace; color: var(--accent); text-align: center; cursor: pointer; user-select: none; z-index: 10; transition: font-size 0.3s; }  
+    body.minimal-ui .display { font-size: 25vw; margin-bottom: 0; }  
+    @media (orientation: landscape) { body.minimal-ui .display { font-size: 35vh; } }  
+      
+    .ms { font-size: 0.3em; opacity: 0.7; }  
+      
+    .controls-ui { background: var(--card); padding: 25px; border-radius: 25px; border: 1px solid #444; width: 90%; max-width: 400px; display: flex; flex-direction: column; margin-top: 20px; }  
+    input { background: rgba(0,0,0,0.3); border: 1px solid var(--accent); color: var(--accent); padding: 12px; border-radius: 12px; text-align: center; width: 100%; font-size: 1.6rem; outline: none; margin-bottom: 15px; }  
+      
+    .main-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }  
+    .start-btn { grid-column: span 2; padding: 18px; background: var(--accent); color: #000; border: none; border-radius: 15px; font-weight: bold; font-size: 1.2rem; cursor: pointer; }  
+    .reset-btn { background: #3d444d; color: white; border: none; padding: 15px; border-radius: 15px; cursor: pointer; }  
+    .lap-btn { background: #1f6feb; color: white; border: none; padding: 15px; border-radius: 15px; cursor: pointer; }  
+      
+    .install-info { text-align: center; font-size: 0.8rem; color: var(--accent); margin-bottom: 10px; cursor: pointer; border: 1px dashed var(--accent); padding: 6px; border-radius: 8px; font-weight: bold; }  
+    @media (display-mode: standalone) { #installBtnMain { display: none; } }  
+
+
+      @media (min-width:1000px) {
+    .controls-ui {
+      max-width: max-content;
+    }
+
+    .display {
+      font-size: 14vw;
+    }
+
+
+  .install-info {
+    display: none;
+  }
+
+  .reset-btn,
+  .start-btn,
+  .lap-btn {
+    padding: 18px 53px;
+  }
+
+  input {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 17px 25px;
+    border-radius: 12px;
+    text-align: center;
+    width: 100%;
+    font-size: 1.2rem;
+    margin-bottom: 0px;
+  }
+
+  .controls-ui {
+    gap: 15px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+  }
+  .main-btns{
+    display: flex;
+  }
+          #lapList{
+  position: absolute;
+  width: 10%;
+      margin-left: 865px;
+}
+            }
+
+@media (min-width: 600px) and (max-width: 999px) {
+
+  #lapList {
+    margin-left: auto;
+    margin-right: 0;
+  }
+}
+
+
+
+</style>
+
+</head>  
+<body > 
+    <main class="theme-0" ondblclick="toggleModes()">
+    <div class="top-nav">  
+    <button class="menu-btn" onclick="toggleMenu(event)" aria-label="Open Settings Menu">  
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>  
+
+    </button>  
+    <div class="dropdown" id="menuBox">  
+        <button onclick="changeTheme()">🎨 Switch Theme</button>  
+        <button onclick="shareApp()">🔗 Share App</button>  
+        <button onclick="checkUpdate()">🔄 Update App</button>  
+        <button onclick="showAbout()">ℹ️ About App</button>  
+        <button onclick="resetAll()">🔄 Full Reset</button>  
+    </div>  
+</div>  
+
+<div class="display" id="timerDisplay" onclick="handleDisplayClick(event)">  
+    <span id="timeDisplay">00:00:00</span><br>  
+    <span class="ms">.<span id="msDisplay">000</span></span>  
+</div>  
+
+<div class="controls-ui">  
+    <div class="install-info" id="installBtnMain" onclick="installApp()">📲 CLICK TO INSTALL APP</div>  
+    <input type="text" id="timeInput" value="00:00:00" onchange="saveInput()"aria-label="Enter timer duration" >  
+    <div class="main-btns">  
+        <button class="start-btn" id="startBtn" onclick="startTimer(event)">START</button>  
+        <button class="reset-btn" onclick="resetAll()">RESET</button>  
+        <button class="lap-btn" onclick="addLap()">LAP</button>  
+    </div>  
+</div>
+</main>
+<script>
+const APP_VERSION = "5.2";
+let timer, running = false, totalMs = 0, isMinimal = false;
+let currentTheme = 0;
+let deferredPrompt;
+
+/* ---------------- ABOUT ---------------- */
+function showAbout() {
+    alert(
+        "Pro Smart Timer v" + APP_VERSION + "\n\n" +
+        "Double Click: Enter/Exit landscape (Timer only)\n" +
+        "Single Tap: Start/Stop timer\n" +
+        "Update: Fetches latest icons/features\n" +
+        "Memory: Themes & inputs are auto-saved."
+    );
+}
+
+/* ---------------- UPDATE ---------------- */
+function checkUpdate() {
+    if (confirm("Check for updates?")) {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations()
+                .then(regs => regs.forEach(r => r.unregister()));
+        }
+        location.reload(true);
+    }
+}
+
+/* ---------------- MANIFEST ---------------- */
+const myManifest = {
+    name: "Pro Smart Timer",
+    short_name: "Timer Pro",
+    start_url: ".",
+    display: "standalone",
+    background_color: "#0a0c10",
+    theme_color: "#00ff9d",
+    icons: [{
+        src: "https://img.icons8.com/color/512/stopwatch.png",
+        sizes: "512x512",
+        type: "image/png"
+    }]
+};
+const blob = new Blob([JSON.stringify(myManifest)], { type: 'application/json' });
+document.getElementById('manifestLink').href = URL.createObjectURL(blob);
+
+/* ---------------- INSTALL & SHARE ---------------- */
+window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+});
+async function installApp() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt = null;
+    } else {
+        alert("Use Browser Menu > Install");
+    }
+}
+async function shareApp() {
+    if (navigator.share) {
+        navigator.share({ title: "Timer Pro", url: location.href });
+    }
+}
+
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+/* ---------------- LOAD SAVED DATA ---------------- */
+window.onload = () => {
+    const savedTheme = localStorage.getItem("timerTheme");
+    if (savedTheme !== null) {
+        document.body.className = `theme-${savedTheme}`;
+        currentTheme = +savedTheme;
+    }
+
+    const savedTime = localStorage.getItem("timerInput");
+    if (savedTime) timeInput.value = savedTime;
+
+    if (matchMedia('(display-mode: standalone)').matches) {
+        installBtnMain.style.display = "none";
+    }
+};
+
+/* ---------------- BASIC UI ---------------- */
+function saveInput() {
+    localStorage.setItem("timerInput", timeInput.value);
+}
+function changeTheme() {
+    currentTheme = (currentTheme + 1) % 5;
+    document.body.className = `theme-${currentTheme}`;
+    localStorage.setItem("timerTheme", currentTheme);
+}
+function toggleMenu(e) {
+    e.stopPropagation();
+    menuBox.style.display = menuBox.style.display === "flex" ? "none" : "flex";
+}
+window.onclick = () => menuBox.style.display = "none";
+
+/* ---------------- FULLSCREEN ---------------- */
+function toggleModes() {
+    isMinimal = !isMinimal;
+    document.body.classList.toggle("minimal-ui", isMinimal);
+
+    if (isMinimal) {
+        document.documentElement.requestFullscreen().catch(()=>{});
+        screen.orientation?.lock("landscape").catch(()=>{});
+    } else {
+        document.exitFullscreen?.();
+        screen.orientation?.unlock();
+    }
+}
+
+/* ---------------- TIMER CORE ---------------- */
+function handleDisplayClick(e) {
+    e.stopPropagation();
+    running ? stopTimer() : startTimer();
+}
+
+function format(ms) {
+    let s = Math.floor(ms / 1000);
+    let h = Math.floor(s / 3600);
+    let m = Math.floor((s % 3600) / 60);
+    let sec = s % 60;
+    let milli = ms % 1000;
+
+    const timeText =
+        `${String(h).padStart(2, '0')}:` +
+        `${String(m).padStart(2, '0')}:` +
+        `${String(sec).padStart(2, '0')}`;
+
+    timeDisplay.textContent = timeText;
+    msDisplay.textContent = String(milli).padStart(3, '0');
+
+    /* LIVE TAB TITLE */
+    document.title = `${timeText}.${String(milli).padStart(3,'0')} | Haproven Timer`;
+}
+
+function startTimer(e) {
+    if (running) return stopTimer();
+    if (e) e.stopPropagation();
+
+    let parts = timeInput.value.split(":").map(Number);
+    let inputVal =
+        ((parts[0]||0)*3600 +
+         (parts[1]||0)*60 +
+         (parts[2]||0)) * 1000;
+
+    let mode = (inputVal > 0 && totalMs === 0) ? "down" : "up";
+    if (mode === "down") totalMs = inputVal;
+
+    running = true;
+    startBtn.textContent = "STOP";
+    startBtn.style.background = "#ff4d4d";
+
+    timer = setInterval(() => {
+        if (mode === "up") totalMs += 10;
+        else {
+            totalMs -= 10;
+            if (totalMs <= 0) {
+                totalMs = 0;
+                stopTimer();
+                playAlarm();
+            }
+        }
+        format(totalMs);
+    }, 10);
+}
+
+function stopTimer() {
+    clearInterval(timer);
+    running = false;
+    startBtn.textContent = "START";
+    startBtn.style.background = "var(--accent)";
+}
+
+function playAlarm() {
+    [0, 600].forEach(d => setTimeout(() => {
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.connect(g);
+        g.connect(audioCtx.destination);
+        o.frequency.value = 880;
+        o.start();
+        setTimeout(() => o.stop(), 300);
+    }, d));
+}
+
+/* ---------------- RESET ---------------- */
+function resetAll() {
+    stopTimer();
+    totalMs = 0;
+    format(0);
+    timeInput.value = "00:00:00";
+    localStorage.setItem("timerInput", "00:00:00");
+
+    document.title = "Haproven Timer | #1 Pro Precision Stopwatch";
+
+    const lapContainer = document.getElementById("lapList");
+    if (lapContainer) lapContainer.innerHTML = "";
+}
+
+/* ---------------- LAPS ---------------- */
+function addLap() {
+    if (totalMs === 0) return;
+
+    let lapContainer = document.getElementById("lapList");
+    if (!lapContainer) {
+        lapContainer = document.createElement("div");
+        lapContainer.id = "lapList";
+        lapContainer.style.marginTop = "15px";
+        lapContainer.style.maxHeight = "120px";
+        lapContainer.style.overflowY = "auto";
+        lapContainer.style.fontSize = "0.9rem";
+        document.querySelector(".controls-ui").appendChild(lapContainer);
+    }
+
+    const currentTime =
+        timeDisplay.textContent + "." + msDisplay.textContent;
+
+    const lapEntry = document.createElement("div");
+    lapEntry.style.padding = "8px";
+    lapEntry.style.borderBottom = "1px solid #444";
+    lapEntry.style.display = "flex";
+    lapEntry.style.justifyContent = "space-between";
+
+    const lapCount = lapContainer.children.length + 1;
+    lapEntry.innerHTML =
+        `<span>Lap ${lapCount}</span>
+         <span style="color:var(--accent)">${currentTime}</span>`;
+
+    lapContainer.prepend(lapEntry);
+}
+</script>
+
+</body>  
+</html>  
