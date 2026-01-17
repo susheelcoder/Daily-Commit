@@ -3,155 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smart Timer Pro</title>
-
-    <meta name="theme-color" content="#090a0f">
-    <link rel="manifest" id="manifestLink">
-
+    <title>Smart Timer Pro Max</title>
     <style>
+        :root {
+            --accent: #00ff9d;
+            --bg: #090a0f;
+            --panel: #1a1b26;
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { height: 100vh; background: var(--bg); display: flex; justify-content: center; align-items: center; color: #fff; overflow: hidden; padding: 15px; }
 
-        body { 
-            height: 100vh; 
-            background: #090a0f; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            color: #fff; 
-            overflow: hidden; 
-            padding: 15px;
-        }
+        /* --- TOP NAV --- */
+        .top-nav { position: absolute; top: 15px; left: 15px; right: 15px; display: flex; justify-content: space-between; z-index: 1001; }
+        .menu-btn { background: none; border: none; cursor: pointer; padding: 10px; }
+        .dropdown { position: absolute; top: 50px; right: 0; background: var(--panel); border: 1px solid #333; border-radius: 12px; display: none; flex-direction: column; width: 180px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); z-index: 2000; }
+        .dropdown button { background: none; color: white; padding: 14px; text-align: left; border: none; border-bottom: 1px solid #222; cursor: pointer; }
 
-        /* Top Navigation */
-        .top-nav {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            right: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1001;
-        }
-
-        .back-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white;
-            padding: 8px;
-            border-radius: 50%;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-        }
-
-        .back-btn:hover { background: rgba(255,255,255,0.2); }
-
-        .menu-btn { background: none; border: none; cursor: pointer; padding: 10px; border-radius: 50%; }
-
-        .dropdown {
-            position: absolute;
-            top: 50px;
-            right: 0;
-            background: #1a1b26;
-            border: 1px solid #333;
-            border-radius: 12px;
-            display: none;
-            flex-direction: column;
-            width: 170px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-            overflow: hidden;
-        }
-
-        .dropdown button {
-            background: none;
-            color: white;
-            padding: 14px;
-            text-align: left;
-            border: none;
-            border-bottom: 1px solid #222;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-
-        /* Main UI */
+        /* --- CONTAINER --- */
         .container { width: 100%; max-width: 450px; text-align: center; }
+        #modeTag { font-size: 0.8rem; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; opacity: 0.7; }
 
-        .display { 
-            font-size: 16vw; 
-            font-weight: 800; 
-            font-family: 'Courier New', monospace; 
-            color: #00ff9d; 
-            line-height: 1; 
-            text-shadow: 0 0 20px rgba(0,255,157,0.2);
-        }
-
+        /* --- DIGITAL DISPLAY --- */
+        .display { font-size: 16vw; font-weight: 800; font-family: 'Courier New', monospace; color: var(--accent); line-height: 1; cursor: pointer; user-select: none; }
         @media (min-width: 600px) { .display { font-size: 6rem; } }
-
         .ms { font-size: 0.45em; color: #fff; opacity: 0.3; }
 
-        input[type="text"] {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(0,255,157,0.3);
-            border-radius: 10px;
-            color: #fff;
-            font-size: 1.5rem;
-            text-align: center;
-            padding: 12px;
-            width: 180px;
-            margin: 25px auto;
-            outline: none;
+        /* --- ANALOG CLOCK (DEEWAR GHADI) --- */
+        .analog-view {
+            display: none; width: 280px; height: 280px; border-radius: 50%;
+            position: relative; margin: 20px auto; border: 10px solid #333;
+            background: radial-gradient(circle, #1a1b26 0%, #000 100%);
+            box-shadow: 0 0 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.5);
+            cursor: pointer;
         }
+        /* Design 2: Classic White */
+        .analog-view.theme-classic { background: #eee; border-color: #222; }
+        .analog-view.theme-classic .hand { background: #111; }
+        .analog-view.theme-classic .number { color: #111; }
+        .analog-view.theme-classic .sec-hand { background: #ff4d4d; }
 
-        .controls { display: flex; flex-direction: column; gap: 12px; }
-        .start-btn { width: 100%; padding: 18px; font-size: 1.6rem; font-weight: bold; border-radius: 18px; border: none; background: #00ff9d; color: #000; cursor: pointer; }
+        .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom; border-radius: 10px; transition: transform 0.1s cubic-bezier(0.4, 2.08, 0.55, 0.44); }
+        .hour-hand { width: 6px; height: 60px; background: #fff; z-index: 3; }
+        .min-hand { width: 4px; height: 90px; background: #bbb; z-index: 2; }
+        .sec-hand { width: 2px; height: 110px; background: var(--accent); z-index: 1; }
+        .center-dot { position: absolute; top: 50%; left: 50%; width: 12px; height: 12px; background: var(--accent); border-radius: 50%; transform: translate(-50%, -50%); z-index: 10; }
+        .number { position: absolute; width: 100%; height: 100%; padding: 15px; text-align: center; font-weight: bold; font-size: 1.2rem; color: #555; }
 
+        /* --- INPUT & BUTTONS --- */
+        input[type="text"] { background: rgba(255,255,255,0.08); border: 1px solid rgba(0,255,157,0.3); border-radius: 10px; color: #fff; font-size: 1.5rem; text-align: center; padding: 12px; width: 180px; margin: 25px auto; outline: none; display: none; }
+        .controls { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+        .start-btn { width: 100%; padding: 18px; font-size: 1.6rem; font-weight: bold; border-radius: 18px; border: none; background: var(--accent); color: #000; cursor: pointer; }
         .secondary-btns { display: flex; gap: 10px; }
         .secondary-btns button { flex: 1; padding: 14px; font-size: 0.85rem; font-weight: bold; border-radius: 12px; border: none; cursor: pointer; color: white; }
-
-        .stop { background: #ff4d4d; }
-        .reset { background: #333; }
-        .lap { background: #00c6ff; }
-
-        .laps-box { margin-top: 20px; max-height: 120px; overflow-y: auto; border-top: 1px solid #222; padding-top: 10px; font-size: 0.9rem; color: #888; }
-        .lap-item { display: flex; justify-content: space-between; padding: 5px 15px; border-bottom: 1px solid #111; }
+        .stop { background: #ff4d4d; } .reset { background: #333; } .lap { background: #00c6ff; }
+        .laps-box { margin-top: 20px; max-height: 100px; overflow-y: auto; font-size: 0.9rem; color: #888; }
     </style>
 </head>
 <body>
 
     <div class="top-nav">
-        <a href="/" class="back-btn" title="Go to Index">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-        </a>
-
+        <div style="font-size: 0.7rem; color: #555;">Triple Tap: Mode | Menu: Design</div>
         <div style="position: relative;">
             <button class="menu-btn" onclick="toggleMenu()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                    <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-                </svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
             </button>
             <div class="dropdown" id="menuDropdown">
+                <button onclick="changeClockDesign()">🎨 Change Clock Look</button>
                 <button onclick="toggleFull()">Full Screen</button>
-                <button id="installBtn" onclick="installApp()">📲 Install App</button>
                 <button onclick="resetTimer()">Reset All</button>
             </div>
         </div>
     </div>
 
     <div class="container">
-        <div class="display">
+        <div id="modeTag">Stopwatch</div>
+        
+        <div class="display" id="digitalView" onclick="handleTap()">
             <span id="timeDisplay">00:00:00</span><br>
             <span class="ms">.<span id="msDisplay">000</span></span>
         </div>
 
+        <div class="analog-view" id="analogView" onclick="handleTap()">
+            <div class="center-dot"></div>
+            <div class="number" style="transform: rotate(0deg)">12</div>
+            <div class="number" style="transform: rotate(90deg)">3</div>
+            <div class="number" style="transform: rotate(180deg)">6</div>
+            <div class="number" style="transform: rotate(270deg)">9</div>
+            <div id="h-hand" class="hand hour-hand"></div>
+            <div id="m-hand" class="hand min-hand"></div>
+            <div id="s-hand" class="hand sec-hand"></div>
+        </div>
+
         <input type="text" id="timeInput" value="00:00:00" placeholder="HH:MM:SS">
 
-        <div class="controls">
+        <div class="controls" id="controlsSection">
             <button class="start-btn" id="startBtn" onclick="startTimer()">START</button>
             <div class="secondary-btns">
                 <button class="stop" onclick="stopTimer()">STOP</button>
@@ -159,49 +104,50 @@
                 <button class="lap" onclick="addLap()">LAP</button>
             </div>
         </div>
-
         <div class="laps-box" id="lapsList"></div>
     </div>
 
 <script>
-    /* --- AUTO INSTALL LOGIC --- */
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        // Pehli baar open karte hi install prompt dikhane ki koshish
-        setTimeout(() => { installApp(); }, 2000); 
-    });
-
-    async function installApp() {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            deferredPrompt = null;
-        }
-        if(document.getElementById("menuDropdown").style.display === "flex") toggleMenu();
+    let timer, running = false, totalMs = 0;
+    let currentView = 0; // 0: Stopwatch, 1: Timer, 2: Analog Clock
+    const views = ["Stopwatch", "Countdown", "Analog Clock"];
+    
+    // --- TRIPLE TAP LOGIC ---
+    let tapCount = 0;
+    function handleTap() {
+        tapCount++;
+        if (tapCount === 3) { switchView(); tapCount = 0; }
+        setTimeout(() => { tapCount = 0; }, 500);
     }
 
-    /* PWA Manifest */
-    const myManifest = {
-        "name": "Smart Timer Pro",
-        "short_name": "Timer",
-        "start_url": ".",
-        "display": "standalone",
-        "background_color": "#090a0f",
-        "theme_color": "#00ff9d",
-        "icons": [{ "src": "https://cdn-icons-png.flaticon.com/512/2972/2972353.png", "sizes": "512x512", "type": "image/png" }]
-    };
-    const blob = new Blob([JSON.stringify(myManifest)], {type: 'application/json'});
-    document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(blob));
+    function switchView() {
+        stopTimer(); resetTimer();
+        currentView = (currentView + 1) % 3;
+        document.getElementById("modeTag").textContent = views[currentView];
 
-    /* --- TIMER LOGIC --- */
-    let timer, running = false, totalMs = 0, mode = "up";
-    const timeDisplay = document.getElementById("timeDisplay");
-    const msDisplay = document.getElementById("msDisplay");
-    const menu = document.getElementById("menuDropdown");
+        // UI Toggle
+        document.getElementById("digitalView").style.display = (currentView === 2) ? "none" : "block";
+        document.getElementById("analogView").style.display = (currentView === 2) ? "block" : "none";
+        document.getElementById("timeInput").style.display = (currentView === 1) ? "block" : "none";
+        document.getElementById("controlsSection").style.display = (currentView === 2) ? "none" : "flex";
 
-    function toggleMenu() { menu.style.display = menu.style.display === "flex" ? "none" : "flex"; }
+        if (currentView === 2) startClockMode();
+    }
+
+    function changeClockDesign() {
+        const clock = document.getElementById("analogView");
+        clock.classList.toggle("theme-classic");
+        toggleMenu();
+    }
+
+    function updateAnalog(h, m, s, ms) {
+        const sDeg = (s * 6) + (ms * 0.006);
+        const mDeg = (m * 6) + (s * 0.1);
+        const hDeg = (h * 30) + (m * 0.5);
+        document.getElementById("s-hand").style.transform = `translateX(-50%) rotate(${sDeg}deg)`;
+        document.getElementById("m-hand").style.transform = `translateX(-50%) rotate(${mDeg}deg)`;
+        document.getElementById("h-hand").style.transform = `translateX(-50%) rotate(${hDeg}deg)`;
+    }
 
     function format(ms) {
         let s = Math.floor(ms / 1000);
@@ -209,67 +155,48 @@
         let m = Math.floor((s % 3600) / 60);
         let sec = s % 60;
         let milli = ms % 1000;
-        timeDisplay.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-        msDisplay.textContent = String(milli).padStart(3,'0');
+        document.getElementById("timeDisplay").textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+        document.getElementById("msDisplay").textContent = String(milli).padStart(3,'0');
+        updateAnalog(h, m, sec, milli);
     }
 
     function startTimer() {
         if (running) return;
-        let parts = document.getElementById("timeInput").value.split(":").map(Number);
-        let inputVal = ( (parts[0]||0) * 3600 + (parts[1]||0) * 60 + (parts[2]||0) ) * 1000;
-
-        if (inputVal > 0 && totalMs === 0) { mode = "down"; totalMs = inputVal; }
-        else if (totalMs === 0) { mode = "up"; }
-
+        if (currentView === 1 && totalMs === 0) {
+            let parts = document.getElementById("timeInput").value.split(":").map(Number);
+            totalMs = ((parts[0] || 0) * 3600 + (parts[1] || 0) * 60 + (parts[2] || 0)) * 1000;
+        }
         running = true;
         document.getElementById("startBtn").style.background = "#008a55";
-
         timer = setInterval(() => {
-            if (mode === "up") totalMs += 10;
-            else {
-                totalMs -= 10;
-                if (totalMs <= 0) { totalMs = 0; stopTimer(); playDoubleBeep(); }
-            }
+            if (currentView === 0) totalMs += 10;
+            else { totalMs -= 10; if (totalMs <= 0) { totalMs = 0; stopTimer(); playDoubleBeep(); } }
             format(totalMs);
         }, 10);
     }
 
+    function startClockMode() {
+        timer = setInterval(() => {
+            const now = new Date();
+            updateAnalog(now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
+        }, 50);
+    }
+
     function stopTimer() { clearInterval(timer); running = false; document.getElementById("startBtn").style.background = "#00ff9d"; }
     function resetTimer() { stopTimer(); totalMs = 0; format(0); document.getElementById("lapsList").innerHTML = ""; }
+    function toggleMenu() { const m = document.getElementById("menuDropdown"); m.style.display = m.style.display === "flex" ? "none" : "flex"; }
+    function toggleFull() { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); toggleMenu(); }
 
-    function addLap() {
-        if(totalMs === 0) return;
-        let div = document.createElement("div");
-        div.className = "lap-item";
-        div.innerHTML = `<span>Lap ${document.getElementById("lapsList").children.length + 1}</span> <span>${timeDisplay.textContent}.${msDisplay.textContent}</span>`;
-        document.getElementById("lapsList").prepend(div);
-    }
-
-    /* 2 Baar Beep Bajane ka Function */
     function playDoubleBeep() {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        function beep(delay) {
-            setTimeout(() => {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.frequency.value = 880; 
-                osc.start();
-                setTimeout(() => osc.stop(), 300);
-            }, delay);
-        }
-
-        beep(0);     // Pehli beep
-        beep(500);   // Dusri beep 0.5 second baad
-    }
-
-    function toggleFull() {
-        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-        else document.exitFullscreen();
-        toggleMenu();
+        const beep = (d) => setTimeout(() => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.connect(g); g.connect(audioCtx.destination);
+            o.frequency.value = 880; o.start(); setTimeout(() => o.stop(), 300);
+        }, d);
+        beep(0); beep(500);
     }
 </script>
 </body>
-</html> 
+</html>
