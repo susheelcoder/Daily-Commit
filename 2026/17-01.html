@@ -3,192 +3,225 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Online Countdown Timer</title>
+<title>Dual Timer</title>
 
 <style>
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family: 'Poppins', sans-serif;
+    font-family:Poppins, sans-serif;
 }
 
 body{
     height:100vh;
     overflow:hidden;
-    background: radial-gradient(circle at top, #1e3c72, #2a5298);
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
     color:#fff;
 }
 
-/* MAIN CONTAINER */
-.timer-app{
+/* PAGE */
+.wrapper{
     height:100vh;
     display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
 }
 
-/* TIMER DISPLAY */
-.timer-display{
-    font-size:4rem;
+/* TIMER BOX */
+.timer-box{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    border-right:1px solid rgba(255,255,255,0.2);
+}
+
+.timer-box:last-child{
+    border:none;
+}
+
+h2{
+    margin-bottom:15px;
+}
+
+/* DISPLAY */
+.display{
+    font-size:3.5rem;
+    margin-bottom:15px;
     font-weight:700;
-    margin-bottom:20px;
-    letter-spacing:3px;
 }
 
 /* INPUT */
 input{
     width:120px;
-    padding:10px;
-    font-size:1.2rem;
-    text-align:center;
+    padding:8px;
     border:none;
-    border-radius:10px;
-    outline:none;
+    border-radius:8px;
+    font-size:1rem;
+    text-align:center;
 }
 
 /* BUTTONS */
 .buttons{
-    margin-top:20px;
     display:flex;
-    gap:15px;
+    gap:10px;
+    margin-top:15px;
     flex-wrap:wrap;
     justify-content:center;
 }
 
 button{
-    padding:12px 25px;
-    font-size:1rem;
+    padding:10px 20px;
     border:none;
-    border-radius:25px;
-    cursor:pointer;
+    border-radius:20px;
     font-weight:600;
+    cursor:pointer;
     transition:0.3s;
 }
 
-.start{background:#00ff9d;color:#000;}
+.start{background:#00ff9d;}
 .stop{background:#ff4d4d;color:#fff;}
-.restart{background:#ffd633;color:#000;}
-.record{background:#00c6ff;color:#000;}
+.reset{background:#ffd633;}
+.record{background:#00c6ff;}
 
 button:hover{
-    transform:scale(1.08);
-    opacity:0.9;
+    transform:scale(1.1);
 }
 
-/* RECORD SECTION */
+/* RECORD */
 .records{
-    position:absolute;
-    bottom:0;
-    width:100%;
-    max-height:35vh;
+    margin-top:15px;
+    width:80%;
+    max-height:150px;
     overflow:auto;
-    background:rgba(0,0,0,0.25);
-    padding:15px;
+    background:rgba(0,0,0,0.3);
+    border-radius:10px;
+    padding:10px;
 }
 
-.records h3{
-    text-align:center;
-    margin-bottom:10px;
-}
-
-.records ul{
-    list-style:none;
-}
-
-.records li{
-    padding:6px;
+.records p{
+    font-size:0.9rem;
     border-bottom:1px solid rgba(255,255,255,0.2);
-    font-size:1rem;
+    padding:5px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="timer-app">
+<div class="wrapper">
 
-    <h2>Online Countdown Timer</h2>
+<!-- STOPWATCH -->
+<div class="timer-box">
+    <h2>Stopwatch</h2>
+    <div class="display" id="swDisplay">00:00:00</div>
 
-    <!-- TIME INPUT -->
-    <input type="number" id="timeInput" placeholder="Seconds">
-
-    <!-- DISPLAY -->
-    <div class="timer-display" id="display">00:00</div>
-
-    <!-- BUTTONS -->
     <div class="buttons">
-        <button class="start" onclick="startTimer()">Start</button>
-        <button class="stop" onclick="stopTimer()">Stop</button>
-        <button class="restart" onclick="restartTimer()">Restart</button>
-        <button class="record" onclick="recordTime()">Record</button>
+        <button class="start" onclick="startSW()">Start</button>
+        <button class="stop" onclick="stopSW()">Stop</button>
+        <button class="reset" onclick="resetSW()">Restart</button>
+        <button class="record" onclick="recordSW()">Record</button>
     </div>
 
+    <div class="records" id="swRecords"></div>
 </div>
 
-<!-- RECORD LIST -->
-<div class="records">
-    <h3>Recorded Times</h3>
-    <ul id="recordList"></ul>
+<!-- COUNTDOWN -->
+<div class="timer-box">
+    <h2>Countdown Timer</h2>
+    <input type="number" id="cdInput" placeholder="Seconds">
+
+    <div class="display" id="cdDisplay">00:00</div>
+
+    <div class="buttons">
+        <button class="start" onclick="startCD()">Start</button>
+        <button class="stop" onclick="stopCD()">Stop</button>
+        <button class="reset" onclick="resetCD()">Restart</button>
+        <button class="record" onclick="recordCD()">Record</button>
+    </div>
+
+    <div class="records" id="cdRecords"></div>
+</div>
+
 </div>
 
 <script>
-let timer;
-let remainingTime = 0;
-let isRunning = false;
+/* -------- STOPWATCH -------- */
+let swTime = 0, swTimer, swRunning = false;
 
-/* FORMAT TIME */
-function formatTime(seconds){
-    let min = Math.floor(seconds / 60);
-    let sec = seconds % 60;
-    return `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+function formatSW(t){
+    let h = Math.floor(t / 3600);
+    let m = Math.floor((t % 3600) / 60);
+    let s = t % 60;
+    return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
 
-/* START */
-function startTimer(){
-    if(isRunning) return;
+function startSW(){
+    if(swRunning) return;
+    swRunning = true;
+    swTimer = setInterval(()=>{
+        swTime++;
+        swDisplay.innerText = formatSW(swTime);
+    },1000);
+}
 
-    if(remainingTime === 0){
-        remainingTime = parseInt(document.getElementById("timeInput").value);
-        if(isNaN(remainingTime) || remainingTime <= 0){
+function stopSW(){
+    clearInterval(swTimer);
+    swRunning = false;
+}
+
+function resetSW(){
+    stopSW();
+    swTime = 0;
+    swDisplay.innerText = "00:00:00";
+}
+
+function recordSW(){
+    swRecords.innerHTML = `<p>${formatSW(swTime)}</p>` + swRecords.innerHTML;
+}
+
+/* -------- COUNTDOWN -------- */
+let cdTime = 0, cdTimer, cdRunning = false;
+
+function formatCD(t){
+    let m = Math.floor(t / 60);
+    let s = t % 60;
+    return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function startCD(){
+    if(cdRunning) return;
+    if(cdTime === 0){
+        cdTime = parseInt(cdInput.value);
+        if(isNaN(cdTime) || cdTime <= 0){
             alert("Enter valid seconds");
             return;
         }
     }
-
-    isRunning = true;
-    timer = setInterval(()=>{
-        if(remainingTime <= 0){
-            clearInterval(timer);
-            isRunning = false;
+    cdRunning = true;
+    cdTimer = setInterval(()=>{
+        if(cdTime <= 0){
+            stopCD();
             return;
         }
-        remainingTime--;
-        document.getElementById("display").innerText = formatTime(remainingTime);
+        cdTime--;
+        cdDisplay.innerText = formatCD(cdTime);
     },1000);
 }
 
-/* STOP */
-function stopTimer(){
-    clearInterval(timer);
-    isRunning = false;
+function stopCD(){
+    clearInterval(cdTimer);
+    cdRunning = false;
 }
 
-/* RESTART */
-function restartTimer(){
-    clearInterval(timer);
-    isRunning = false;
-    remainingTime = parseInt(document.getElementById("timeInput").value) || 0;
-    document.getElementById("display").innerText = formatTime(remainingTime);
+function resetCD(){
+    stopCD();
+    cdTime = parseInt(cdInput.value) || 0;
+    cdDisplay.innerText = formatCD(cdTime);
 }
 
-/* RECORD */
-function recordTime(){
-    let list = document.getElementById("recordList");
-    let li = document.createElement("li");
-    li.innerText = "Recorded at: " + formatTime(remainingTime);
-    list.prepend(li);
+function recordCD(){
+    cdRecords.innerHTML = `<p>${formatCD(cdTime)}</p>` + cdRecords.innerHTML;
 }
 </script>
 
