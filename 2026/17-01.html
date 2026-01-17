@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Timer</title>
+<title>Smart Timer with Alarm</title>
 
 <style>
 *{
@@ -23,25 +23,21 @@ body{
     color:#fff;
 }
 
-/* GLASS CARD */
 .card{
     width:360px;
     padding:35px;
     border-radius:20px;
-    background:rgba(255,255,255,0.1);
+    background:rgba(255,255,255,0.12);
     backdrop-filter:blur(15px);
-    box-shadow:0 20px 40px rgba(0,0,0,0.4);
+    box-shadow:0 25px 50px rgba(0,0,0,0.5);
     text-align:center;
 }
 
-/* TITLE */
 h1{
     font-size:1.4rem;
     margin-bottom:15px;
-    letter-spacing:1px;
 }
 
-/* INPUT */
 input{
     width:200px;
     padding:12px;
@@ -55,15 +51,9 @@ input{
     color:#fff;
 }
 
-input::placeholder{
-    color:#ddd;
-}
-
-/* DISPLAY */
 .display{
     font-size:2.8rem;
     font-weight:700;
-    letter-spacing:2px;
     margin-bottom:25px;
 }
 
@@ -72,7 +62,6 @@ input::placeholder{
     opacity:0.8;
 }
 
-/* BUTTONS */
 .buttons{
     display:flex;
     gap:12px;
@@ -122,8 +111,25 @@ button:hover{
 <script>
 let timer;
 let running = false;
-let mode = "up"; // up or down
+let mode = "up";   // up = stopwatch, down = countdown
 let totalMs = 0;
+
+/* 🔔 ALARM SOUND (Web Audio API) */
+function playBeep(){
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+    gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + 1); // 1 second beep
+}
 
 /* FORMAT */
 function formatTime(ms){
@@ -137,11 +143,12 @@ function formatTime(ms){
         `${String(h).padStart(2,'0')}:`+
         `${String(m).padStart(2,'0')}:`+
         `${String(s).padStart(2,'0')}`;
+
     document.getElementById("ms").innerText =
         String(milli).padStart(3,'0');
 }
 
-/* PARSE INPUT HH:MM:SS */
+/* PARSE HH:MM:SS */
 function parseInput(str){
     let p = str.split(":").map(Number);
     if(p.length !== 3) return 0;
@@ -152,8 +159,7 @@ function parseInput(str){
 function startTimer(){
     if(running) return;
 
-    let input = timeInput.value;
-    let parsed = parseInput(input);
+    let parsed = parseInput(timeInput.value);
 
     if(parsed > 0){
         totalMs = parsed;
@@ -171,6 +177,7 @@ function startTimer(){
         }else{
             if(totalMs <= 0){
                 stopTimer();
+                playBeep(); // 🔔 ALARM
                 return;
             }
             totalMs -= 10;
