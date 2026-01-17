@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Timer Pro - Compact</title>
+    <title>Smart Timer Pro</title>
+    
+    <meta name="theme-color" content="#090a0f">
+    <link rel="manifest" id="manifestLink">
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
 
@@ -17,18 +21,48 @@
             overflow: hidden;
         }
 
-        /* Full Screen Button Top Right */
-        .fullscreen-btn {
+        /* 3-Dot Menu Styling */
+        .header-actions {
             position: absolute;
             top: 15px;
             right: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            padding: 8px;
-            border-radius: 50%;
-            cursor: pointer;
-            z-index: 100;
+            display: flex;
+            gap: 10px;
         }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 101;
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background: #1a1b26;
+            border: 1px solid #333;
+            border-radius: 8px;
+            display: none;
+            flex-direction: column;
+            width: 150px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .dropdown button {
+            background: none;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            border: none;
+            border-bottom: 1px solid #222;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .dropdown button:hover { background: #2a2c3d; }
 
         .container {
             width: 95%;
@@ -36,13 +70,11 @@
             text-align: center;
         }
 
-        /* Extra Large Timer */
         .display {
             font-size: 7rem; 
             font-weight: 800;
             font-family: monospace;
             color: #00ff9d;
-            margin-bottom: 10px;
             line-height: 1;
         }
 
@@ -52,76 +84,69 @@
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 8px;
-            color: #aaa;
-            font-size: 1.2rem;
+            color: #888;
+            font-size: 1.1rem;
             text-align: center;
             padding: 5px;
-            width: 150px;
-            margin-bottom: 40px;
+            width: 140px;
+            margin: 20px 0 40px 0;
         }
 
-        .controls {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+        .controls { display: flex; flex-direction: column; gap: 15px; }
 
-        /* Big Start Button */
         .start-btn {
             width: 100%;
-            padding: 20px;
-            font-size: 1.8rem;
+            padding: 18px;
+            font-size: 1.6rem;
             font-weight: bold;
             border-radius: 15px;
             border: none;
             background: #00ff9d;
             color: #000;
             cursor: pointer;
-            transition: 0.2s;
         }
 
-        /* Three buttons in one line */
-        .secondary-btns {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
+        .secondary-btns { display: flex; gap: 10px; }
 
         .secondary-btns button {
             flex: 1;
             padding: 12px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: bold;
             border-radius: 10px;
             border: none;
             cursor: pointer;
             color: white;
-            text-transform: uppercase;
         }
 
         .stop { background: #ff4d4d; }
-        .reset { background: #444; }
+        .reset { background: #333; }
         .lap { background: #00c6ff; }
-
-        button:active { transform: scale(0.95); }
 
         .laps-box {
             margin-top: 25px;
-            height: 100px;
+            height: 80px;
             overflow-y: auto;
-            font-size: 0.85rem;
-            color: #888;
-            border-top: 1px solid #222;
-            padding-top: 10px;
+            font-size: 0.8rem;
+            color: #666;
+            border-top: 1px solid #111;
         }
-        .lap-row { display: flex; justify-content: space-between; padding: 4px 10px; }
     </style>
 </head>
 <body>
 
-    <button class="fullscreen-btn" onclick="toggleFull()">
-        <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
-    </button>
+    <div class="header-actions">
+        <button class="menu-btn" onclick="toggleMenu()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+            </svg>
+        </button>
+        <div class="dropdown" id="menuDropdown">
+            <button onclick="toggleFull()">Full Screen</button>
+            <button onclick="resetTimer()">Reset Timer</button>
+            <button onclick="alert('Smart Timer Pro v2.0')">About</button>
+            </div>
+    </div>
 
     <div class="container">
         <div class="display">
@@ -133,11 +158,10 @@
 
         <div class="controls">
             <button class="start-btn" id="startBtn" onclick="startTimer()">START</button>
-            
             <div class="secondary-btns">
-                <button class="stop" onclick="stopTimer()">Stop</button>
-                <button class="reset" onclick="resetTimer()">Reset</button>
-                <button class="lap" onclick="addLap()">Lap</button>
+                <button class="stop" onclick="stopTimer()">STOP</button>
+                <button class="reset" onclick="resetTimer()">RESET</button>
+                <button class="lap" onclick="addLap()">LAP</button>
             </div>
         </div>
 
@@ -145,11 +169,35 @@
     </div>
 
 <script>
+    /* PWA Manifest Setup (Add to Home Screen) */
+    const myManifest = {
+        "name": "Smart Timer Pro",
+        "short_name": "Timer",
+        "start_url": ".",
+        "display": "standalone",
+        "background_color": "#090a0f",
+        "theme_color": "#090a0f",
+        "icons": [{ "src": "https://cdn-icons-png.flaticon.com/512/2972/2972353.png", "sizes": "512x512", "type": "image/png" }]
+    };
+    const blob = new Blob([JSON.stringify(myManifest)], {type: 'application/json'});
+    document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(blob));
+
+    /* Service Worker for Install Prompt */
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            const swCode = `self.addEventListener('fetch', function(e) {});`;
+            const swBlob = new Blob([swCode], {type: 'text/javascript'});
+            navigator.serviceWorker.register(URL.createObjectURL(swBlob));
+        });
+    }
+
     let timer, running = false, totalMs = 0, mode = "up";
     const timeDisplay = document.getElementById("timeDisplay");
     const msDisplay = document.getElementById("msDisplay");
-    const timeInput = document.getElementById("timeInput");
-    const lapsList = document.getElementById("lapsList");
+    const menu = document.getElementById("menuDropdown");
+
+    function toggleMenu() { menu.style.display = menu.style.display === "flex" ? "none" : "flex"; }
+    window.onclick = (e) => { if (!e.target.closest('.header-actions')) menu.style.display = "none"; }
 
     function format(ms) {
         let s = Math.floor(ms / 1000);
@@ -163,14 +211,14 @@
 
     function startTimer() {
         if (running) return;
-        let parts = timeInput.value.split(":").map(Number);
+        let parts = document.getElementById("timeInput").value.split(":").map(Number);
         let inputVal = (parts[0] * 3600 + parts[1] * 60 + parts[2]) * 1000;
         
         if (inputVal > 0 && totalMs === 0) { mode = "down"; totalMs = inputVal; }
         else if (totalMs === 0) { mode = "up"; }
 
         running = true;
-        document.getElementById("startBtn").style.background = "#008a55";
+        document.getElementById("startBtn").style.opacity = "0.6";
 
         timer = setInterval(() => {
             if (mode === "up") totalMs += 10;
@@ -182,34 +230,21 @@
         }, 10);
     }
 
-    function stopTimer() {
-        clearInterval(timer);
-        running = false;
-        document.getElementById("startBtn").style.background = "#00ff9d";
-    }
-
-    function resetTimer() {
-        stopTimer();
-        totalMs = 0;
-        format(0);
-        timeInput.value = "00:00:00";
-        lapsList.innerHTML = "";
-    }
+    function stopTimer() { clearInterval(timer); running = false; document.getElementById("startBtn").style.opacity = "1"; }
+    
+    function resetTimer() { stopTimer(); totalMs = 0; format(0); document.getElementById("lapsList").innerHTML = ""; }
 
     function addLap() {
         let div = document.createElement("div");
-        div.className = "lap-row";
-        div.innerHTML = `<span>Lap ${lapsList.children.length + 1}</span> <span>${timeDisplay.textContent}.${msDisplay.textContent}</span>`;
-        lapsList.prepend(div);
+        div.style.padding = "2px";
+        div.textContent = `Lap ${document.getElementById("lapsList").children.length + 1}: ${timeDisplay.textContent}.${msDisplay.textContent}`;
+        document.getElementById("lapsList").prepend(div);
     }
 
     function playBeep() {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const ctx = new AudioContext();
         const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.frequency.value = 1000;
+        osc.connect(ctx.destination);
         osc.start();
         setTimeout(() => osc.stop(), 500);
     }
@@ -217,6 +252,7 @@
     function toggleFull() {
         if (!document.fullscreenElement) document.documentElement.requestFullscreen();
         else document.exitFullscreen();
+        menu.style.display = "none";
     }
 </script>
 </body>
