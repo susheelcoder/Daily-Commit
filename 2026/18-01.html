@@ -3,22 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pro Smart Timer v4.9</title>
     
-    <title>Pro Smart Timer - Best Online Countdown & Stopwatch</title>
-    <meta name="description" content="Free online Pro Smart Timer with countdown, stopwatch, and lap features. Professional timer for workout, study, and cooking.">
-    <meta name="keywords" content="Smart Timer, Online Stopwatch, Countdown Timer, Workout Timer, Study Timer, Pro Timer App">
-    <meta name="author" content="Your Name/Brand">
-
-    <meta property="og:title" content="Pro Smart Timer">
-    <meta property="og:description" content="The most advanced web-based timer with landscape mode.">
-    <meta property="og:image" content="https://cdn-icons-png.flaticon.com/512/2972/2972353.png"> <meta property="og:url" content="https://your-link.com">
-
     <meta name="theme-color" content="#0a0c10">
-    <meta name="mobile-web-app-capable" content="yes">
     <link rel="manifest" id="manifestLink">
 
     <style>
-        /* CSS Same as v4.7 */
+        /* All CSS remains same as v4.8 */
         :root { --accent: #00ff9d; --bg: #0a0c10; --text: #ffffff; --card: #1a1d23; }
         body.theme-0 { --bg: #0a0c10; --accent: #00ff9d; --card: #1a1d23; }
         body.theme-1 { --bg: #001219; --accent: #00d4ff; --card: #002533; }
@@ -51,15 +42,12 @@
 
     <div class="top-nav">
         <button class="menu-btn" onclick="toggleMenu(event)">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-            </svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
         </button>
         <div class="dropdown" id="menuBox">
             <button onclick="changeTheme()">🎨 Switch Theme</button>
             <button onclick="shareApp()">🔗 Share App</button>
             <button onclick="resetAll()">🔄 Full Reset</button>
-            <button onclick="showAbout()">ℹ️ About</button>
         </div>
     </div>
 
@@ -84,39 +72,7 @@
     let currentTheme = 0;
     let deferredPrompt;
 
-    // --- SHARE LOGIC ---
-    async function shareApp() {
-        if (navigator.share) {
-            try {
-                await navigator.share({
-                    title: 'Pro Smart Timer',
-                    text: 'Best Smart Timer for Workout & Study!',
-                    url: window.location.href
-                });
-            } catch (err) { console.log('Share failed'); }
-        } else {
-            alert("Copy Link: " + window.location.href);
-        }
-    }
-
-    // --- INSTALL LOGIC ---
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-    });
-
-    async function installApp() {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') document.getElementById('installBtnMain').style.display = 'none';
-            deferredPrompt = null;
-        } else {
-            alert("To Install: Click 3-dots in Chrome > Install App");
-        }
-    }
-
-    // --- ICON & MANIFEST ---
+    // --- NEW ICON IN MANIFEST ---
     const myManifest = {
         "name": "Pro Smart Timer",
         "short_name": "Timer Pro",
@@ -125,7 +81,8 @@
         "background_color": "#0a0c10",
         "theme_color": "#00ff9d",
         "icons": [{ 
-            "src": "https://cdn-icons-png.flaticon.com/512/2972/2972353.png", // <--- CHANGE ICON LINK HERE
+            // Naya Orange/Black Icon Link
+            "src": "https://img.icons8.com/color/512/stopwatch.png", 
             "sizes": "512x512", 
             "type": "image/png" 
         }]
@@ -133,7 +90,10 @@
     const blob = new Blob([JSON.stringify(myManifest)], {type: 'application/json'});
     document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(blob));
 
-    /* --- REST OF TIMER LOGIC (Same as v4.7) --- */
+    /* --- REST OF LOGIC --- */
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
+    async function installApp() { if (deferredPrompt) { deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; deferredPrompt = null; } else { alert("To Install: Chrome Menu > Install App"); } }
+    async function shareApp() { if (navigator.share) { try { await navigator.share({ title: 'Pro Timer', url: window.location.href }); } catch(e){} } else { alert(window.location.href); } }
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     window.onload = () => {
         const savedTheme = localStorage.getItem('timerTheme');
@@ -154,7 +114,6 @@
     function startTimer(e) { if (running) { stopTimer(); return; } if(e) e.stopPropagation(); let parts = document.getElementById("timeInput").value.split(":").map(Number); let inputVal = ((parts[0]||0)*3600 + (parts[1]||0)*60 + (parts[2]||0))*1000; let mode = (inputVal > 0 && totalMs === 0) ? "down" : "up"; if(mode === "down") totalMs = inputVal; running = true; document.getElementById("startBtn").textContent = "STOP"; document.getElementById("startBtn").style.background = "#ff4d4d"; timer = setInterval(() => { if(mode === "up") totalMs += 10; else { totalMs -= 10; if(totalMs <= 0) { totalMs = 0; stopTimer(); playAlarm(); } } format(totalMs); }, 10); }
     function stopTimer() { clearInterval(timer); running = false; document.getElementById("startBtn").textContent = "START"; document.getElementById("startBtn").style.background = "var(--accent)"; }
     function addLap() { if(totalMs === 0) return; const list = document.getElementById("lapsList"); const item = document.createElement("div"); item.style.display = "flex"; item.style.justifyContent = "space-between"; item.style.padding = "5px 0"; item.style.borderBottom = "1px solid #444"; item.innerHTML = `<span>Lap ${list.children.length + 1}</span> <span>${document.getElementById("timeDisplay").textContent}</span>`; list.prepend(item); }
-    function showAbout() { alert("Pro Timer v4.8\n- SEO & Search Optimized\n- Dynamic App Icon Support\n- Share App with native menu"); }
 </script>
 </body>
 </html>
