@@ -3,14 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Timer with Alarm</title>
+<title>Smart Timer</title>
+
+<!-- 🔹 INLINE MANIFEST (PWA) -->
+<link rel="manifest" id="manifestLink">
+
+<meta name="theme-color" content="#203a43">
 
 <style>
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Poppins', sans-serif;
+    font-family:Poppins, sans-serif;
 }
 
 body{
@@ -26,25 +31,25 @@ body{
 .card{
     width:360px;
     padding:35px;
-    border-radius:20px;
+    border-radius:22px;
     background:rgba(255,255,255,0.12);
-    backdrop-filter:blur(15px);
-    box-shadow:0 25px 50px rgba(0,0,0,0.5);
+    backdrop-filter:blur(16px);
+    box-shadow:0 30px 60px rgba(0,0,0,0.5);
     text-align:center;
 }
 
 h1{
-    font-size:1.4rem;
     margin-bottom:15px;
+    letter-spacing:1px;
 }
 
 input{
-    width:200px;
+    width:210px;
     padding:12px;
     font-size:1.2rem;
     text-align:center;
     border:none;
-    border-radius:12px;
+    border-radius:14px;
     outline:none;
     margin-bottom:20px;
     background:rgba(255,255,255,0.2);
@@ -52,13 +57,13 @@ input{
 }
 
 .display{
-    font-size:2.8rem;
+    font-size:2.7rem;
     font-weight:700;
     margin-bottom:25px;
 }
 
 .ms{
-    font-size:1.2rem;
+    font-size:1.1rem;
     opacity:0.8;
 }
 
@@ -72,10 +77,9 @@ button{
     padding:12px 22px;
     border:none;
     border-radius:25px;
-    font-size:0.95rem;
     font-weight:600;
     cursor:pointer;
-    transition:0.3s;
+    transition:.3s;
 }
 
 .start{background:#00ff9d;color:#000;}
@@ -83,7 +87,7 @@ button{
 .reset{background:#ffd633;color:#000;}
 
 button:hover{
-    transform:scale(1.12);
+    transform:scale(1.1);
     box-shadow:0 0 15px rgba(255,255,255,0.4);
 }
 </style>
@@ -109,58 +113,64 @@ button:hover{
 </div>
 
 <script>
-let timer;
-let running = false;
-let mode = "up";   // up = stopwatch, down = countdown
-let totalMs = 0;
+/* =========================
+   🔔 MULTIPLE BEEPS (3x)
+========================= */
+function playMultipleBeeps(times = 3){
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    let count = 0;
 
-/* 🔔 ALARM SOUND (Web Audio API) */
-function playBeep(){
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
+    function beep(){
+        if(count >= times) return;
+        count++;
 
-    oscillator.type = "sine";
-    oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
-    gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
 
-    oscillator.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
+        osc.frequency.value = 900;
+        gain.gain.value = 0.4;
 
-    oscillator.start();
-    oscillator.stop(audioCtx.currentTime + 1); // 1 second beep
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        osc.stop(ctx.currentTime + 0.25);
+
+        setTimeout(beep, 400);
+    }
+    beep();
 }
 
-/* FORMAT */
-function formatTime(ms){
-    let totalSeconds = Math.floor(ms / 1000);
-    let h = Math.floor(totalSeconds / 3600);
-    let m = Math.floor((totalSeconds % 3600) / 60);
-    let s = totalSeconds % 60;
-    let milli = ms % 1000;
+/* =========================
+   ⏱ TIMER LOGIC
+========================= */
+let timer, running=false, mode="up", totalMs=0;
+
+function format(ms){
+    let s = Math.floor(ms/1000);
+    let h = Math.floor(s/3600);
+    let m = Math.floor((s%3600)/60);
+    let sec = s%60;
+    let milli = ms%1000;
 
     time.innerText =
         `${String(h).padStart(2,'0')}:`+
         `${String(m).padStart(2,'0')}:`+
-        `${String(s).padStart(2,'0')}`;
-
+        `${String(sec).padStart(2,'0')}`;
     document.getElementById("ms").innerText =
         String(milli).padStart(3,'0');
 }
 
-/* PARSE HH:MM:SS */
-function parseInput(str){
-    let p = str.split(":").map(Number);
-    if(p.length !== 3) return 0;
-    return ((p[0]*3600)+(p[1]*60)+p[2]) * 1000;
+function parseInput(v){
+    let p = v.split(":").map(Number);
+    if(p.length!==3) return 0;
+    return (p[0]*3600+p[1]*60+p[2])*1000;
 }
 
-/* START */
 function startTimer(){
     if(running) return;
 
     let parsed = parseInput(timeInput.value);
-
     if(parsed > 0){
         totalMs = parsed;
         mode = "down";
@@ -170,34 +180,61 @@ function startTimer(){
     }
 
     running = true;
-
     timer = setInterval(()=>{
-        if(mode === "up"){
+        if(mode==="up"){
             totalMs += 10;
         }else{
             if(totalMs <= 0){
                 stopTimer();
-                playBeep(); // 🔔 ALARM
+                playMultipleBeeps(3); // 🔔🔔🔔
                 return;
             }
             totalMs -= 10;
         }
-        formatTime(totalMs);
+        format(totalMs);
     },10);
 }
 
-/* STOP */
 function stopTimer(){
     clearInterval(timer);
-    running = false;
+    running=false;
 }
 
-/* RESET */
 function resetTimer(){
     stopTimer();
-    totalMs = 0;
-    formatTime(0);
-    timeInput.value = "00:00:00";
+    totalMs=0;
+    format(0);
+    timeInput.value="00:00:00";
+}
+
+/* =========================
+   📲 INLINE PWA (NO FILES)
+========================= */
+const manifest = {
+    name: "Smart Timer",
+    short_name: "Timer",
+    start_url: ".",
+    display: "standalone",
+    background_color: "#0f2027",
+    theme_color: "#203a43"
+};
+
+const manifestBlob = new Blob(
+    [JSON.stringify(manifest)],
+    { type: "application/json" }
+);
+document.getElementById("manifestLink").href =
+    URL.createObjectURL(manifestBlob);
+
+/* SERVICE WORKER (INLINE) */
+if ("serviceWorker" in navigator) {
+    const swCode = `
+        self.addEventListener('install', e => self.skipWaiting());
+        self.addEventListener('fetch', e => {});
+    `;
+    const swBlob = new Blob([swCode], { type: "text/javascript" });
+    const swUrl = URL.createObjectURL(swBlob);
+    navigator.serviceWorker.register(swUrl);
 }
 </script>
 
