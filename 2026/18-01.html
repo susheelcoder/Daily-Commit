@@ -112,10 +112,20 @@
   }
           #lapList{
   position: absolute;
-  width: 16%;
+  width: 10%;
       margin-left: 865px;
 }
             }
+
+      @media (min-width:870px) {
+    .controls-ui {
+      max-width: 65%;
+    }
+
+    #lapList {
+      margin-left: 700px;
+    }
+  }
 </style>
 
 </head>  
@@ -251,7 +261,7 @@ function addLap() {
         lapContainer.style.marginTop = '15px';
         lapContainer.style.maxHeight = '120px';
         lapContainer.style.overflowY = 'auto';
-        lapContainer.style.width = '100%';
+        // lapContainer.style.width = '100%';
         lapContainer.style.fontSize = '0.9rem';
         document.querySelector('.controls-ui').appendChild(lapContainer);
     }
