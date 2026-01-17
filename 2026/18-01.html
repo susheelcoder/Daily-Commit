@@ -55,7 +55,7 @@
     body.minimal-ui .display { font-size: 25vw; margin-bottom: 0; }  
     @media (orientation: landscape) { body.minimal-ui .display { font-size: 35vh; } }  
       
-    .ms { font-size: 0.4em; opacity: 0.3; }  
+    .ms { font-size: 0.3em; opacity: 0.7; }  
       
     .controls-ui { background: var(--card); padding: 25px; border-radius: 25px; border: 1px solid #444; width: 90%; max-width: 400px; display: flex; flex-direction: column; margin-top: 20px; }  
     input { background: rgba(0,0,0,0.3); border: 1px solid var(--accent); color: var(--accent); padding: 12px; border-radius: 12px; text-align: center; width: 100%; font-size: 1.6rem; outline: none; margin-bottom: 15px; }  
@@ -70,7 +70,9 @@
 </style>
 
 </head>  
-<body class="theme-0" ondblclick="toggleModes()">  <div class="top-nav">  
+<body class="theme-0" ondblclick="toggleModes()"> 
+    <main>
+    <div class="top-nav">  
     <button class="menu-btn" onclick="toggleMenu(event)" aria-label="Open Settings Menu">  
         <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>  
 
@@ -98,7 +100,7 @@
         <button class="lap-btn" onclick="addLap()">LAP</button>  
     </div>  
 </div>
-
+</main>
 <script>  
     const APP_VERSION = "5.2";   
     let timer, running = false, totalMs = 0, isMinimal = false;  
@@ -235,5 +237,6 @@ function resetAll() {
     if (lapContainer) lapContainer.innerHTML = '';
 }
 
-</script>  </body>  
+</script> 
+</body>  
 </html>  
