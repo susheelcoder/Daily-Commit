@@ -3,11 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pro Smart Timer v3.0</title>
+    <title>Pro Smart Timer v4.0</title>
     <style>
         :root { --accent: #00ff9d; --bg: #0a0c10; --text: #ffffff; --card: #1a1d23; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: all 0.2s ease; }
+        /* THEMES */
+        body.theme-0 { --bg: #0a0c10; --accent: #00ff9d; --card: #1a1d23; } /* Neon Green */
+        body.theme-1 { --bg: #001219; --accent: #00d4ff; --card: #002533; } /* Ocean Blue */
+        body.theme-2 { --bg: #1a001a; --accent: #ff00ff; --card: #2d002d; } /* Cyber Pink */
+        body.theme-3 { --bg: #000000; --accent: #ffffff; --card: #111111; } /* Classic White/Black */
+        body.theme-4 { --bg: #1b1b1b; --accent: #ffaa00; --card: #2a2a2a; } /* Industrial Gold */
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: background 0.4s, color 0.4s; }
         
         body { 
             height: 100vh; width: 100vw; background: var(--bg); 
@@ -16,27 +23,23 @@
             position: relative;
         }
 
-        /* --- 3-DOT MENU STYLES --- */
         .top-nav { position: absolute; top: 15px; right: 15px; z-index: 2000; }
-        .menu-btn { background: var(--card); border: 1px solid #333; border-radius: 50%; padding: 10px; cursor: pointer; display: flex; }
+        .menu-btn { background: var(--card); border: 1px solid #444; border-radius: 50%; padding: 10px; cursor: pointer; display: flex; }
         .dropdown { 
-            position: absolute; top: 45px; right: 0; background: #1c2128; border: 1px solid #444; 
+            position: absolute; top: 45px; right: 0; background: var(--card); border: 1px solid #444; 
             border-radius: 12px; display: none; flex-direction: column; width: 180px; overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
-        .dropdown button { background: none; color: white; padding: 12px; text-align: left; border: none; border-bottom: 1px solid #333; cursor: pointer; font-size: 0.9rem; }
-        .dropdown button:hover { background: #2d333b; }
+        .dropdown button { background: none; color: white; padding: 12px; text-align: left; border: none; border-bottom: 1px solid #444; cursor: pointer; font-size: 0.9rem; }
 
-        /* Mode Switch Logic */
         body.minimal-ui .controls-ui, body.minimal-ui .top-nav { display: none !important; }
 
-        /* Landscape Handling (Size fixed as you liked) */
         @media (orientation: landscape) {
             .display { font-size: 18vh !important; margin-bottom: 5px !important; }
             .controls-ui { max-width: 550px !important; flex-direction: row !important; padding: 10px 20px !important; }
             .main-btns { grid-template-columns: repeat(3, 1fr) !important; width: 100%; }
             .start-btn { grid-column: span 1 !important; padding: 12px !important; }
-            input { margin-bottom: 0 !important; width: 130px !important; margin-right: 10px; }
+            input { margin-bottom: 0 !important; width: 130px !important; }
             .laps-box { display: none; }
         }
 
@@ -45,16 +48,16 @@
             color: var(--accent); margin-bottom: 20px; text-align: center; 
             cursor: pointer; user-select: none;
         }
-        .ms { font-size: 0.4em; opacity: 0.3; color: #fff; }
+        .ms { font-size: 0.4em; opacity: 0.3; }
 
         .controls-ui { 
             background: var(--card); padding: 25px; border-radius: 25px; 
-            border: 1px solid #333; width: 90%; max-width: 400px; 
+            border: 1px solid #444; width: 90%; max-width: 400px; 
             display: flex; flex-direction: column;
         }
 
         input { 
-            background: #000; border: 1px solid var(--accent); color: var(--accent); 
+            background: rgba(0,0,0,0.3); border: 1px solid var(--accent); color: var(--accent); 
             padding: 12px; border-radius: 12px; text-align: center; 
             width: 100%; font-size: 1.6rem; outline: none; margin-bottom: 15px; 
         }
@@ -63,20 +66,19 @@
         .start-btn { grid-column: span 2; padding: 18px; background: var(--accent); color: #000; border: none; border-radius: 15px; font-weight: bold; font-size: 1.2rem; cursor: pointer; }
         .reset-btn { background: #3d444d; color: white; border: none; padding: 15px; border-radius: 15px; cursor: pointer; }
         .lap-btn { background: #1f6feb; color: white; border: none; padding: 15px; border-radius: 15px; cursor: pointer; }
-
-        .laps-box { margin-top: 15px; max-height: 80px; overflow-y: auto; font-size: 0.85rem; opacity: 0.5; border-top: 1px solid #333; padding-top: 10px; }
+        .laps-box { margin-top: 15px; max-height: 80px; overflow-y: auto; font-size: 0.85rem; opacity: 0.5; border-top: 1px solid #444; padding-top: 10px; }
     </style>
 </head>
-<body ondblclick="toggleModes()">
+<body class="theme-0" ondblclick="toggleModes()">
 
     <div class="top-nav">
         <button class="menu-btn" onclick="toggleMenu(event)">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
         </button>
         <div class="dropdown" id="menuBox">
-            <button onclick="changeColor()">🎨 Change Color</button>
-            <button onclick="alert('Installation process started...')">📲 Install App</button>
-            <button onclick="showAbout()">ℹ️ About Timer</button>
+            <button onclick="changeTheme()">🎨 Switch Theme</button>
+            <button onclick="alert('PWA Service Ready')">📲 Install App</button>
+            <button onclick="showAbout()">ℹ️ About</button>
             <button onclick="resetAll()">🔄 Full Reset</button>
         </div>
     </div>
@@ -87,7 +89,7 @@
     </div>
 
     <div class="controls-ui">
-        <input type="text" id="timeInput" value="00:00:00">
+        <input type="text" id="timeInput" value="00:00:00" onchange="saveInput()">
         <div class="main-btns">
             <button class="start-btn" id="startBtn" onclick="startTimer(event)">START</button>
             <button class="reset-btn" onclick="resetAll()">RESET</button>
@@ -98,9 +100,29 @@
 
 <script>
     let timer, running = false, totalMs = 0, isMinimal = false;
-    let colorIndex = 0;
-    const colors = ['#00ff9d', '#00d4ff', '#ff007f', '#ffaa00', '#ffffff'];
+    let currentTheme = 0;
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    // 1. Load Saved Settings on Start
+    window.onload = () => {
+        const savedTheme = localStorage.getItem('timerTheme');
+        if (savedTheme !== null) {
+            currentTheme = parseInt(savedTheme);
+            document.body.className = `theme-${currentTheme}`;
+        }
+        const savedTime = localStorage.getItem('timerInput');
+        if (savedTime) document.getElementById('timeInput').value = savedTime;
+    };
+
+    function saveInput() {
+        localStorage.setItem('timerInput', document.getElementById('timeInput').value);
+    }
+
+    function changeTheme() {
+        currentTheme = (currentTheme + 1) % 5;
+        document.body.className = `theme-${currentTheme}`;
+        localStorage.setItem('timerTheme', currentTheme);
+    }
 
     function toggleMenu(e) { 
         e.stopPropagation(); 
@@ -109,24 +131,13 @@
     }
     window.onclick = () => document.getElementById('menuBox').style.display = 'none';
 
-    function changeColor() {
-        colorIndex = (colorIndex + 1) % colors.length;
-        document.documentElement.style.setProperty('--accent', colors[colorIndex]);
-    }
-
-    function showAbout() {
-        alert("Pro Smart Timer v3.0\n\nFeatures:\n- Auto Landscape Fullscreen\n- Tap to Stop\n- Double Ring Alarm\n- Professional Dashboard\n\nCreated for high-performance use.");
-    }
-
     function toggleModes() {
         isMinimal = !isMinimal;
         document.body.classList.toggle('minimal-ui', isMinimal);
         if (isMinimal) {
             if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{});
-            if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(()=>{});
         } else {
             if (document.fullscreenElement) document.exitFullscreen().catch(()=>{});
-            if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
         }
     }
 
@@ -135,6 +146,7 @@
     function resetAll() {
         stopTimer(); totalMs = 0; format(0);
         document.getElementById("timeInput").value = "00:00:00";
+        localStorage.setItem('timerInput', "00:00:00");
         document.getElementById("lapsList").innerHTML = "";
     }
 
@@ -160,16 +172,25 @@
     function startTimer(e) {
         if (running) { stopTimer(); return; }
         if(e) e.stopPropagation();
+        
         let parts = document.getElementById("timeInput").value.split(":").map(Number);
         let inputVal = ((parts[0]||0)*3600 + (parts[1]||0)*60 + (parts[2]||0))*1000;
         let mode = (inputVal > 0 && totalMs === 0) ? "down" : "up";
         if(mode === "down") totalMs = inputVal;
+
         running = true;
         document.getElementById("startBtn").textContent = "STOP";
         document.getElementById("startBtn").style.background = "#ff4d4d";
+        
         timer = setInterval(() => {
             if(mode === "up") totalMs += 10;
-            else { totalMs -= 10; if(totalMs <= 0) { totalMs = 0; stopTimer(); playAlarm(); setTimeout(()=>alert("Time Up!"), 800); } }
+            else { 
+                totalMs -= 10; 
+                if(totalMs <= 0) { 
+                    totalMs = 0; stopTimer(); playAlarm(); 
+                    setTimeout(() => alert("Time Up!"), 500);
+                } 
+            }
             format(totalMs);
         }, 10);
     }
@@ -185,9 +206,13 @@
         const list = document.getElementById("lapsList");
         const item = document.createElement("div");
         item.style.display = "flex"; item.style.justifyContent = "space-between";
-        item.style.padding = "5px 0"; item.style.borderBottom = "1px solid #333";
+        item.style.padding = "5px 0"; item.style.borderBottom = "1px solid #444";
         item.innerHTML = `<span>Lap ${list.children.length + 1}</span> <span>${document.getElementById("timeDisplay").textContent}</span>`;
         list.prepend(item);
+    }
+
+    function showAbout() {
+        alert("Pro Timer v4.0\n- Auto-Save Theme & Time\n- Multi-Color Dark Themes\n- Persistent State Protection\n- Fullscreen Optimized");
     }
 </script>
 </body>
