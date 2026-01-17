@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pro Smart Timer v4.6</title>
+    <title>Pro Smart Timer v4.7</title>
     
     <meta name="theme-color" content="#0a0c10">
     <meta name="mobile-web-app-capable" content="yes">
@@ -40,7 +40,11 @@
 
         body.minimal-ui .controls-ui, body.minimal-ui .top-nav { display: none !important; }
 
-        /* LANDSCAPE FIX FROM v4.5 */
+        /* Hide install button when in standalone mode (App mode) */
+        @media (display-mode: standalone) {
+            #installBtnMain { display: none !important; }
+        }
+
         @media (orientation: landscape) {
             .display { font-size: 18vh !important; margin-bottom: 5px !important; }
             body.minimal-ui .display { font-size: 35vh !important; }
@@ -95,7 +99,7 @@
         </button>
         <div class="dropdown" id="menuBox">
             <button onclick="changeTheme()">🎨 Switch Theme</button>
-            <button id="installBtnMenu" onclick="installApp()">📲 Install App</button>
+            <button onclick="shareApp()">🔗 Share App</button>
             <button onclick="resetAll()">🔄 Full Reset</button>
             <button onclick="showAbout()">ℹ️ About</button>
         </div>
@@ -124,12 +128,29 @@
     let currentTheme = 0;
     let deferredPrompt;
 
-    /* --- SMART INSTALLATION & MANIFEST LOGIC --- */
+    // --- SHARE LOGIC ---
+    async function shareApp() {
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: 'Pro Smart Timer',
+                    text: 'Check out this awesome Smart Timer App!',
+                    url: window.location.href
+                });
+            } catch (err) { console.log('Share failed'); }
+        } else {
+            alert("Copy Link: " + window.location.href);
+        }
+    }
+
+    // --- INSTALL LOGIC ---
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        // 2 second baad auto popup
-        setTimeout(() => { installApp(); }, 2000); 
+        // Hide UI install button if already installed (Double check)
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            document.getElementById('installBtnMain').style.display = 'none';
+        }
     });
 
     async function installApp() {
@@ -141,11 +162,11 @@
             }
             deferredPrompt = null;
         } else {
-            alert("To Install:\n1. Open Browser Menu (3 dots)\n2. Click 'Install App' or 'Add to Home Screen'");
+            alert("To Install:\n1. Click 3-dots in Browser\n2. Select 'Add to Home Screen'");
         }
     }
 
-    // Dynamic Manifest creation
+    // Manifest
     const myManifest = {
         "name": "Pro Smart Timer",
         "short_name": "Timer",
@@ -169,6 +190,11 @@
         }
         const savedTime = localStorage.getItem('timerInput');
         if (savedTime) document.getElementById('timeInput').value = savedTime;
+
+        // Extra check: if in standalone mode, hide install button
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            document.getElementById('installBtnMain').style.display = 'none';
+        }
     };
 
     function saveInput() { localStorage.setItem('timerInput', document.getElementById('timeInput').value); }
@@ -263,7 +289,7 @@
     }
 
     function showAbout() {
-        alert("Pro Timer v4.6\n- Auto-Install Logic\n- Orientation Lock Fix\n- Persistent Memory (Time/Theme)");
+        alert("Pro Timer v4.7\n- Auto-Hide Install Button in App Mode\n- Share App via 3-Dot Menu\n- Orientation Lock Optimized");
     }
 </script>
 </body>
