@@ -3,237 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Professional Hindi-English Translator with Mic and Sound">
-    <title>Bhasha Janrera | Translator Pro</title>
+    <meta name="description" content="Professional Bhasha Janrera - Hindi English Translator">
+    <title>Bhasha Janrera Pro</title>
     
     <style>
-        /* Speed Optimization: Zero External Fonts */
-        :root {
-            --primary: #2563eb;
-            --bg: #f1f5f9;
-            --text: #0f172a;
-        }
-
+        :root { --primary: #2563eb; --bg: #f8fafc; --text: #1e293b; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
 
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+        body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* Header & 3-Dot Menu */
+        header { 
+            background: #fff; padding: 15px 20px; 
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative;
         }
 
-        header {
-            background: #fff;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        .menu-dots { cursor: pointer; font-size: 24px; padding: 5px; }
+        
+        .dropdown {
+            position: absolute; top: 50px; right: 20px; background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-radius: 8px;
+            display: none; flex-direction: column; width: 150px; z-index: 100;
         }
-
-        main {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
+        .dropdown a { 
+            padding: 12px; text-decoration: none; color: #333; font-size: 14px; 
+            border-bottom: 1px solid #f1f1f1; 
         }
+        .dropdown a:hover { background: #f8fafc; }
 
-        .translator-container {
-            background: #fff;
-            width: 100%;
-            max-width: 900px;
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        /* Main Content */
+        main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 15px; }
+        .card { background: #fff; width: 100%; max-width: 900px; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+
+        .grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 768px) { .grid { grid-template-columns: 1fr 50px 1fr; align-items: center; } }
+
+        .box { display: flex; flex-direction: column; gap: 8px; }
+        .label { font-weight: bold; color: var(--primary); font-size: 12px; letter-spacing: 1px; }
+
+        textarea, .res-div { 
+            width: 100%; height: 160px; padding: 15px; border: 2px solid #e2e8f0; 
+            border-radius: 12px; font-size: 18px; outline: none; resize: none; 
         }
+        .res-div { background: #f8fafc; border-left: 4px solid var(--primary); overflow-y: auto; }
 
-        /* Responsive Grid: Mobile pe vertical, Laptop pe Horizontal */
-        .grid-layout {
-            display: grid;
-            grid-template-columns: 1fr; /* Mobile default */
-            gap: 20px;
+        .btns { display: flex; gap: 8px; margin-top: 5px; }
+        .b-sm { flex: 1; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; cursor: pointer; }
+
+        .swap-btn { width: 45px; height: 45px; background: var(--primary); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 20px; margin: 0 auto; }
+        .main-btn { grid-column: 1 / -1; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+
+        /* About Overlay */
+        #overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); color: white; display: none;
+            justify-content: center; align-items: center; z-index: 1000;
+            padding: 20px; text-align: center;
         }
+        .close-btn { position: absolute; top: 20px; right: 20px; font-size: 30px; cursor: pointer; }
 
-        @media (min-width: 768px) {
-            .grid-layout {
-                grid-template-columns: 1fr 50px 1fr; /* Laptop side-by-side */
-                align-items: center;
-            }
-        }
-
-        .lang-box {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .label {
-            font-weight: bold;
-            color: var(--primary);
-            font-size: 14px;
-            text-transform: uppercase;
-        }
-
-        textarea, .result-div {
-            width: 100%;
-            height: 160px;
-            padding: 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 18px;
-            outline: none;
-            resize: none;
-            background: #fff;
-        }
-
-        .result-div {
-            background: #f8fafc;
-            border-left: 5px solid var(--primary);
-            overflow-y: auto;
-        }
-
-        .controls {
-            display: flex;
-            gap: 8px;
-            margin-top: 5px;
-        }
-
-        .btn-small {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            background: #fff;
-            cursor: pointer;
-            font-size: 13px;
-            transition: 0.2s;
-        }
-
-        .btn-small:hover { background: #f1f5f9; }
-
-        .swap-area {
-            text-align: center;
-        }
-
-        .swap-btn {
-            width: 45px;
-            height: 45px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 20px;
-        }
-
-        .main-action-btn {
-            grid-column: 1 / -1;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .mic-on { background: #ef4444 !important; color: white; animation: pulse 1s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+        .mic-on { background: #ef4444 !important; color: white; }
     </style>
 </head>
 <body>
 
     <header>
-        <h2>Bhasha Janrera</h2>
+        <h2 style="color: var(--primary);">Bhasha Janrera</h2>
+        <div class="menu-dots" onclick="toggleMenu()">⋮</div>
+        <div class="dropdown" id="myDropdown">
+            <a href="javascript:void(0)" onclick="showAbout()">ℹ️ About Us</a>
+            <a href="#">🛠️ Settings</a>
+            <a href="#">📄 Privacy</a>
+        </div>
     </header>
 
     <main>
-        <div class="translator-container">
-            <div class="grid-layout">
-                
-                <div class="lang-box">
-                    <div class="label" id="srcLabel">English</div>
-                    <textarea id="inpText" placeholder="Yahan likhein..."></textarea>
-                    <div class="controls">
-                        <button class="btn-small" onclick="useMic()" id="micBtn">🎤 Mic</button>
-                        <button class="btn-small" onclick="playVoice('input')">🔊 Suniye</button>
+        <div class="card">
+            <div class="grid">
+                <div class="box">
+                    <div class="label" id="L1">ENGLISH</div>
+                    <textarea id="inp" placeholder="Kuch likhein..."></textarea>
+                    <div class="btns">
+                        <button class="b-sm" onclick="startMic()" id="mBtn">🎤 Mic</button>
+                        <button class="b-sm" onclick="playVoice('input')">🔊 Listen</button>
                     </div>
                 </div>
 
-                <div class="swap-area">
-                    <button class="swap-btn" onclick="toggleLang()">⇄</button>
-                </div>
+                <div style="text-align: center;"><button class="swap-btn" onclick="swap()">⇄</button></div>
 
-                <div class="lang-box">
-                    <div class="label" id="destLabel">Hindi</div>
-                    <div class="result-div" id="outText">Anuvaad yahan dikhega...</div>
-                    <div class="controls">
-                        <button class="btn-small" onclick="playVoice('output')">🔊 Suniye</button>
-                        <button class="btn-small" onclick="copyResult()">📋 Copy</button>
+                <div class="box">
+                    <div class="label" id="L2">HINDI</div>
+                    <div class="res-div" id="out">Anuvaad...</div>
+                    <div class="btns">
+                        <button class="b-sm" onclick="playVoice('output')">🔊 Listen</button>
+                        <button class="b-sm" onclick="copy()">📋 Copy</button>
                     </div>
                 </div>
 
-                <button class="main-action-btn" onclick="startTranslate()">Translate Karein</button>
-
+                <button class="main-btn" onclick="doTranslate()">Translate Now</button>
             </div>
         </div>
     </main>
 
+    <div id="overlay">
+        <span class="close-btn" onclick="hideAbout()">&times;</span>
+        <div style="max-width: 500px;">
+            <h2>Bhasha Janrera Pro</h2>
+            <p style="margin-top: 20px;">Yeh ek high-speed AI translator hai jo Google Translate API use karta hai. Ise khaas karke mobile aur laptop dono ke liye design kiya gaya hai.</p>
+            <p style="margin-top: 15px; color: #aaa;">Version 3.1 | Made for Fast Usage</p>
+        </div>
+    </div>
+
     <script>
-        let isEnToHi = true;
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const recog = SpeechRecognition ? new SpeechRecognition() : null;
+        let isEn = true;
+        const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const rec = Speech ? new Speech() : null;
 
-        function toggleLang() {
-            isEnToHi = !isEnToHi;
-            document.getElementById('srcLabel').innerText = isEnToHi ? "English" : "Hindi";
-            document.getElementById('destLabel').innerText = isEnToHi ? "Hindi" : "English";
-            document.getElementById('inpText').placeholder = isEnToHi ? "Type in English..." : "Hindi mein likhein...";
+        function toggleMenu() {
+            const d = document.getElementById('myDropdown');
+            d.style.display = d.style.display === 'flex' ? 'none' : 'flex';
         }
 
-        async function startTranslate() {
-            const val = document.getElementById('inpText').value;
-            const res = document.getElementById('outText');
-            if(!val.trim()) return;
+        // Close menu when clicking outside
+        window.onclick = (e) => { if (!e.target.matches('.menu-dots')) document.getElementById('myDropdown').style.display = 'none'; }
 
+        function showAbout() { document.getElementById('overlay').style.display = 'flex'; }
+        function hideAbout() { document.getElementById('overlay').style.display = 'none'; }
+
+        function swap() {
+            isEn = !isEn;
+            document.getElementById('L1').innerText = isEn ? "ENGLISH" : "HINDI";
+            document.getElementById('L2').innerText = isEn ? "HINDI" : "ENGLISH";
+        }
+
+        async function doTranslate() {
+            const txt = document.getElementById('inp').value;
+            const res = document.getElementById('out');
+            if(!txt.trim()) return;
             res.innerText = "Processing...";
-            const s = isEnToHi ? 'en' : 'hi';
-            const t = isEnToHi ? 'hi' : 'en';
-
             try {
-                const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${s}&tl=${t}&dt=t&q=${encodeURIComponent(val)}`);
-                const data = await response.json();
-                res.innerText = data[0].map(x => x[0]).join('');
-            } catch (err) { res.innerText = "Error: Check Internet"; }
+                const s = isEn ? 'en' : 'hi', t = isEn ? 'hi' : 'en';
+                const r = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${s}&tl=${t}&dt=t&q=${encodeURIComponent(txt)}`);
+                const d = await r.json();
+                res.innerText = d[0].map(x => x[0]).join('');
+            } catch(e) { res.innerText = "Error!"; }
         }
 
-        function useMic() {
-            if(!recog) return alert("Mic not supported");
-            recog.lang = isEnToHi ? 'en-US' : 'hi-IN';
-            recog.start();
-            document.getElementById('micBtn').classList.add('mic-on');
-            recog.onresult = (e) => {
-                document.getElementById('inpText').value = e.results[0][0].transcript;
-                startTranslate();
-            };
-            recog.onend = () => document.getElementById('micBtn').classList.remove('mic-on');
+        function startMic() {
+            if(!rec) return alert("Browser error");
+            rec.lang = isEn ? 'en-US' : 'hi-IN';
+            rec.start();
+            document.getElementById('mBtn').classList.add('mic-on');
+            rec.onresult = (e) => { document.getElementById('inp').value = e.results[0][0].transcript; doTranslate(); };
+            rec.onend = () => document.getElementById('mBtn').classList.remove('mic-on');
         }
 
         function playVoice(type) {
-            const text = type === 'input' ? document.getElementById('inpText').value : document.getElementById('outText').innerText;
-            if(!text || text.includes('...')) return;
-            const ut = new SpeechSynthesisUtterance(text);
-            ut.lang = type === 'input' ? (isEnToHi ? 'en-US' : 'hi-IN') : (isEnToHi ? 'hi-IN' : 'en-US');
-            window.speechSynthesis.speak(ut);
+            const t = type === 'input' ? document.getElementById('inp').value : document.getElementById('out').innerText;
+            if(!t) return;
+            const u = new SpeechSynthesisUtterance(t);
+            u.lang = type === 'input' ? (isEn ? 'en-US' : 'hi-IN') : (isEn ? 'hi-IN' : 'en-US');
+            window.speechSynthesis.speak(u);
         }
 
-        function copyResult() {
-            navigator.clipboard.writeText(document.getElementById('outText').innerText);
-            alert("Copied!");
-        }
+        function copy() { navigator.clipboard.writeText(document.getElementById('out').innerText); alert("Copied!"); }
     </script>
 </body>
 </html>
