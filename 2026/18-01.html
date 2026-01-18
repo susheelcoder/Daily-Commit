@@ -3,133 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Massage Counter Page</title>
+    <title>Bhasha Janrera - Translator</title>
     <style>
         :root {
-            --primary: #6d4c41;
-            --secondary: #d7ccc8;
-            --bg: #f5f5f5;
+            --primary: #4a90e2;
+            --bg: #f0f2f5;
         }
 
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             background-color: var(--bg);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
         }
 
-        .counter-container {
+        .translator-card {
             background: white;
-            padding: 40px;
+            padding: 30px;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             width: 90%;
-            max-width: 400px;
+            max-width: 600px;
         }
 
-        h1 { color: var(--primary); margin-bottom: 10px; }
-        p { color: #666; margin-bottom: 30px; }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
 
-        .count-display {
-            font-size: 80px;
+        .lang-switch {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
             font-weight: bold;
             color: var(--primary);
-            margin: 20px 0;
-            background: var(--secondary);
-            border-radius: 15px;
-            padding: 10px;
         }
 
-        .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .main-btn {
+        .swap-btn {
             background: var(--primary);
             color: white;
             border: none;
-            padding: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
             font-size: 20px;
+            transition: 0.3s;
+        }
+
+        .swap-btn:hover { transform: rotate(180deg); }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            border: 2px solid #eee;
             border-radius: 12px;
-            cursor: pointer;
-            transition: transform 0.1s, background 0.3s;
-            font-weight: bold;
+            font-size: 18px;
+            resize: none;
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s;
         }
 
-        .main-btn:active {
-            transform: scale(0.95);
-        }
+        textarea:focus { border-color: var(--primary); }
 
-        .reset-btn {
-            background: transparent;
-            color: #e53935;
-            border: 1px solid #e53935;
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .reset-btn:hover {
-            background: #ffebee;
-        }
-
-        .log {
+        .result-box {
             margin-top: 20px;
-            font-size: 14px;
+            min-height: 100px;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 5px solid var(--primary);
+            font-size: 18px;
+            white-space: pre-wrap;
+        }
+
+        .translate-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .translate-btn:active { transform: scale(0.98); }
+
+        .status {
+            font-size: 12px;
             color: #888;
+            margin-top: 10px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <div class="counter-container">
-        <h1>Massage Janrera</h1>
-        <p>Ek click = Ek Massage Entry</p>
+    <div class="translator-card">
+        <h2>Bhasha Janrera</h2>
 
-        <div class="count-display" id="counter">0</div>
-
-        <div class="btn-group">
-            <button class="main-btn" onclick="addMassage()">+ Massage Ginna Shuru Karein</button>
-            <button class="reset-btn" onclick="resetCount()">Data Reset Karein</button>
+        <div class="lang-switch">
+            <span id="srcLangText">English</span>
+            <button class="swap-btn" onclick="swapLanguages()">⇄</button>
+            <span id="destLangText">Hindi</span>
         </div>
 
-        <div class="log" id="lastAction">Abhi tak koi entry nahi hui.</div>
+        <textarea id="inputText" placeholder="Yahan likhna shuru karein..."></textarea>
+
+        <button class="translate-btn" onclick="translateText()">Anuvaad Karein (Translate)</button>
+
+        <div class="result-box" id="resultText">Aapka anuvaad yahan dikhega...</div>
+        
+        <div class="status">Google Translate API se juda hua</div>
     </div>
 
     <script>
-        let count = 0;
-        const counterDisplay = document.getElementById('counter');
-        const lastActionDisplay = document.getElementById('lastAction');
+        let isEnToHi = true;
 
-        // Massage count badhane ke liye function
-        function addMassage() {
-            count++;
-            counterDisplay.innerText = count;
+        function swapLanguages() {
+            isEnToHi = !isEnToHi;
+            document.getElementById('srcLangText').innerText = isEnToHi ? "English" : "Hindi";
+            document.getElementById('destLangText').innerText = isEnToHi ? "Hindi" : "English";
+            document.getElementById('inputText').placeholder = isEnToHi ? "English mein likhein..." : "Hindi mein likhein...";
             
-            // Time dikhane ke liye
-            const abhi = new Date();
-            const samay = abhi.getHours() + ":" + abhi.getMinutes() + ":" + abhi.getSeconds();
-            lastActionDisplay.innerText = "Aakhri entry samay: " + samay;
+            // Input aur Result ko swap karna
+            let currentInput = document.getElementById('inputText').value;
+            let currentResult = document.getElementById('resultText').innerText;
             
-            // Click effect
-            counterDisplay.style.color = "#4CAF50";
-            setTimeout(() => {
-                counterDisplay.style.color = "#6d4c41";
-            }, 200);
+            if(currentResult !== "Aapka anuvaad yahan dikhega...") {
+                document.getElementById('inputText').value = currentResult;
+                document.getElementById('resultText').innerText = currentInput;
+            }
         }
 
-        // Reset karne ke liye
-        function resetCount() {
-            if(confirm("Kya aap saara data zero karna chahte hain?")) {
-                count = 0;
-                counterDisplay.innerText = count;
-                lastActionDisplay.innerText = "Data reset kar diya gaya hai.";
+        async function translateText() {
+            const text = document.getElementById('inputText').value;
+            const resultBox = document.getElementById('resultText');
+            
+            if (!text.trim()) {
+                alert("Kripya kuch likhein!");
+                return;
+            }
+
+            resultBox.innerText = "Anuvaad ho raha hai...";
+            
+            const sourceLang = isEnToHi ? 'en' : 'hi';
+            const targetLang = isEnToHi ? 'hi' : 'en';
+
+            try {
+                // Free Google Translate API endpoint
+                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURI(text)}`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                // Result nikalna (JSON structure se)
+                const translatedText = data[0].map(item => item[0]).join('');
+                resultBox.innerText = translatedText;
+            } catch (error) {
+                console.error(error);
+                resultBox.innerText = "Error: Internet check karein ya thodi der baad try karein.";
             }
         }
     </script>
