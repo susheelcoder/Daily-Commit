@@ -3,182 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bhasha Janrera - Translator</title>
+    <title>Bhasha Janrera - Mic & Sound</title>
     <style>
-        :root {
-            --primary: #4a90e2;
-            --bg: #f0f2f5;
-        }
+        :root { --primary: #4a90e2; --bg: #f0f2f5; --accent: #34c759; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .translator-card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 95%; max-width: 600px; }
+        
+        .lang-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #f8f9fa; padding: 10px; border-radius: 12px; }
+        .swap-btn { background: var(--primary); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 20px; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background-color: var(--bg);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-
-        .translator-card {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 600px;
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 25px;
-        }
-
-        .lang-switch {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f8f9fa;
-            padding: 10px 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-weight: bold;
-            color: var(--primary);
-        }
-
-        .swap-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 20px;
-            transition: 0.3s;
-        }
-
-        .swap-btn:hover { transform: rotate(180deg); }
-
-        textarea {
-            width: 100%;
-            height: 150px;
-            padding: 15px;
-            border: 2px solid #eee;
-            border-radius: 12px;
-            font-size: 18px;
-            resize: none;
-            box-sizing: border-box;
-            outline: none;
-            transition: 0.3s;
-        }
-
+        .box { position: relative; margin-bottom: 20px; }
+        textarea, .result-box { width: 100%; min-height: 140px; padding: 15px; border: 2px solid #eee; border-radius: 12px; font-size: 18px; box-sizing: border-box; outline: none; transition: 0.3s; background: #fff; }
         textarea:focus { border-color: var(--primary); }
+        .result-box { background: #f9f9f9; border-left: 5px solid var(--primary); white-space: pre-wrap; }
 
-        .result-box {
-            margin-top: 20px;
-            min-height: 100px;
-            background: #f9f9f9;
-            padding: 15px;
-            border-radius: 12px;
-            border-left: 5px solid var(--primary);
-            font-size: 18px;
-            white-space: pre-wrap;
-        }
+        .controls { display: flex; gap: 10px; margin-top: 8px; }
+        .icon-btn { background: #eee; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 14px; }
+        .icon-btn:hover { background: #ddd; }
+        .mic-active { background: #ff4444 !important; color: white; animation: pulse 1.5s infinite; }
 
-        .translate-btn {
-            width: 100%;
-            padding: 15px;
-            margin-top: 20px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
-        .translate-btn:active { transform: scale(0.98); }
-
-        .status {
-            font-size: 12px;
-            color: #888;
-            margin-top: 10px;
-            text-align: center;
-        }
+        .translate-btn { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="translator-card">
-        <h2>Bhasha Janrera</h2>
-
-        <div class="lang-switch">
-            <span id="srcLangText">English</span>
-            <button class="swap-btn" onclick="swapLanguages()">⇄</button>
-            <span id="destLangText">Hindi</span>
-        </div>
-
-        <textarea id="inputText" placeholder="Yahan likhna shuru karein..."></textarea>
-
-        <button class="translate-btn" onclick="translateText()">Anuvaad Karein (Translate)</button>
-
-        <div class="result-box" id="resultText">Aapka anuvaad yahan dikhega...</div>
-        
-        <div class="status">Google Translate API se juda hua</div>
+<div class="translator-card">
+    <div class="lang-header">
+        <strong id="srcText">English</strong>
+        <button class="swap-btn" onclick="swap()">⇄</button>
+        <strong id="destText">Hindi</strong>
     </div>
 
-    <script>
-        let isEnToHi = true;
+    <div class="box">
+        <textarea id="inputText" placeholder="Yahan likhein ya Mic use karein..."></textarea>
+        <div class="controls">
+            <button class="icon-btn" onclick="startMic()" id="micBtn">🎤 Mic</button>
+            <button class="icon-btn" onclick="speak('input')">🔊 Suniye</button>
+            <button class="icon-btn" onclick="copyText('inputText')">📋 Copy</button>
+        </div>
+    </div>
 
-        function swapLanguages() {
-            isEnToHi = !isEnToHi;
-            document.getElementById('srcLangText').innerText = isEnToHi ? "English" : "Hindi";
-            document.getElementById('destLangText').innerText = isEnToHi ? "Hindi" : "English";
-            document.getElementById('inputText').placeholder = isEnToHi ? "English mein likhein..." : "Hindi mein likhein...";
-            
-            // Input aur Result ko swap karna
-            let currentInput = document.getElementById('inputText').value;
-            let currentResult = document.getElementById('resultText').innerText;
-            
-            if(currentResult !== "Aapka anuvaad yahan dikhega...") {
-                document.getElementById('inputText').value = currentResult;
-                document.getElementById('resultText').innerText = currentInput;
-            }
-        }
+    <button class="translate-btn" onclick="translateText()">Anuvaad Karein</button>
 
-        async function translateText() {
-            const text = document.getElementById('inputText').value;
-            const resultBox = document.getElementById('resultText');
-            
-            if (!text.trim()) {
-                alert("Kripya kuch likhein!");
-                return;
-            }
+    <div class="box" style="margin-top:20px;">
+        <div class="result-box" id="resultText">Aapka anuvaad yahan dikhega...</div>
+        <div class="controls">
+            <button class="icon-btn" onclick="speak('output')">🔊 Suniye</button>
+            <button class="icon-btn" onclick="copyText('resultText', true)">📋 Copy</button>
+        </div>
+    </div>
+</div>
 
-            resultBox.innerText = "Anuvaad ho raha hai...";
-            
-            const sourceLang = isEnToHi ? 'en' : 'hi';
-            const targetLang = isEnToHi ? 'hi' : 'en';
+<script>
+    let isEnToHi = true;
+    const recognition = window.SpeechRecognition || window.webkitSpeechRecognition ? new (window.SpeechRecognition || window.webkitSpeechRecognition)() : null;
 
-            try {
-                // Free Google Translate API endpoint
-                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURI(text)}`;
-                
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                // Result nikalna (JSON structure se)
-                const translatedText = data[0].map(item => item[0]).join('');
-                resultBox.innerText = translatedText;
-            } catch (error) {
-                console.error(error);
-                resultBox.innerText = "Error: Internet check karein ya thodi der baad try karein.";
-            }
-        }
-    </script>
+    // 1. Voice to Text (Mic)
+    function startMic() {
+        if (!recognition) return alert("Aapka browser mic support nahi karta.");
+        recognition.lang = isEnToHi ? 'en-US' : 'hi-IN';
+        recognition.start();
+        document.getElementById('micBtn').classList.add('mic-active');
+        
+        recognition.onresult = (event) => {
+            document.getElementById('inputText').value = event.results[0][0].transcript;
+            document.getElementById('micBtn').classList.remove('mic-active');
+        };
+        recognition.onspeechend = () => recognition.stop();
+        recognition.onerror = () => document.getElementById('micBtn').classList.remove('mic-active');
+    }
+
+    // 2. Text to Speech (Sound)
+    function speak(type) {
+        const text = type === 'input' ? document.getElementById('inputText').value : document.getElementById('resultText').innerText;
+        if (!text || text.includes('...')) return;
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = (type === 'input') ? (isEnToHi ? 'en-US' : 'hi-IN') : (isEnToHi ? 'hi-IN' : 'en-US');
+        window.speechSynthesis.speak(utterance);
+    }
+
+    // 3. Translation Logic
+    async function translateText() {
+        const text = document.getElementById('inputText').value;
+        const resBox = document.getElementById('resultText');
+        if (!text.trim()) return;
+
+        resBox.innerText = "Processing...";
+        const sl = isEnToHi ? 'en' : 'hi';
+        const tl = isEnToHi ? 'hi' : 'en';
+
+        try {
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${encodeURI(text)}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            resBox.innerText = data[0].map(item => item[0]).join('');
+        } catch (e) { resBox.innerText = "Error! Check Internet."; }
+    }
+
+    // 4. Copy & Swap
+    function copyText(id, isDiv = false) {
+        const text = isDiv ? document.getElementById(id).innerText : document.getElementById(id).value;
+        navigator.clipboard.writeText(text);
+        alert("Copy ho gaya!");
+    }
+
+    function swap() {
+        isEnToHi = !isEnToHi;
+        document.getElementById('srcText').innerText = isEnToHi ? "English" : "Hindi";
+        document.getElementById('destText').innerText = isEnToHi ? "Hindi" : "English";
+    }
+</script>
 
 </body>
 </html>
