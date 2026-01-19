@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Repeater - Susheelcoder</title>
+    <title>Advance Grid Repeater - Susheelcoder</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -24,15 +24,23 @@
         }
 
         .controls {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .extra-controls {
+            max-width: 1100px;
+            margin: 10px auto 0;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
             gap: 10px;
         }
 
         input, select, button {
-            padding: 12px;
+            padding: 10px;
             border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 14px;
@@ -46,33 +54,39 @@
             border: none;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.3s;
         }
 
-        .copy-btn:hover { background-color: #0056b3; }
-
-        /* Output Area */
         #output-container {
             flex-grow: 1;
             overflow-y: auto;
             padding: 20px;
             display: grid;
-            gap: 5px; /* Box के बीच की दूरी */
+            gap: 8px;
             align-content: flex-start;
         }
 
         .item {
             background: white;
             padding: 10px;
-            border: 1px solid #ccc;
-            word-break: break-all;
+            border: 1px solid #ddd;
             text-align: center;
-            font-size: 14px;
+            border-radius: 4px;
+        }
+
+        .mid-msg {
+            grid-column: 1 / -1; /* Ye puri row cover karega */
+            background: #ffeb3b;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 4px;
+            margin: 10px 0;
+            border: 2px dashed #fbc02d;
         }
 
         @media (max-width: 768px) {
-            .controls { grid-template-columns: 1fr 1fr; }
-            .controls input:first-child { grid-column: span 2; }
+            .controls, .extra-controls { grid-template-columns: 1fr 1fr; }
+            body { overflow: auto; height: auto; min-height: 100vh; }
         }
     </style>
 </head>
@@ -80,9 +94,8 @@
 
     <div class="header">
         <div class="controls">
-            <input type="text" id="textInput" placeholder="टेक्स्ट लिखें..." oninput="generate()">
-            <input type="number" id="countInput" placeholder="संख्या?" min="1" oninput="generate()">
-            
+            <input type="text" id="textInput" placeholder="Main Text..." oninput="generate()">
+            <input type="number" id="countInput" placeholder="Total Items?" min="1" oninput="generate()">
             <select id="colInput" onchange="generate()">
                 <option value="1">1 Column</option>
                 <option value="2">2 Columns</option>
@@ -90,8 +103,12 @@
                 <option value="4">4 Columns</option>
                 <option value="5">5 Columns</option>
             </select>
+        </div>
 
-            <button class="copy-btn" onclick="copyInFormat()">Copy Format</button>
+        <div class="extra-controls">
+            <input type="text" id="midMsgInput" placeholder="Middle Message (Optional)" oninput="generate()">
+            <input type="number" id="rowNumInput" placeholder="Kish Row ke baad?" min="1" oninput="generate()">
+            <button class="copy-btn" onclick="copyInFormat()">Copy Everything</button>
         </div>
     </div>
 
@@ -102,8 +119,10 @@
             const text = document.getElementById("textInput").value;
             const count = parseInt(document.getElementById("countInput").value);
             const cols = parseInt(document.getElementById("colInput").value);
+            const midMsg = document.getElementById("midMsgInput").value;
+            const targetRow = parseInt(document.getElementById("rowNumInput").value);
+            
             const container = document.getElementById("output-container");
-
             container.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
 
             if (!text || isNaN(count) || count <= 0) {
@@ -112,9 +131,16 @@
             }
 
             let htmlContent = "";
-            for (let i = 0; i < Math.min(count, 5000); i++) {
+            let targetItemIndex = targetRow * cols; // Row number ko item index me badla
+
+            for (let i = 0; i < count; i++) {
+                // Check karein ki kya ye wahi jagah hai jahan message dalna hai
+                if (midMsg && i === targetItemIndex) {
+                    htmlContent += `<div class="mid-msg">${midMsg}</div>`;
+                }
                 htmlContent += `<div class="item">${text}</div>`;
             }
+            
             container.innerHTML = htmlContent;
         }
 
@@ -122,31 +148,30 @@
             const text = document.getElementById("textInput").value;
             const count = parseInt(document.getElementById("countInput").value);
             const cols = parseInt(document.getElementById("colInput").value);
+            const midMsg = document.getElementById("midMsgInput").value;
+            const targetRow = parseInt(document.getElementById("rowNumInput").value);
             
             if (!text || !count) return;
 
             let formattedText = "";
+            let targetItemIndex = targetRow * cols;
+
             for (let i = 0; i < count; i++) {
+                if (midMsg && i === targetItemIndex) {
+                    formattedText += "\n--- " + midMsg + " ---\n\n";
+                }
+
                 formattedText += text;
-                
-                // अगर यह कॉलम का आखिरी आइटम है तो अगली लाइन पर जाएँ, 
-                // वरना स्पेस या टैब दें
+
                 if ((i + 1) % cols === 0) {
                     formattedText += "\n";
                 } else {
-                    formattedText += "\t"; // Columns के बीच गैप के लिए
+                    formattedText += "\t";
                 }
             }
             
             navigator.clipboard.writeText(formattedText).then(() => {
-                const btn = document.querySelector('.copy-btn');
-                btn.innerText = "Copied! ✅";
-                btn.style.backgroundColor = "#28a745";
-                
-                setTimeout(() => {
-                    btn.innerText = "Copy Format";
-                    btn.style.backgroundColor = "#007bff";
-                }, 2000);
+                alert("Format ke sath copy ho gaya!");
             });
         }
     </script>
