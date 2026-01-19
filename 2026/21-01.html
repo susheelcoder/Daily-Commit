@@ -1,56 +1,57 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Bomber - Susheelcoder</title>
-    <style>
-        body { font-family: sans-serif; background: #128C7E; color: white; padding: 20px; text-align: center; }
-        .box { background: white; color: #333; padding: 20px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; }
-        .code-area { background: #eee; padding: 10px; font-size: 10px; word-break: break-all; border-radius: 5px; margin: 10px 0; color: #555; height: 60px; overflow-y: auto; }
-        .btn { background: #25D366; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .steps { text-align: left; font-size: 13px; margin-top: 20px; background: #075E54; padding: 15px; border-radius: 10px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sorry Prank 😅</title>
+<style>
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,#ff758c,#ff7eb3);
+    font-family:sans-serif;
+}
+.card{
+    background:#fff;
+    padding:25px;
+    border-radius:15px;
+    text-align:center;
+    width:90%;
+    max-width:350px;
+    box-shadow:0 10px 30px rgba(0,0,0,.3);
+}
+button{
+    margin-top:20px;
+    padding:15px 20px;
+    width:100%;
+    border:none;
+    border-radius:10px;
+    font-size:18px;
+    background:#25D366;
+    color:#fff;
+    cursor:pointer;
+}
+button:hover{opacity:.9}
+</style>
 </head>
 <body>
 
-<div class="box">
-    <h2>Mobile Web Bomber</h2>
-    <input type="text" id="m" placeholder="मैसेज (e.g. Sorry 🥺)" oninput="gen()">
-    <input type="number" id="q" placeholder="कितनी बार? (e.g. 50)" oninput="gen()">
-    
-    <div class="code-area" id="c">कोड यहाँ दिखेगा...</div>
-    
-    <button class="btn" onclick="copy()">मैजिक कोड कॉपी करें</button>
-</div>
-
-<div class="steps">
-    <b>सेटअप कैसे करें (सिर्फ एक बार):</b><br>
-    1. ऊपर वाला कोड कॉपी करें।<br>
-    2. अपने ब्राउज़र में कोई भी <b>Bookmark</b> बनाएं और उसे 'Bomber' नाम दें।<br>
-    3. उस बुकमार्क के <b>URL/Address</b> में यह कोड पेस्ट कर दें।<br><br>
-    <b>कैसे चलाएं:</b><br>
-    1. WhatsApp Web (Desktop Site) खोलें।<br>
-    2. चैट सेलेक्ट करें।<br>
-    3. एड्रेस बार में <code>javascript:</code> लिखकर अपना कोड पेस्ट कर दें या बुकमार्क चलाएं।
+<div class="card">
+    <h2>😔 Sorry yaar</h2>
+    <p>Ek special message bhejna hai…</p>
+    <button onclick="sendPrank()">Send Sorry 💚</button>
 </div>
 
 <script>
-    function gen() {
-        const msg = document.getElementById('m').value || "Sorry";
-        const qty = document.getElementById('q').value || 10;
-        // ये कोड ब्राउज़र के अंदर व्हाट्सएप के सेंड बटन को टारगेट करता है
-        const script = `javascript:(async function(){const t=document.querySelector('div[contenteditable="true"]');if(!t){alert('WhatsApp Web खोलें!');return;}for(let i=0;i<${qty};i++){t.focus();document.execCommand('insertText',false,"${msg}");t.dispatchEvent(new Event('input',{bubbles:true}));const b=document.querySelector('[data-testid="send"]')||document.querySelector('[data-icon="send"]');if(b)b.click();await new Promise(r=>setTimeout(r,800));}})();`;
-        document.getElementById('c').innerText = script;
-    }
-    gen();
-
-    function copy() {
-        const text = document.getElementById('c').innerText;
-        navigator.clipboard.writeText(text);
-        alert("जादुई कोड कॉपी हो गया!");
-    }
+function sendPrank(){
+    const phone = "91XXXXXXXXXX"; // yahan girl ka number
+    const msg = "Sorry 😔🙏\nGalti ho gayi...\nPlease maan jao na 💔🥺";
+    const url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(msg);
+    window.location.href = url;
+}
 </script>
 
 </body>
