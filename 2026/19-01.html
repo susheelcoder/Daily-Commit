@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <title>Text Repeater</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; }
+        input { padding: 10px; margin: 5px; border: 1px solid #ccc; border-radius: 4px; }
+        #output { margin-top: 20px; font-weight: bold; color: #2c3e50; word-wrap: break-word; }
+        .repeat-item { background: #e1f5fe; margin: 2px; padding: 2px 5px; display: inline-block; border-radius: 3px; }
+    </style>
+</head>
+<body>
+
+    <h2>Text Repeater</h2>
+    
+    <input type="text" id="textInput" placeholder="अपना नाम या टेक्स्ट लिखें" oninput="repeatText()">
+    
+    <input type="number" id="countInput" placeholder="संख्या डालें" value="1" min="1" oninput="repeatText()">
+
+    <div id="output"></div>
+
+    <script>
+        function repeatText() {
+            const text = document.getElementById("textInput").value;
+            const count = document.getElementById("countInput").value;
+            const outputDiv = document.getElementById("output");
+
+            // अगर टेक्स्ट खाली है या नंबर सही नहीं है
+            if (text === "" || count <= 0) {
+                outputDiv.innerHTML = "";
+                return;
+            }
+
+            // टेक्स्ट को रिपीट करना
+            // .repeat() मेथड का इस्तेमाल करके
+            let result = "";
+            for (let i = 0; i < count; i++) {
+                result += `<span class="repeat-item">${text}</span> `;
+            }
+
+            outputDiv.innerHTML = result;
+        }
+    </script>
+
+</body>
+</html>
