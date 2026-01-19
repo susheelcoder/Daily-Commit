@@ -3,112 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhatsApp Sender Board - Susheelcoder</title>
+    <title>Susheelcoder Pro Sender</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            background-color: #ece5dd; 
-            height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-        }
-        .header { 
-            background: #075e54; 
-            color: white; 
-            padding: 15px; 
-            text-align: center; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
-        }
-        .container { 
-            max-width: 500px; 
-            margin: 20px auto; 
-            background: white; 
-            padding: 20px; 
-            border-radius: 10px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-        }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #444; }
-        input, textarea { 
-            width: 100%; 
-            padding: 12px; 
-            border: 1px solid #ccc; 
-            border-radius: 5px; 
-            font-size: 14px; 
-        }
-        .send-btn { 
-            width: 100%; 
-            background: #25d366; 
-            color: white; 
-            border: none; 
-            padding: 15px; 
-            font-size: 16px; 
-            font-weight: bold; 
-            border-radius: 5px; 
-            cursor: pointer; 
-            transition: 0.3s;
-        }
-        .send-btn:hover { background: #128c7e; }
-        #status { 
-            margin-top: 15px; 
-            font-size: 13px; 
-            text-align: center; 
-            color: #666; 
-        }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #2c3e50; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: #34495e; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 400px; text-align: center; }
+        h2 { color: #2ecc71; margin-bottom: 20px; }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: none; font-size: 15px; }
+        .code-box { background: #1a1a1a; color: #f1c40f; padding: 10px; border-radius: 5px; font-family: monospace; font-size: 12px; text-align: left; overflow-x: auto; margin-bottom: 15px; }
+        button { background: #2ecc71; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        button:hover { background: #27ae60; }
+        .step { font-size: 12px; color: #bdc3c7; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h2>WhatsApp Message Board</h2>
+<div class="card">
+    <h2>WhatsApp Bomber Board</h2>
+    <input type="text" id="targetMsg" placeholder="मैसेज लिखें (जैसे: Sorry)">
+    <input type="number" id="targetCount" placeholder="कितनी बार भेजना है?">
+    
+    <div class="step">1. नीचे वाला कोड कॉपी करें:</div>
+    <div class="code-box" id="scriptCode">
+        // लोड हो रहा है...
     </div>
+    
+    <button onclick="copyScript()">कोड कॉपी करें</button>
+    
+    <div class="step">2. WhatsApp Web खोलें > F12 दबाएं > Console में पेस्ट करें।</div>
+</div>
 
-    <div class="container">
-        <div class="form-group">
-            <label>किस नंबर पर भेजना है? (With Country Code)</label>
-            <input type="text" id="targetPhone" placeholder="919876543210">
-        </div>
+<script>
+    function updateCode() {
+        const msg = document.getElementById('targetMsg').value || "Sorry";
+        const count = document.getElementById('targetCount').value || 10;
+        
+        const code = `async function startBombing() {
+    const main = document.querySelector('#main');
+    const textarea = main.querySelector('div[contenteditable="true"]');
+    for (let i = 0; i < ${count}; i++) {
+        textarea.focus();
+        document.execCommand('insertText', false, "${msg}");
+        textarea.dispatchEvent(new Event('input', { bubbles: true }));
+        (main.querySelector('[data-testid="send"]') || main.querySelector('[data-icon="send"]')).click();
+        await new Promise(r => setTimeout(r, 600)); 
+    }
+}
+startBombing();`;
 
-        <div class="form-group">
-            <label>क्या मैसेज भेजना है?</label>
-            <textarea id="msgBody" rows="3" placeholder="Type: Sorry"></textarea>
-        </div>
+        document.getElementById('scriptCode').innerText = code;
+    }
 
-        <div class="form-group">
-            <label>कितनी बार भेजना है?</label>
-            <input type="number" id="repeatCount" value="1" min="1">
-        </div>
+    // इनपुट बदलते ही कोड अपडेट होगा
+    document.getElementById('targetMsg').oninput = updateCode;
+    document.getElementById('targetCount').oninput = updateCode;
+    updateCode();
 
-        <button class="send-btn" onclick="startSending()">मैसेज भेजें (Start)</button>
-
-        <div id="status"></div>
-    </div>
-
-    <script>
-        function startSending() {
-            const phone = document.getElementById('targetPhone').value.replace(/\D/g, '');
-            const message = encodeURIComponent(document.getElementById('msgBody').value);
-            const count = parseInt(document.getElementById('repeatCount').value);
-            const status = document.getElementById('status');
-
-            if (!phone || !message || isNaN(count)) {
-                alert("कृपया सारी जानकारी सही भरें!");
-                return;
-            }
-
-            status.innerHTML = "प्रोसेस शुरू हो रहा है... कृपया हर बार 'Send' दबाएं।";
-
-            // लूप के जरिए अलग-अलग टैब में मैसेज खोलना
-            for (let i = 0; i < count; i++) {
-                // WhatsApp API का उपयोग
-                const url = `https://api.whatsapp.com/send?phone=${phone}&text=${message}`;
-                
-                // ब्राउज़र में नया टैब खोलना
-                window.open(url, '_blank');
-            }
-        }
-    </script>
+    function copyScript() {
+        const code = document.getElementById('scriptCode').innerText;
+        navigator.clipboard.writeText(code);
+        alert("कोड कॉपी हो गया! अब इसे WhatsApp Console में पेस्ट करें।");
+    }
+</script>
 
 </body>
 </html>
