@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sorry Prank 😅</title>
+<title>WhatsApp Prank 😅</title>
 <style>
 body{
     margin:0;
@@ -11,21 +11,29 @@ body{
     display:flex;
     align-items:center;
     justify-content:center;
-    background:linear-gradient(135deg,#ff758c,#ff7eb3);
+    background:linear-gradient(135deg,#667eea,#764ba2);
     font-family:sans-serif;
 }
 .card{
     background:#fff;
-    padding:25px;
+    padding:20px;
     border-radius:15px;
-    text-align:center;
     width:90%;
-    max-width:350px;
-    box-shadow:0 10px 30px rgba(0,0,0,.3);
+    max-width:360px;
+    box-shadow:0 15px 40px rgba(0,0,0,.3);
+}
+h2{text-align:center}
+input, textarea, select{
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    font-size:15px;
 }
 button{
-    margin-top:20px;
-    padding:15px 20px;
+    margin-top:15px;
+    padding:14px;
     width:100%;
     border:none;
     border-radius:10px;
@@ -34,22 +42,40 @@ button{
     color:#fff;
     cursor:pointer;
 }
-button:hover{opacity:.9}
 </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>😔 Sorry yaar</h2>
-    <p>Ek special message bhejna hai…</p>
-    <button onclick="sendPrank()">Send Sorry 💚</button>
+    <h2>😜 WhatsApp Prank</h2>
+
+    <input id="name" placeholder="Kis ke liye? (Name)" />
+
+    <textarea id="msg" rows="3" placeholder="Message likho (jaise Sorry 😔)"></textarea>
+
+    <select id="count">
+        <option value="1">1 baar</option>
+        <option value="3">3 baar</option>
+        <option value="5">5 baar</option>
+        <option value="10">10 baar 😈</option>
+    </select>
+
+    <button onclick="sendPrank()">Send Prank 💚</button>
 </div>
 
 <script>
 function sendPrank(){
-    const phone = "91XXXXXXXXXX"; // yahan girl ka number
-    const msg = "Sorry 😔🙏\nGalti ho gayi...\nPlease maan jao na 💔🥺";
-    const url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(msg);
+    const phone = "91XXXXXXXXXX"; // number yahan
+    const name = document.getElementById("name").value || "Tum";
+    const msg = document.getElementById("msg").value || "Sorry 😔";
+    const count = document.getElementById("count").value;
+
+    let finalMsg = "";
+    for(let i=0;i<count;i++){
+        finalMsg += name + " ❤️ " + msg + "\n";
+    }
+
+    const url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(finalMsg);
     window.location.href = url;
 }
 </script>
