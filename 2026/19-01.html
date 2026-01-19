@@ -3,105 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Text Repeater</title>
+    <title>Responsive Repeater - Susheelcoder</title>
     <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            padding: 20px; 
-            background-color: #f4f7f6;
+            font-family: 'Segoe UI', sans-serif; 
+            background-color: #f0f2f5;
+            height: 100vh; /* पूरी स्क्रीन की हाइट */
             display: flex;
             flex-direction: column;
-            align-items: center;
+            overflow: hidden; /* बॉडी को स्क्रॉल होने से रोकेगा */
         }
 
-        .container {
-            background: white;
+        /* हेडर और कंट्रोल्स */
+        .controls {
+            background: #ffffff;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 600px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 10;
         }
 
-        .input-group {
-            display: flex;
+        .input-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
             gap: 10px;
-            margin-bottom: 20px;
         }
 
-        /* मोबाइल के लिए सेटिंग (Mobile Fix) */
-        @media (max-width: 480px) {
-            .input-group {
-                flex-direction: column;
-            }
-        }
-
-        input {
+        input, select {
             padding: 12px;
             border: 2px solid #ddd;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 16px;
-            flex: 1; /* लैपटॉप पर जगह घेरेगा */
-        }
-
-        input:focus {
-            border-color: #007bff;
             outline: none;
+            width: 100%;
         }
 
-        #output {
-            margin-top: 20px;
-            padding: 15px;
-            border-top: 1px solid #eee;
-            word-wrap: break-word; /* लंबे शब्दों को तोड़ने के लिए */
-            max-height: 400px;
-            overflow-y: auto; /* अगर बहुत ज्यादा टेक्स्ट हो तो स्क्रॉल आ जाए */
+        input:focus, select:focus { border-color: #007bff; }
+
+        /* आउटपुट एरिया जो पूरी बची हुई जगह लेगा */
+        #output-container {
+            flex-grow: 1; 
+            overflow-y: auto; /* सिर्फ यहाँ स्क्रॉल होगा */
+            padding: 20px;
+            display: flex;
+            align-content: flex-start;
+            flex-wrap: wrap; /* डिफ़ॉल्ट रूप से Row */
+            gap: 10px;
         }
+
+        /* लेआउट मोड क्लास */
+        .mode-row { flex-direction: row; }
+        .mode-column { flex-direction: column; align-items: flex-start; }
 
         .item {
-            display: inline-block;
-            background: #e7f3ff;
-            color: #007bff;
-            padding: 5px 10px;
-            margin: 4px;
-            border-radius: 4px;
-            font-size: 14px;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 4px solid #007bff;
+        }
+
+        /* मोबाइल के लिए फिक्स */
+        @media (max-width: 600px) {
+            .input-wrapper {
+                grid-template-columns: 1fr;
+            }
+            .controls { padding: 10px; }
+            body { height: 100vh; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2 style="text-align: center;">Text Repeater</h2>
-        
-        <div class="input-group">
-            <input type="text" id="textInput" placeholder="क्या रिपीट करना है?" oninput="repeat()">
-            <input type="number" id="countInput" placeholder="कितनी बार?" min="0" oninput="repeat()">
+    <div class="controls">
+        <div class="input-wrapper">
+            <input type="text" id="textInput" placeholder="टेक्स्ट लिखें..." oninput="generate()">
+            <input type="number" id="countInput" placeholder="कितनी बार?" min="1" oninput="generate()">
+            
+            <select id="layoutMode" onchange="generate()">
+                <option value="row">लाइन में (Row)</option>
+                <option value="column">नीचे (Column)</option>
+            </select>
         </div>
-
-        <div id="output"></div>
     </div>
 
+    <div id="output-container" class="mode-row"></div>
+
     <script>
-        function repeat() {
+        function generate() {
             const text = document.getElementById("textInput").value;
             const count = parseInt(document.getElementById("countInput").value);
-            const output = document.getElementById("output");
+            const mode = document.getElementById("layoutMode").value;
+            const container = document.getElementById("output-container");
+
+            // लेआउट क्लास बदलें
+            if (mode === 'column') {
+                container.className = "mode-column";
+            } else {
+                container.className = "mode-row";
+            }
 
             if (!text || isNaN(count) || count <= 0) {
-                output.innerHTML = "<small style='color:gray;'>यहाँ आपका रिजल्ट दिखेगा...</small>";
+                container.innerHTML = "<p style='color:gray;'>टाइप करना शुरू करें...</p>";
                 return;
             }
 
-            // लिमिट लगा दी है ताकि ब्राउज़र हैंग न हो (Max 5000)
-            let safeCount = Math.min(count, 5000);
+            // ब्राउज़र परफॉरमेंस के लिए लिमिट
+            let safeCount = Math.min(count, 2000);
             
-            let htmlContent = "";
+            let fragments = "";
             for (let i = 0; i < safeCount; i++) {
-                htmlContent += `<span class="item">${text}</span>`;
+                fragments += `<div class="item">${text}</div>`;
             }
             
-            output.innerHTML = htmlContent;
+            container.innerHTML = fragments;
         }
     </script>
 
