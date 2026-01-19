@@ -3,123 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Repeater - Susheelcoder</title>
+    <title>Advance Repeater - Susheelcoder</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body { 
             font-family: 'Segoe UI', sans-serif; 
             background-color: #f0f2f5;
-            height: 100vh; /* पूरी स्क्रीन की हाइट */
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* बॉडी को स्क्रॉल होने से रोकेगा */
+            overflow: hidden;
         }
 
-        /* हेडर और कंट्रोल्स */
-        .controls {
-            background: #ffffff;
-            padding: 20px;
+        .header {
+            background: #fff;
+            padding: 15px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             z-index: 10;
         }
 
-        .input-wrapper {
-            max-width: 900px;
+        .controls {
+            max-width: 1000px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
             gap: 10px;
         }
 
-        input, select {
+        input, select, button {
             padding: 12px;
             border: 2px solid #ddd;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 14px;
             outline: none;
             width: 100%;
         }
 
-        input:focus, select:focus { border-color: #007bff; }
+        input:focus { border-color: #007bff; }
 
-        /* आउटपुट एरिया जो पूरी बची हुई जगह लेगा */
-        #output-container {
-            flex-grow: 1; 
-            overflow-y: auto; /* सिर्फ यहाँ स्क्रॉल होगा */
-            padding: 20px;
-            display: flex;
-            align-content: flex-start;
-            flex-wrap: wrap; /* डिफ़ॉल्ट रूप से Row */
-            gap: 10px;
+        .copy-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
         }
 
-        /* लेआउट मोड क्लास */
-        .mode-row { flex-direction: row; }
-        .mode-column { flex-direction: column; align-items: flex-start; }
+        .copy-btn:active { background-color: #218838; }
+
+        /* Output Area */
+        #output-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: grid; /* Grid system for columns */
+            gap: 10px;
+            align-content: flex-start;
+        }
 
         .item {
             background: white;
-            padding: 10px 15px;
+            padding: 10px;
             border-radius: 6px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             border-left: 4px solid #007bff;
+            word-break: break-all;
+            text-align: center;
         }
 
-        /* मोबाइल के लिए फिक्स */
-        @media (max-width: 600px) {
-            .input-wrapper {
-                grid-template-columns: 1fr;
+        /* Mobile Fix */
+        @media (max-width: 768px) {
+            .controls {
+                grid-template-columns: 1fr 1fr;
             }
-            .controls { padding: 10px; }
-            body { height: 100vh; }
+            .controls input:first-child { grid-column: span 2; }
         }
     </style>
 </head>
 <body>
 
-    <div class="controls">
-        <div class="input-wrapper">
-            <input type="text" id="textInput" placeholder="टेक्स्ट लिखें..." oninput="generate()">
-            <input type="number" id="countInput" placeholder="कितनी बार?" min="1" oninput="generate()">
+    <div class="header">
+        <div class="controls">
+            <input type="text" id="textInput" placeholder="Text likhen..." oninput="generate()">
+            <input type="number" id="countInput" placeholder="Total Repeat?" min="1" oninput="generate()">
             
-            <select id="layoutMode" onchange="generate()">
-                <option value="row">लाइन में (Row)</option>
-                <option value="column">नीचे (Column)</option>
+            <select id="colInput" onchange="generate()">
+                <option value="1">1 Column (List)</option>
+                <option value="2">2 Columns</option>
+                <option value="3" selected>3 Columns</option>
+                <option value="4">4 Columns</option>
+                <option value="5">5 Columns</option>
+                <option value="10">10 Columns</option>
             </select>
+
+            <button class="copy-btn" onclick="copyAll()">Copy All</button>
         </div>
     </div>
 
-    <div id="output-container" class="mode-row"></div>
+    <div id="output-container"></div>
 
     <script>
         function generate() {
             const text = document.getElementById("textInput").value;
             const count = parseInt(document.getElementById("countInput").value);
-            const mode = document.getElementById("layoutMode").value;
+            const cols = document.getElementById("colInput").value;
             const container = document.getElementById("output-container");
 
-            // लेआउट क्लास बदलें
-            if (mode === 'column') {
-                container.className = "mode-column";
-            } else {
-                container.className = "mode-row";
-            }
+            // Grid columns fix karna
+            container.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
 
             if (!text || isNaN(count) || count <= 0) {
-                container.innerHTML = "<p style='color:gray;'>टाइप करना शुरू करें...</p>";
+                container.innerHTML = "<p style='color:gray;'>Type karke quantity dalen...</p>";
                 return;
             }
 
-            // ब्राउज़र परफॉरमेंस के लिए लिमिट
-            let safeCount = Math.min(count, 2000);
-            
-            let fragments = "";
-            for (let i = 0; i < safeCount; i++) {
-                fragments += `<div class="item">${text}</div>`;
+            let htmlContent = "";
+            for (let i = 0; i < Math.min(count, 5000); i++) {
+                htmlContent += `<div class="item">${text}</div>`;
             }
+            container.innerHTML = htmlContent;
+        }
+
+        function copyAll() {
+            const text = document.getElementById("textInput").value;
+            const count = parseInt(document.getElementById("countInput").value);
             
-            container.innerHTML = fragments;
+            if (!text || !count) return;
+
+            // Saare text ko ek sath jodna
+            const fullText = Array(count).fill(text).join("\n");
+            
+            navigator.clipboard.writeText(fullText).then(() => {
+                alert("Saara text copy ho gaya!");
+            });
         }
     </script>
 
