@@ -2,44 +2,106 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>Text Repeater</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Text Repeater</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; }
-        input { padding: 10px; margin: 5px; border: 1px solid #ccc; border-radius: 4px; }
-        #output { margin-top: 20px; font-weight: bold; color: #2c3e50; word-wrap: break-word; }
-        .repeat-item { background: #e1f5fe; margin: 2px; padding: 2px 5px; display: inline-block; border-radius: 3px; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            padding: 20px; 
+            background-color: #f4f7f6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* मोबाइल के लिए सेटिंग (Mobile Fix) */
+        @media (max-width: 480px) {
+            .input-group {
+                flex-direction: column;
+            }
+        }
+
+        input {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            flex: 1; /* लैपटॉप पर जगह घेरेगा */
+        }
+
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        #output {
+            margin-top: 20px;
+            padding: 15px;
+            border-top: 1px solid #eee;
+            word-wrap: break-word; /* लंबे शब्दों को तोड़ने के लिए */
+            max-height: 400px;
+            overflow-y: auto; /* अगर बहुत ज्यादा टेक्स्ट हो तो स्क्रॉल आ जाए */
+        }
+
+        .item {
+            display: inline-block;
+            background: #e7f3ff;
+            color: #007bff;
+            padding: 5px 10px;
+            margin: 4px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
 
-    <h2>Text Repeater</h2>
-    
-    <input type="text" id="textInput" placeholder="अपना नाम या टेक्स्ट लिखें" oninput="repeatText()">
-    
-    <input type="number" id="countInput" placeholder="संख्या डालें" value="1" min="1" oninput="repeatText()">
+    <div class="container">
+        <h2 style="text-align: center;">Text Repeater</h2>
+        
+        <div class="input-group">
+            <input type="text" id="textInput" placeholder="क्या रिपीट करना है?" oninput="repeat()">
+            <input type="number" id="countInput" placeholder="कितनी बार?" min="0" oninput="repeat()">
+        </div>
 
-    <div id="output"></div>
+        <div id="output"></div>
+    </div>
 
     <script>
-        function repeatText() {
+        function repeat() {
             const text = document.getElementById("textInput").value;
-            const count = document.getElementById("countInput").value;
-            const outputDiv = document.getElementById("output");
+            const count = parseInt(document.getElementById("countInput").value);
+            const output = document.getElementById("output");
 
-            // अगर टेक्स्ट खाली है या नंबर सही नहीं है
-            if (text === "" || count <= 0) {
-                outputDiv.innerHTML = "";
+            if (!text || isNaN(count) || count <= 0) {
+                output.innerHTML = "<small style='color:gray;'>यहाँ आपका रिजल्ट दिखेगा...</small>";
                 return;
             }
 
-            // टेक्स्ट को रिपीट करना
-            // .repeat() मेथड का इस्तेमाल करके
-            let result = "";
-            for (let i = 0; i < count; i++) {
-                result += `<span class="repeat-item">${text}</span> `;
+            // लिमिट लगा दी है ताकि ब्राउज़र हैंग न हो (Max 5000)
+            let safeCount = Math.min(count, 5000);
+            
+            let htmlContent = "";
+            for (let i = 0; i < safeCount; i++) {
+                htmlContent += `<span class="item">${text}</span>`;
             }
-
-            outputDiv.innerHTML = result;
+            
+            output.innerHTML = htmlContent;
         }
     </script>
 
