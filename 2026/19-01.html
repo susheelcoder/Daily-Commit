@@ -3,194 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Susheelcoder - Ultra Repeater</title>
+    <title>Chat Style - Susheelcoder</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            background-color: #f0f2f5;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .header {
-            background: #fff;
-            padding: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            z-index: 10;
-        }
-
-        .controls-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 10px;
-        }
-
-        input, select, button {
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 13px;
-            outline: none;
-        }
-
-        .copy-btn {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-
-        .copy-list-btn {
-            background-color: #6f42c1; /* Purple color for list copy */
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .copy-btn:hover, .copy-list-btn:hover { opacity: 0.9; }
-
-        #output-container {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: grid;
-            gap: 5px;
-            align-content: flex-start;
-        }
-
-        .item {
-            background: white;
-            padding: 8px;
-            border: 1px solid #eee;
-            text-align: center;
-            font-size: 13px;
-            border-radius: 4px;
-        }
-
-        .mid-msg {
-            grid-column: 1 / -1;
-            background: #d4edda;
-            padding: 10px;
-            text-align: center;
-            font-weight: bold;
-            color: #155724;
-            margin: 5px 0;
-            border-radius: 4px;
-        }
-
-        @media (max-width: 600px) {
-            body { overflow: auto; height: auto; }
-            .header { position: sticky; top: 0; }
-            .controls-grid { grid-template-columns: 1fr 1fr; }
-        }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #e5ddd5; height: 100vh; display: flex; flex-direction: column; }
+        .header { background: #075e54; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .controls { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+        input, button { padding: 10px; border-radius: 8px; border: none; outline: none; }
+        .btn-copy { background-color: #25d366; color: white; font-weight: bold; cursor: pointer; }
+        #output-container { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 5px; }
+        .msg-bubble { background: #ffffff; padding: 8px 12px; border-radius: 8px; max-width: fit-content; align-self: flex-start; box-shadow: 0 1px 1px rgba(0,0,0,0.1); font-size: 14px; position: relative; }
+        /* Photo jaisa look dene ke liye */
+        .msg-bubble::before { content: ""; position: absolute; left: -8px; top: 0; border: 8px solid transparent; border-right-color: white; border-top: 0; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="controls-grid">
-            <input type="text" id="textInput" placeholder="Main Text" oninput="generate()">
-            <input type="number" id="countInput" placeholder="Total Items" oninput="generate()">
-            <select id="colInput" onchange="generate()">
-                <option value="1">1 Col</option>
-                <option value="2">2 Cols</option>
-                <option value="3" selected>3 Cols</option>
-                <option value="4">4 Cols</option>
-                <option value="5">5 Cols</option>
-            </select>
-            <input type="text" id="midMsgInput" placeholder="Middle Msg" oninput="generate()">
-            <input type="number" id="rowNumInput" placeholder="After Row?" oninput="generate()">
-            <button class="copy-btn" onclick="copyInFormat()">Copy Format</button>
-            <button class="copy-list-btn" onclick="copyAsList()">Copy as List</button>
+        <div class="controls">
+            <input type="text" id="textIn" placeholder="Type: Sorry" oninput="draw()">
+            <input type="number" id="countIn" placeholder="Quantity" oninput="draw()">
+            <button class="btn-copy" onclick="copyIndividual()">Copy for Chat</button>
         </div>
     </div>
 
     <div id="output-container"></div>
 
     <script>
-        function generate() {
-            const text = document.getElementById("textInput").value;
-            const count = parseInt(document.getElementById("countInput").value);
-            const cols = parseInt(document.getElementById("colInput").value);
-            const midMsg = document.getElementById("midMsgInput").value;
-            const targetRow = parseInt(document.getElementById("rowNumInput").value);
-            
+        function draw() {
+            const text = document.getElementById("textIn").value;
+            const count = parseInt(document.getElementById("countIn").value);
             const container = document.getElementById("output-container");
-            container.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+            
+            if (!text || !count) { container.innerHTML = ""; return; }
 
-            if (!text || isNaN(count) || count <= 0) {
-                container.innerHTML = "";
-                return;
+            let html = "";
+            for (let i = 0; i < Math.min(count, 500); i++) {
+                html += `<div class="msg-bubble">${text}</div>`;
             }
-
-            let htmlContent = "";
-            let targetIndex = targetRow * cols;
-
-            for (let i = 0; i < count; i++) {
-                if (midMsg && i === targetIndex) {
-                    htmlContent += `<div class="mid-msg">${midMsg}</div>`;
-                }
-                htmlContent += `<div class="item">${text}</div>`;
-            }
-            container.innerHTML = htmlContent;
+            container.innerHTML = html;
         }
 
-        // Option 1: Grid Format me copy karega
-        function copyInFormat() {
-            const text = document.getElementById("textInput").value;
-            const count = parseInt(document.getElementById("countInput").value);
-            const cols = parseInt(document.getElementById("colInput").value);
-            const midMsg = document.getElementById("midMsgInput").value;
-            const targetRow = parseInt(document.getElementById("rowNumInput").value);
-            
-            if (!text) return;
-
-            let formattedText = "";
-            let targetIndex = targetRow * cols;
-
-            for (let i = 0; i < count; i++) {
-                if (midMsg && i === targetIndex) {
-                    formattedText += (formattedText.endsWith("\n") ? "" : "\n") + midMsg + "\n";
-                }
-                formattedText += text;
-                if ((i + 1) % cols === 0) {
-                    formattedText += "\n";
-                } else {
-                    formattedText += " ";
-                }
-            }
-            finishCopy(formattedText);
-        }
-
-        // Option 2: Har word ko alag-alag newline me copy karega
-        function copyAsList() {
-            const text = document.getElementById("textInput").value;
-            const count = parseInt(document.getElementById("countInput").value);
-            
+        function copyIndividual() {
+            const text = document.getElementById("textIn").value;
+            const count = parseInt(document.getElementById("countIn").value);
             if (!text || !count) return;
 
-            let listText = "";
+            // Har message ke baad single line break
+            let finalStr = "";
             for (let i = 0; i < count; i++) {
-                listText += text + "\n";
+                finalStr += text + "\n";
             }
-            finishCopy(listText);
-        }
-
-        function finishCopy(content) {
-            navigator.clipboard.writeText(content.trim()).then(() => {
-                alert("Copied to clipboard!");
+            
+            navigator.clipboard.writeText(finalStr.trim()).then(() => {
+                alert("Copied! (Note: Alag-alag bhejane ke liye kisi Auto-Clicker ka use karein)");
             });
         }
     </script>
-
 </body>
 </html>
