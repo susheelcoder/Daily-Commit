@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advance Grid Repeater - Susheelcoder</title>
+    <title>Susheelcoder - Pro Format Repeater</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -23,19 +23,11 @@
             z-index: 10;
         }
 
-        .controls {
+        .controls-grid {
             max-width: 1100px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 10px;
-        }
-
-        .extra-controls {
-            max-width: 1100px;
-            margin: 10px auto 0;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 10px;
         }
 
@@ -45,7 +37,6 @@
             border-radius: 8px;
             font-size: 14px;
             outline: none;
-            width: 100%;
         }
 
         .copy-btn {
@@ -61,54 +52,50 @@
             overflow-y: auto;
             padding: 20px;
             display: grid;
-            gap: 8px;
+            gap: 5px;
             align-content: flex-start;
         }
 
         .item {
             background: white;
-            padding: 10px;
-            border: 1px solid #ddd;
+            padding: 8px;
+            border: 1px solid #eee;
             text-align: center;
-            border-radius: 4px;
+            font-size: 13px;
         }
 
         .mid-msg {
-            grid-column: 1 / -1; /* Ye puri row cover karega */
-            background: #ffeb3b;
+            grid-column: 1 / -1;
+            background: #d4edda;
             padding: 10px;
             text-align: center;
             font-weight: bold;
-            border-radius: 4px;
-            margin: 10px 0;
-            border: 2px dashed #fbc02d;
+            color: #155724;
+            margin: 5px 0;
         }
 
-        @media (max-width: 768px) {
-            .controls, .extra-controls { grid-template-columns: 1fr 1fr; }
-            body { overflow: auto; height: auto; min-height: 100vh; }
+        @media (max-width: 600px) {
+            body { overflow: auto; height: auto; }
+            .header { position: sticky; top: 0; }
         }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="controls">
-            <input type="text" id="textInput" placeholder="Main Text..." oninput="generate()">
-            <input type="number" id="countInput" placeholder="Total Items?" min="1" oninput="generate()">
+        <div class="controls-grid">
+            <input type="text" id="textInput" placeholder="Main Text" oninput="generate()">
+            <input type="number" id="countInput" placeholder="Total Items" oninput="generate()">
             <select id="colInput" onchange="generate()">
-                <option value="1">1 Column</option>
-                <option value="2">2 Columns</option>
-                <option value="3" selected>3 Columns</option>
-                <option value="4">4 Columns</option>
-                <option value="5">5 Columns</option>
+                <option value="1">1 Col</option>
+                <option value="2">2 Cols</option>
+                <option value="3" selected>3 Cols</option>
+                <option value="4">4 Cols</option>
+                <option value="5">5 Cols</option>
             </select>
-        </div>
-
-        <div class="extra-controls">
-            <input type="text" id="midMsgInput" placeholder="Middle Message (Optional)" oninput="generate()">
-            <input type="number" id="rowNumInput" placeholder="Kish Row ke baad?" min="1" oninput="generate()">
-            <button class="copy-btn" onclick="copyInFormat()">Copy Everything</button>
+            <input type="text" id="midMsgInput" placeholder="Middle Msg" oninput="generate()">
+            <input type="number" id="rowNumInput" placeholder="After Row?" oninput="generate()">
+            <button class="copy-btn" onclick="copyInFormat()">Copy Now</button>
         </div>
     </div>
 
@@ -131,16 +118,14 @@
             }
 
             let htmlContent = "";
-            let targetItemIndex = targetRow * cols; // Row number ko item index me badla
+            let targetIndex = targetRow * cols;
 
             for (let i = 0; i < count; i++) {
-                // Check karein ki kya ye wahi jagah hai jahan message dalna hai
-                if (midMsg && i === targetItemIndex) {
+                if (midMsg && i === targetIndex) {
                     htmlContent += `<div class="mid-msg">${midMsg}</div>`;
                 }
                 htmlContent += `<div class="item">${text}</div>`;
             }
-            
             container.innerHTML = htmlContent;
         }
 
@@ -151,27 +136,30 @@
             const midMsg = document.getElementById("midMsgInput").value;
             const targetRow = parseInt(document.getElementById("rowNumInput").value);
             
-            if (!text || !count) return;
+            if (!text) return;
 
             let formattedText = "";
-            let targetItemIndex = targetRow * cols;
+            let targetIndex = targetRow * cols;
 
             for (let i = 0; i < count; i++) {
-                if (midMsg && i === targetItemIndex) {
-                    formattedText += "\n--- " + midMsg + " ---\n\n";
+                // Middle Message add logic without extra gaps
+                if (midMsg && i === targetIndex) {
+                    // अगर मैसेज है, तो नई लाइन में मैसेज डालें
+                    formattedText += (formattedText.endsWith("\n") ? "" : "\n") + midMsg + "\n";
                 }
 
                 formattedText += text;
 
+                // Column format maintain karna
                 if ((i + 1) % cols === 0) {
                     formattedText += "\n";
                 } else {
-                    formattedText += "\t";
+                    formattedText += " "; // Ek space columns ke beech
                 }
             }
             
-            navigator.clipboard.writeText(formattedText).then(() => {
-                alert("Format ke sath copy ho gaya!");
+            navigator.clipboard.writeText(formattedText.trim()).then(() => {
+                alert("Copied successfully!");
             });
         }
     </script>
