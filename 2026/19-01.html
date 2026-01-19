@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Susheelcoder - Pro Format Repeater</title>
+    <title>Susheelcoder - Ultra Repeater</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -24,10 +24,10 @@
         }
 
         .controls-grid {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 10px;
         }
 
@@ -35,7 +35,7 @@
             padding: 10px;
             border: 2px solid #ddd;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 13px;
             outline: none;
         }
 
@@ -45,7 +45,18 @@
             border: none;
             cursor: pointer;
             font-weight: bold;
+            transition: 0.2s;
         }
+
+        .copy-list-btn {
+            background-color: #6f42c1; /* Purple color for list copy */
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .copy-btn:hover, .copy-list-btn:hover { opacity: 0.9; }
 
         #output-container {
             flex-grow: 1;
@@ -62,6 +73,7 @@
             border: 1px solid #eee;
             text-align: center;
             font-size: 13px;
+            border-radius: 4px;
         }
 
         .mid-msg {
@@ -72,11 +84,13 @@
             font-weight: bold;
             color: #155724;
             margin: 5px 0;
+            border-radius: 4px;
         }
 
         @media (max-width: 600px) {
             body { overflow: auto; height: auto; }
             .header { position: sticky; top: 0; }
+            .controls-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
@@ -95,7 +109,8 @@
             </select>
             <input type="text" id="midMsgInput" placeholder="Middle Msg" oninput="generate()">
             <input type="number" id="rowNumInput" placeholder="After Row?" oninput="generate()">
-            <button class="copy-btn" onclick="copyInFormat()">Copy Now</button>
+            <button class="copy-btn" onclick="copyInFormat()">Copy Format</button>
+            <button class="copy-list-btn" onclick="copyAsList()">Copy as List</button>
         </div>
     </div>
 
@@ -129,6 +144,7 @@
             container.innerHTML = htmlContent;
         }
 
+        // Option 1: Grid Format me copy karega
         function copyInFormat() {
             const text = document.getElementById("textInput").value;
             const count = parseInt(document.getElementById("countInput").value);
@@ -142,24 +158,36 @@
             let targetIndex = targetRow * cols;
 
             for (let i = 0; i < count; i++) {
-                // Middle Message add logic without extra gaps
                 if (midMsg && i === targetIndex) {
-                    // अगर मैसेज है, तो नई लाइन में मैसेज डालें
                     formattedText += (formattedText.endsWith("\n") ? "" : "\n") + midMsg + "\n";
                 }
-
                 formattedText += text;
-
-                // Column format maintain karna
                 if ((i + 1) % cols === 0) {
                     formattedText += "\n";
                 } else {
-                    formattedText += " "; // Ek space columns ke beech
+                    formattedText += " ";
                 }
             }
+            finishCopy(formattedText);
+        }
+
+        // Option 2: Har word ko alag-alag newline me copy karega
+        function copyAsList() {
+            const text = document.getElementById("textInput").value;
+            const count = parseInt(document.getElementById("countInput").value);
             
-            navigator.clipboard.writeText(formattedText.trim()).then(() => {
-                alert("Copied successfully!");
+            if (!text || !count) return;
+
+            let listText = "";
+            for (let i = 0; i < count; i++) {
+                listText += text + "\n";
+            }
+            finishCopy(listText);
+        }
+
+        function finishCopy(content) {
+            navigator.clipboard.writeText(content.trim()).then(() => {
+                alert("Copied to clipboard!");
             });
         }
     </script>
