@@ -3,121 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Susheelcoder Dashboard</title>
+    <title>Smart Converter | Susheelcoder</title>
     <style>
-        :root {
-            --bg: #121212;
-            --card: #1e1e1e;
-            --text: #ffffff;
-            --accent: #00adb5;
-        }
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            display: flex;
-            justify-content: center;
-            padding: 20px;
-        }
-        .container {
-            width: 100%;
-            max-width: 600px;
-        }
-        h1 { color: var(--accent); border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
-        
-        /* Card Style */
-        .card {
-            background: var(--card);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
-        /* Task List */
-        .task-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-        }
-        input[type="checkbox"] {
-            margin-right: 15px;
-            transform: scale(1.3);
-            cursor: pointer;
-        }
-
-        /* Link Buttons */
-        .links-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        .link-btn {
-            background: var(--accent);
-            color: white;
-            text-decoration: none;
-            padding: 10px;
-            text-align: center;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        .link-btn:hover { opacity: 0.8; transform: translateY(-2px); }
-
-        .time-display { font-size: 0.9rem; color: #888; margin-top: -10px; margin-bottom: 20px; }
+        body { font-family: sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; padding: 20px; }
+        .tool-box { background: #1e293b; padding: 25px; border-radius: 15px; width: 100%; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #334155; }
+        h2 { color: #38bdf8; text-align: center; margin-bottom: 20px; }
+        label { display: block; margin: 15px 0 5px; font-size: 0.9rem; color: #94a3b8; }
+        select, input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; font-size: 1rem; }
+        .result-area { margin-top: 25px; padding: 15px; background: #334155; border-radius: 8px; text-align: center; }
+        .result-val { font-size: 1.5rem; font-weight: bold; color: #fbbf24; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Susheelcoder Workspace</h1>
-    <div class="time-display" id="date-time"></div>
+<div class="tool-box">
+    <h2>🚀 Smart Converter</h2>
+    
+    <label>Category Chunein</label>
+    <select id="category" onchange="updateUnits()">
+        <option value="currency">Currency (USD to INR)</option>
+        <option value="length">Length (Meter to Feet)</option>
+        <option value="weight">Weight (KG to Pounds)</option>
+        <option value="temp">Temperature (Celsius to Fab)</option>
+    </select>
 
-    <div class="card">
-        <h3>🚀 Quick Links</h3>
-        <div class="links-grid">
-            <a href="https://github.com" target="_blank" class="link-btn">GitHub</a>
-            <a href="https://stackoverflow.com" target="_blank" class="link-btn">Stack Overflow</a>
-            <a href="https://chatgpt.com" target="_blank" class="link-btn">ChatGPT</a>
-            <a href="https://youtube.com" target="_blank" class="link-btn">YouTube Coding</a>
-        </div>
+    <label>Value Likhein</label>
+    <input type="number" id="inputValue" placeholder="0" oninput="convert()">
+
+    <div class="result-area">
+        <span id="labelResult">Natija:</span><br>
+        <span class="result-val" id="outputValue">0</span>
     </div>
 
-    <div class="card">
-        <h3>✅ Today's Goals</h3>
-        <div class="task-item">
-            <input type="checkbox"> <span>Web development practice</span>
-        </div>
-        <div class="task-item">
-            <input type="checkbox"> <span>Learn new CSS trick</span>
-        </div>
-        <div class="task-item">
-            <input type="checkbox"> <span>Review old project code</span>
-        </div>
-    </div>
-
-    <div class="card">
-        <h3>📝 Quick Note</h3>
-        <textarea id="notes" style="width: 100%; height: 80px; background: #333; color: white; border: none; padding: 10px; border-radius: 5px;" placeholder="Kuch likhna hai?"></textarea>
-    </div>
+    <p style="font-size: 0.8rem; color: #64748b; margin-top: 15px; text-align: center;">
+        *Currency 1 USD = 83 INR ke hisaab se set hai.
+    </p>
 </div>
 
 <script>
-    // Real-time Date dikhane ke liye
-    function updateTime() {
-        const now = new Date();
-        document.getElementById('date-time').innerText = now.toLocaleString('hi-IN');
-    }
-    setInterval(updateTime, 1000);
-    updateTime();
+    function convert() {
+        const cat = document.getElementById('category').value;
+        const val = parseFloat(document.getElementById('inputValue').value) || 0;
+        let result = 0;
+        let unitName = "";
 
-    // Notes ko browser mein save rakhne ke liye (Local Storage)
-    const noteArea = document.getElementById('notes');
-    noteArea.value = localStorage.getItem('myNote') || "";
-    noteArea.addEventListener('input', () => {
-        localStorage.setItem('myNote', noteArea.value);
-    });
+        if (cat === "currency") {
+            result = (val * 83).toFixed(2);
+            unitName = " ₹ (INR)";
+        } else if (cat === "length") {
+            result = (val * 3.281).toFixed(2);
+            unitName = " Feet";
+        } else if (cat === "weight") {
+            result = (val * 2.205).toFixed(2);
+            unitName = " Pounds";
+        } else if (cat === "temp") {
+            result = ((val * 9/5) + 32).toFixed(2);
+            unitName = " °F";
+        }
+
+        document.getElementById('outputValue').innerText = result + unitName;
+    }
+
+    function updateUnits() {
+        document.getElementById('inputValue').value = "";
+        document.getElementById('outputValue').innerText = "0";
+        convert();
+    }
 </script>
 
 </body>
