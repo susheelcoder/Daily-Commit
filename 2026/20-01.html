@@ -3,115 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Susheelcoder | Money Manager</title>
+    <title>Pro Money Manager | Susheelcoder</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --paisa-green: #2ecc71; --kharcha-red: #e74c3c; --dark: #2c3e50; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; display: flex; justify-content: center; }
-        .app-container { width: 100%; max-width: 450px; background: white; min-height: 100vh; box-shadow: 0 0 20px rgba(0,0,0,0.1); padding: 20px; }
-        h2 { text-align: center; color: var(--dark); }
+        :root { --primary: #4361ee; --success: #2ecc71; --danger: #e74c3c; --bg: #f8f9fa; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 900px; margin: auto; display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px; }
         
-        .balance-card { background: var(--dark); color: white; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
-        .balance-card h1 { margin: 10px 0; font-size: 2.5rem; }
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        h3 { margin-top: 0; color: #444; font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; }
 
-        .stats { display: flex; justify-content: space-between; margin-bottom: 20px; }
-        .stat-box { flex: 1; padding: 10px; text-align: center; border-radius: 10px; margin: 0 5px; color: white; }
-        .plus { background: var(--paisa-green); }
-        .minus { background: var(--kharcha-red); }
+        /* Stats Section */
+        .balance-box { grid-column: 1 / -1; display: flex; justify-content: space-around; background: var(--primary); color: white; padding: 30px; border-radius: 15px; }
+        .stat h1 { margin: 0; font-size: 2.2rem; }
+        
+        /* Inputs */
+        .input-group { display: flex; flex-direction: column; gap: 12px; }
+        input, select { padding: 12px; border: 1px solid #ddd; border-radius: 8px; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); }
+        .btn-add { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600; }
 
-        .input-group { display: flex; flex-direction: column; gap: 10px; background: #f9f9f9; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
-        input, select, button { padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
-        button { background: #3498db; color: white; border: none; cursor: pointer; font-weight: bold; }
-        button:hover { background: #2980b9; }
+        /* History */
+        .history-container { max-height: 400px; overflow-y: auto; }
+        .item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; transition: 0.2s; }
+        .item:hover { background: #f1f1f1; }
+        .amount-inc { color: var(--success); font-weight: bold; }
+        .amount-exp { color: var(--danger); font-weight: bold; }
 
-        .history-list { list-style: none; padding: 0; }
-        .history-item { display: flex; justify-content: space-between; background: white; padding: 12px; border-radius: 8px; margin-bottom: 8px; border-left: 5px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .history-item.income { border-left-color: var(--paisa-green); }
-        .history-item.expense { border-left-color: var(--kharcha-red); }
-        .delete-btn { color: #e74c3c; cursor: pointer; font-weight: bold; }
+        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <h2>Kharch-Paisa Tracker 💸</h2>
-    
-    <div class="balance-card">
-        <small>Total Balance</small>
-        <h1 id="balance">₹0.00</h1>
-    </div>
-
-    <div class="stats">
-        <div class="stat-box plus">
-            <small>Income</small>
-            <div id="income-val">₹0</div>
+<div class="container">
+    <div class="card balance-box">
+        <div class="stat">
+            <small>Net Balance</small>
+            <h1 id="totalBalance">₹0</h1>
         </div>
-        <div class="stat-box minus">
-            <small>Expense</small>
-            <div id="expense-val">₹0</div>
+        <div class="stat">
+            <small>Total Monthly Income</small>
+            <h2 id="totalIncome" style="color: #afffcf;">₹0</h2>
         </div>
     </div>
 
-    <div class="input-group">
-        <input type="text" id="text" placeholder="Kahan se aaya/gaya? (e.g. Salary, Chai)">
-        <input type="number" id="amount" placeholder="Amount (e.g. 500 ya -200)">
-        <small>*Kharch ke liye minus (-) lagayein</small>
-        <button onclick="addTransaction()">Add Transaction</button>
+    <div class="card">
+        <h3>➕ Add Transaction</h3>
+        <div class="input-group">
+            <input type="text" id="desc" placeholder="Kahan kharch kiya? (e.g. Rent, Freelance)">
+            <input type="number" id="amt" placeholder="Amount (Positive = Income, Negative = Kharcha)">
+            <select id="category">
+                <option value="Food">Khana-Peena</option>
+                <option value="Rent">Kiraya/Bills</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Salary">Salary/Income</option>
+                <option value="Others">Anya</option>
+            </select>
+            <button class="btn-add" onclick="saveData()">Save Transaction</button>
+        </div>
+        <hr>
+        <canvas id="myChart" width="100" height="100"></canvas>
     </div>
 
-    <h3>Transaction History</h3>
-    <ul id="list" class="history-list"></ul>
+    <div class="card">
+        <h3>📜 Recent History</h3>
+        <div class="history-container" id="history">
+            </div>
+        <button onclick="clearAll()" style="margin-top:20px; background:none; border:none; color:red; cursor:pointer;">Delete All Data</button>
+    </div>
 </div>
 
 <script>
-    const balance = document.getElementById('balance');
-    const income_val = document.getElementById('income-val');
-    const expense_val = document.getElementById('expense-val');
-    const list = document.getElementById('list');
-    const text = document.getElementById('text');
-    const amount = document.getElementById('amount');
+    let transactions = JSON.parse(localStorage.getItem('pro_tracker')) || [];
+    let myChart;
 
-    let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+    function saveData() {
+        const desc = document.getElementById('desc').value;
+        const amt = document.getElementById('amt').value;
+        const cat = document.getElementById('category').value;
 
-    function addTransaction() {
-        if (text.value.trim() === '' || amount.value.trim() === '') {
-            alert('Please details bhariye');
-            return;
-        }
-        const transaction = { id: Date.now(), text: text.value, amount: +amount.value };
-        transactions.push(transaction);
-        updateUI();
-        text.value = ''; amount.value = '';
+        if(!desc || !amt) return alert("Puri jankari bhariye!");
+
+        const data = { id: Date.now(), desc, amt: parseFloat(amt), cat };
+        transactions.push(data);
+        localStorage.setItem('pro_tracker', JSON.stringify(transactions));
+        
+        document.getElementById('desc').value = '';
+        document.getElementById('amt').value = '';
+        updateAll();
     }
 
-    function removeTransaction(id) {
-        transactions = transactions.filter(t => t.id !== id);
-        updateUI();
-    }
+    function updateAll() {
+        const history = document.getElementById('history');
+        history.innerHTML = '';
+        let inc = 0, exp = 0;
 
-    function updateUI() {
-        list.innerHTML = '';
-        transactions.forEach(t => {
-            const sign = t.amount < 0 ? '-' : '+';
-            const item = document.createElement('li');
-            item.classList.add('history-item', t.amount < 0 ? 'expense' : 'income');
-            item.innerHTML = `${t.text} <span>${sign}₹${Math.abs(t.amount)}</span> 
-            <span class="delete-btn" onclick="removeTransaction(${t.id})">x</span>`;
-            list.appendChild(item);
+        transactions.slice().reverse().forEach(t => {
+            if(t.amt > 0) inc += t.amt; else exp += Math.abs(t.amt);
+            
+            history.innerHTML += `
+                <div class="item">
+                    <div><strong>${t.desc}</strong><br><small>${t.cat}</small></div>
+                    <div class="${t.amt > 0 ? 'amount-inc' : 'amount-exp'}">${t.amt > 0 ? '+' : ''}₹${t.amt}</div>
+                </div>
+            `;
         });
 
-        const amounts = transactions.map(t => t.amount);
-        const total = amounts.reduce((acc, item) => (acc += item), 0).toFixed(2);
-        const inc = amounts.filter(item => item > 0).reduce((acc, item) => (acc += item), 0).toFixed(2);
-        const exp = (amounts.filter(item => item < 0).reduce((acc, item) => (acc += item), 0) * -1).toFixed(2);
-
-        balance.innerText = `₹${total}`;
-        income_val.innerText = `₹${inc}`;
-        expense_val.innerText = `₹${exp}`;
-        
-        localStorage.setItem('transactions', JSON.stringify(transactions));
+        document.getElementById('totalBalance').innerText = `₹${inc - exp}`;
+        document.getElementById('totalIncome').innerText = `₹${inc}`;
+        updateChart(inc, exp);
     }
 
-    updateUI();
+    function updateChart(inc, exp) {
+        const ctx = document.getElementById('myChart').getContext('2d');
+        if(myChart) myChart.destroy();
+        myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Income', 'Expense'],
+                datasets: [{
+                    data: [inc, exp],
+                    backgroundColor: ['#2ecc71', '#e74c3c']
+                }]
+            }
+        });
+    }
+
+    function clearAll() {
+        if(confirm("Kya aap pura data delete karna chahte hain?")) {
+            localStorage.clear();
+            transactions = [];
+            updateAll();
+        }
+    }
+
+    updateAll();
 </script>
 
 </body>
