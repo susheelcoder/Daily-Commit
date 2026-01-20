@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Susheelcoder Dashboard</title>
+    <style>
+        :root {
+            --bg: #121212;
+            --card: #1e1e1e;
+            --text: #ffffff;
+            --accent: #00adb5;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+        h1 { color: var(--accent); border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
+        
+        /* Card Style */
+        .card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Task List */
+        .task-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        input[type="checkbox"] {
+            margin-right: 15px;
+            transform: scale(1.3);
+            cursor: pointer;
+        }
+
+        /* Link Buttons */
+        .links-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .link-btn {
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .link-btn:hover { opacity: 0.8; transform: translateY(-2px); }
+
+        .time-display { font-size: 0.9rem; color: #888; margin-top: -10px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Susheelcoder Workspace</h1>
+    <div class="time-display" id="date-time"></div>
+
+    <div class="card">
+        <h3>🚀 Quick Links</h3>
+        <div class="links-grid">
+            <a href="https://github.com" target="_blank" class="link-btn">GitHub</a>
+            <a href="https://stackoverflow.com" target="_blank" class="link-btn">Stack Overflow</a>
+            <a href="https://chatgpt.com" target="_blank" class="link-btn">ChatGPT</a>
+            <a href="https://youtube.com" target="_blank" class="link-btn">YouTube Coding</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>✅ Today's Goals</h3>
+        <div class="task-item">
+            <input type="checkbox"> <span>Web development practice</span>
+        </div>
+        <div class="task-item">
+            <input type="checkbox"> <span>Learn new CSS trick</span>
+        </div>
+        <div class="task-item">
+            <input type="checkbox"> <span>Review old project code</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>📝 Quick Note</h3>
+        <textarea id="notes" style="width: 100%; height: 80px; background: #333; color: white; border: none; padding: 10px; border-radius: 5px;" placeholder="Kuch likhna hai?"></textarea>
+    </div>
+</div>
+
+<script>
+    // Real-time Date dikhane ke liye
+    function updateTime() {
+        const now = new Date();
+        document.getElementById('date-time').innerText = now.toLocaleString('hi-IN');
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    // Notes ko browser mein save rakhne ke liye (Local Storage)
+    const noteArea = document.getElementById('notes');
+    noteArea.value = localStorage.getItem('myNote') || "";
+    noteArea.addEventListener('input', () => {
+        localStorage.setItem('myNote', noteArea.value);
+    });
+</script>
+
+</body>
+</html>
