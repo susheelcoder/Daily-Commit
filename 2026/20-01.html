@@ -3,72 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Converter | Susheelcoder</title>
+    <title>Susheelcoder | Money Manager</title>
     <style>
-        body { font-family: sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; padding: 20px; }
-        .tool-box { background: #1e293b; padding: 25px; border-radius: 15px; width: 100%; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #334155; }
-        h2 { color: #38bdf8; text-align: center; margin-bottom: 20px; }
-        label { display: block; margin: 15px 0 5px; font-size: 0.9rem; color: #94a3b8; }
-        select, input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; font-size: 1rem; }
-        .result-area { margin-top: 25px; padding: 15px; background: #334155; border-radius: 8px; text-align: center; }
-        .result-val { font-size: 1.5rem; font-weight: bold; color: #fbbf24; }
+        :root { --paisa-green: #2ecc71; --kharcha-red: #e74c3c; --dark: #2c3e50; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 450px; background: white; min-height: 100vh; box-shadow: 0 0 20px rgba(0,0,0,0.1); padding: 20px; }
+        h2 { text-align: center; color: var(--dark); }
+        
+        .balance-card { background: var(--dark); color: white; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
+        .balance-card h1 { margin: 10px 0; font-size: 2.5rem; }
+
+        .stats { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .stat-box { flex: 1; padding: 10px; text-align: center; border-radius: 10px; margin: 0 5px; color: white; }
+        .plus { background: var(--paisa-green); }
+        .minus { background: var(--kharcha-red); }
+
+        .input-group { display: flex; flex-direction: column; gap: 10px; background: #f9f9f9; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+        input, select, button { padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
+        button { background: #3498db; color: white; border: none; cursor: pointer; font-weight: bold; }
+        button:hover { background: #2980b9; }
+
+        .history-list { list-style: none; padding: 0; }
+        .history-item { display: flex; justify-content: space-between; background: white; padding: 12px; border-radius: 8px; margin-bottom: 8px; border-left: 5px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .history-item.income { border-left-color: var(--paisa-green); }
+        .history-item.expense { border-left-color: var(--kharcha-red); }
+        .delete-btn { color: #e74c3c; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="tool-box">
-    <h2>🚀 Smart Converter</h2>
+<div class="app-container">
+    <h2>Kharch-Paisa Tracker 💸</h2>
     
-    <label>Category Chunein</label>
-    <select id="category" onchange="updateUnits()">
-        <option value="currency">Currency (USD to INR)</option>
-        <option value="length">Length (Meter to Feet)</option>
-        <option value="weight">Weight (KG to Pounds)</option>
-        <option value="temp">Temperature (Celsius to Fab)</option>
-    </select>
-
-    <label>Value Likhein</label>
-    <input type="number" id="inputValue" placeholder="0" oninput="convert()">
-
-    <div class="result-area">
-        <span id="labelResult">Natija:</span><br>
-        <span class="result-val" id="outputValue">0</span>
+    <div class="balance-card">
+        <small>Total Balance</small>
+        <h1 id="balance">₹0.00</h1>
     </div>
 
-    <p style="font-size: 0.8rem; color: #64748b; margin-top: 15px; text-align: center;">
-        *Currency 1 USD = 83 INR ke hisaab se set hai.
-    </p>
+    <div class="stats">
+        <div class="stat-box plus">
+            <small>Income</small>
+            <div id="income-val">₹0</div>
+        </div>
+        <div class="stat-box minus">
+            <small>Expense</small>
+            <div id="expense-val">₹0</div>
+        </div>
+    </div>
+
+    <div class="input-group">
+        <input type="text" id="text" placeholder="Kahan se aaya/gaya? (e.g. Salary, Chai)">
+        <input type="number" id="amount" placeholder="Amount (e.g. 500 ya -200)">
+        <small>*Kharch ke liye minus (-) lagayein</small>
+        <button onclick="addTransaction()">Add Transaction</button>
+    </div>
+
+    <h3>Transaction History</h3>
+    <ul id="list" class="history-list"></ul>
 </div>
 
 <script>
-    function convert() {
-        const cat = document.getElementById('category').value;
-        const val = parseFloat(document.getElementById('inputValue').value) || 0;
-        let result = 0;
-        let unitName = "";
+    const balance = document.getElementById('balance');
+    const income_val = document.getElementById('income-val');
+    const expense_val = document.getElementById('expense-val');
+    const list = document.getElementById('list');
+    const text = document.getElementById('text');
+    const amount = document.getElementById('amount');
 
-        if (cat === "currency") {
-            result = (val * 83).toFixed(2);
-            unitName = " ₹ (INR)";
-        } else if (cat === "length") {
-            result = (val * 3.281).toFixed(2);
-            unitName = " Feet";
-        } else if (cat === "weight") {
-            result = (val * 2.205).toFixed(2);
-            unitName = " Pounds";
-        } else if (cat === "temp") {
-            result = ((val * 9/5) + 32).toFixed(2);
-            unitName = " °F";
+    let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+
+    function addTransaction() {
+        if (text.value.trim() === '' || amount.value.trim() === '') {
+            alert('Please details bhariye');
+            return;
         }
-
-        document.getElementById('outputValue').innerText = result + unitName;
+        const transaction = { id: Date.now(), text: text.value, amount: +amount.value };
+        transactions.push(transaction);
+        updateUI();
+        text.value = ''; amount.value = '';
     }
 
-    function updateUnits() {
-        document.getElementById('inputValue').value = "";
-        document.getElementById('outputValue').innerText = "0";
-        convert();
+    function removeTransaction(id) {
+        transactions = transactions.filter(t => t.id !== id);
+        updateUI();
     }
+
+    function updateUI() {
+        list.innerHTML = '';
+        transactions.forEach(t => {
+            const sign = t.amount < 0 ? '-' : '+';
+            const item = document.createElement('li');
+            item.classList.add('history-item', t.amount < 0 ? 'expense' : 'income');
+            item.innerHTML = `${t.text} <span>${sign}₹${Math.abs(t.amount)}</span> 
+            <span class="delete-btn" onclick="removeTransaction(${t.id})">x</span>`;
+            list.appendChild(item);
+        });
+
+        const amounts = transactions.map(t => t.amount);
+        const total = amounts.reduce((acc, item) => (acc += item), 0).toFixed(2);
+        const inc = amounts.filter(item => item > 0).reduce((acc, item) => (acc += item), 0).toFixed(2);
+        const exp = (amounts.filter(item => item < 0).reduce((acc, item) => (acc += item), 0) * -1).toFixed(2);
+
+        balance.innerText = `₹${total}`;
+        income_val.innerText = `₹${inc}`;
+        expense_val.innerText = `₹${exp}`;
+        
+        localStorage.setItem('transactions', JSON.stringify(transactions));
+    }
+
+    updateUI();
 </script>
 
 </body>
