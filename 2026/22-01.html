@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SusheelCoder - Smart Form</title>
     <style>
-        /* Sundar Design ke liye CSS */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #eef2f3; color: #333; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 500px; margin-bottom: 30px; }
         h2 { text-align: center; color: #007bff; margin-bottom: 20px; }
@@ -16,29 +15,27 @@
         .btn-submit:hover { background-color: #0056b3; }
         .btn-list { background-color: #28a745; color: white; margin-top: 10px; }
         .btn-list:hover { background-color: #218838; }
-        
-        /* Table Design */
+
         #listSection { width: 100%; max-width: 700px; display: none; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
         th { background-color: #f8f9fa; }
-        .photo-link { color: #007bff; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <h2>🌸 SusheelCoder Form</h2>
-        <form id="registrationForm" name="user-data" method="POST" data-netlify="true" enctype="multipart/form-data">
-            
+        <form id="registrationForm" name="user-data">
+
             <label>Pura Naam:</label>
             <input type="text" name="full_name" id="userName" placeholder="Apna naam likhein" required>
 
             <label>Email Address:</label>
             <input type="email" name="email" id="userEmail" placeholder="example@mail.com" required>
 
-            <label>Apni Photo Upload Karein:</label>
-            <input type="file" name="user_image" id="userPhoto" accept="image/*" required>
+            <label>Photo Link/ID:</label>
+            <input type="text" name="photo" id="userPhoto" placeholder="Yahan photo link ya ID daalein" required>
 
             <button type="submit" class="btn-submit">Data Save Karein 🚀</button>
         </form>
@@ -53,29 +50,31 @@
                 <tr>
                     <th>Naam</th>
                     <th>Email</th>
-                    <th>Photo</th>
+                    <th>Photo Info</th>
                 </tr>
             </thead>
-            <tbody id="tableBody">
-                </tbody>
+            <tbody id="tableBody"></tbody>
         </table>
     </div>
 
     <script>
-        // YAHAN APNA GOOGLE SCRIPT URL PASTE KAREIN
-        const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE'; 
+        // Aapka naya Web App URL yahan add ho gaya hai
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzi2uzylqjhBPTZ79O_0RyG9oJiPTVF7w4mQbPpAeRFEs318roUTo028DDTXQ3pZfcIgA/exec'; 
         const form = document.getElementById('registrationForm');
         const showListBtn = document.getElementById('showListBtn');
         const listSection = document.getElementById('listSection');
 
-        // --- 1. Form Submit Logic (Google Sheet + Netlify) ---
         form.addEventListener('submit', e => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
             btn.innerHTML = "Processing...";
             btn.disabled = true;
 
-            const formData = new FormData(form);
+            // Simple data bhej rahe hain Google Sheet mein
+            const formData = new FormData();
+            formData.append('full_name', document.getElementById('userName').value);
+            formData.append('email', document.getElementById('userEmail').value);
+            formData.append('photo', document.getElementById('userPhoto').value);
 
             fetch(scriptURL, { method: 'POST', body: formData })
                 .then(response => response.text())
@@ -83,7 +82,7 @@
                     if (result === "Duplicate") {
                         alert("❌ Dost, Is email se pehle hi form bhara ja chuka hai!");
                     } else {
-                        alert("✅ Badhai ho! Data save ho gaya.");
+                        alert("✅ Badhai ho! Google Sheet mein data save ho gaya.");
                         form.reset();
                     }
                     btn.innerHTML = "Data Save Karein 🚀";
@@ -91,12 +90,11 @@
                 })
                 .catch(error => {
                     console.error('Error!', error.message);
-                    alert("Kuch error aaya, check karein.");
+                    alert("Error! Check karein aapne 'Anyone' access diya hai ya nahi.");
                     btn.disabled = false;
                 });
         });
 
-        // --- 2. List Dikhane Ka Logic ---
         showListBtn.addEventListener('click', () => {
             if (listSection.style.display === "block") {
                 listSection.style.display = "none";
@@ -113,7 +111,7 @@
                 .then(res => res.json())
                 .then(data => {
                     tableBody.innerHTML = ""; 
-                    if (data.length === 0) {
+                    if (!data || data.length === 0) {
                         tableBody.innerHTML = "<tr><td colspan='3'>Abhi tak koi data nahi hai.</td></tr>";
                     } else {
                         data.forEach(row => {
@@ -121,7 +119,7 @@
                                 <tr>
                                     <td>${row[0]}</td>
                                     <td>${row[1]}</td>
-                                    <td><a href="#" class="photo-link">View Image</a></td>
+                                    <td>${row[2]}</td>
                                 </tr>`;
                         });
                     }
