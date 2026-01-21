@@ -1,84 +1,107 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WhatsApp Prank 😅</title>
-<style>
-body{
-    margin:0;
-    height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:linear-gradient(135deg,#667eea,#764ba2);
-    font-family:sans-serif;
-}
-.card{
-    background:#fff;
-    padding:20px;
-    border-radius:15px;
-    width:90%;
-    max-width:360px;
-    box-shadow:0 15px 40px rgba(0,0,0,.3);
-}
-h2{text-align:center}
-input, textarea, select{
-    width:100%;
-    padding:10px;
-    margin-top:10px;
-    border-radius:8px;
-    border:1px solid #ccc;
-    font-size:15px;
-}
-button{
-    margin-top:15px;
-    padding:14px;
-    width:100%;
-    border:none;
-    border-radius:10px;
-    font-size:18px;
-    background:#25D366;
-    color:#fff;
-    cursor:pointer;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instant Certificate Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; background-color: #f0f2f5; margin: 0; padding: 20px; }
+        
+        /* Input Box Styling */
+        .controls { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 30px; text-align: center; }
+        input { padding: 10px; width: 250px; border: 1px solid #ddd; border-radius: 4px; font-size: 16px; }
+        button { padding: 10px 20px; background-color: #2ecc71; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-left: 10px; }
+        button:hover { background-color: #27ae60; }
+
+        /* Certificate Layout */
+        #certificate-area {
+            width: 800px;
+            height: 550px;
+            background: white;
+            border: 15px solid #1a2a6c;
+            position: relative;
+            padding: 40px;
+            box-sizing: border-box;
+            text-align: center;
+            color: #333;
+            background-image: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+        }
+
+        .border-inner { border: 5px solid #b21f1f; height: 100%; padding: 30px; box-sizing: border-box; }
+        
+        h1 { font-size: 50px; margin-top: 10px; color: #1a2a6c; text-transform: uppercase; }
+        p { font-size: 20px; margin: 10px 0; }
+        
+        #display-name {
+            font-size: 45px;
+            font-family: 'Georgia', serif;
+            color: #b21f1f;
+            border-bottom: 2px solid #333;
+            display: inline-block;
+            min-width: 300px;
+            margin: 20px 0;
+            font-style: italic;
+        }
+
+        .footer { margin-top: 50px; display: flex; justify-content: space-around; }
+        .sign { border-top: 1px solid #333; width: 150px; margin-top: 40px; padding-top: 5px; font-weight: bold; }
+    </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>😜 WhatsApp Prank</h2>
+    <div class="controls">
+        <h3>अपना नाम यहाँ लिखें:</h3>
+        <input type="text" id="nameInput" placeholder="आपका पूरा नाम..." oninput="updateName()">
+        <button onclick="downloadCertificate()">सर्टिफिकेट डाउनलोड करें</button>
+    </div>
 
-    <input id="name" placeholder="Kis ke liye? (Name)" />
+    <div id="certificate-area">
+        <div class="border-inner">
+            <h1>प्रमाण पत्र</h1>
+            <p>यह प्रमाणित किया जाता है कि</p>
+            <div id="display-name">आपका नाम यहाँ आएगा</div>
+            <p>ने <b>सफलतापूर्वक</b> अपना प्रोजेक्ट पूरा कर लिया है।</p>
+            <p>हम इनके उज्जवल भविष्य की कामना करते हैं।</p>
 
-    <textarea id="msg" rows="3" placeholder="Message likho (jaise Sorry 😔)"></textarea>
+            <div class="footer">
+                <div>
+                    <div class="sign">Susheelcoder</div>
+                    <p>डायरेक्टर</p>
+                </div>
+                <div>
+                    <div class="sign">21 Jan 2026</div>
+                    <p>दिनांक</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <select id="count">
-        <option value="1">1 baar</option>
-        <option value="3">3 baar</option>
-        <option value="5">5 baar</option>
-        <option value="10">10 baar 😈</option>
-    </select>
+    <script>
+        // लाइव नाम अपडेट करने के लिए
+        function updateName() {
+            const inputVal = document.getElementById('nameInput').value;
+            document.getElementById('display-name').innerText = inputVal || "आपका नाम यहाँ आएगा";
+        }
 
-    <button onclick="sendPrank()">Send Prank 💚</button>
-</div>
+        // इमेज डाउनलोड करने के लिए फंक्शन
+        function downloadCertificate() {
+            const name = document.getElementById('nameInput').value;
+            if(!name) {
+                alert("कृपया पहले अपना नाम लिखें!");
+                return;
+            }
 
-<script>
-function sendPrank(){
-    const phone = "91XXXXXXXXXX"; // number yahan
-    const name = document.getElementById("name").value || "Tum";
-    const msg = document.getElementById("msg").value || "Sorry 😔";
-    const count = document.getElementById("count").value;
-
-    let finalMsg = "";
-    for(let i=0;i<count;i++){
-        finalMsg += name + " ❤️ " + msg + "\n";
-    }
-
-    const url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(finalMsg);
-    window.location.href = url;
-}
-</script>
+            const certificate = document.getElementById('certificate-area');
+            
+            html2canvas(certificate).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `${name}-Certificate.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+    </script>
 
 </body>
 </html>
