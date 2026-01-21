@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SusheelCoder - Smart Photo Form</title>
+    <title>SusheelCoder - Smart Form</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); width: 100%; max-width: 450px; }
@@ -60,13 +60,12 @@
     </div>
 
     <script>
-        // Aapka naya Deployment URL yahan add kar diya gaya hai
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbze8r47KASISusYG18f8RcvPqJW5kVVHRKrtqHXfRL81_49kAVBtE5zz_50HdGrYn1cjg/exec'; 
+        // Aapka naya aur sahi URL yahan update kar diya gaya hai
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyfg1Te-Y4d42ocq46_LbpoNtJRM6Fhtv8gufqyS2J4Rw-vyWPqlD1LX1tMt8QifO8EMg/exec'; 
         const form = document.getElementById('registrationForm');
         const showListBtn = document.getElementById('showListBtn');
         const listSection = document.getElementById('listSection');
 
-        // 1. Form Submit Logic
         form.addEventListener('submit', e => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
@@ -77,7 +76,7 @@
             const formData = new FormData();
             formData.append('full_name', document.getElementById('userName').value);
             formData.append('email', document.getElementById('userEmail').value);
-            formData.append('photo', photoFile.name); // File ka naam sheet mein jayega
+            formData.append('photo', photoFile.name); 
 
             fetch(scriptURL, { method: 'POST', body: formData })
                 .then(res => res.text())
@@ -92,24 +91,22 @@
                     btn.disabled = false;
                 })
                 .catch(err => {
-                    alert("Error! Script URL ya Internet check karein.");
+                    alert("Kuch error aaya hai. Check Script URL.");
                     console.error(err);
                     btn.disabled = false;
                 });
         });
 
-        // 2. Data Fetch/Show Logic
         showListBtn.addEventListener('click', () => {
             const tableBody = document.getElementById('tableBody');
             
-            // Toggle Visibility
             if(listSection.style.display === "block") {
                 listSection.style.display = "none";
                 showListBtn.innerHTML = "Bhari Hui List Dekhein 📋";
             } else {
                 listSection.style.display = "block";
                 showListBtn.innerHTML = "List Chupayein ❌";
-                tableBody.innerHTML = "<tr><td colspan='3' style='text-align:center;'>Loading Database... ⏳</td></tr>";
+                tableBody.innerHTML = "<tr><td colspan='3' style='text-align:center;'>Loading Data... ⏳</td></tr>";
 
                 fetch(scriptURL)
                     .then(res => res.json())
@@ -129,7 +126,7 @@
                         }
                     })
                     .catch(err => {
-                        tableBody.innerHTML = "<tr><td colspan='3' style='color:red;'>Data fetch nahi ho paya!</td></tr>";
+                        tableBody.innerHTML = "<tr><td colspan='3' style='color:red;'>Data load nahi ho paya!</td></tr>";
                     });
             }
         });
