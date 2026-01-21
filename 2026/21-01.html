@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Susheelcoder Professional Certificate</title>
+    <title>Susheelcoder Certificate Generator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body { font-family: 'Arial', sans-serif; display: flex; flex-direction: column; align-items: center; background-color: #f4f7f6; padding: 20px; }
         
+        /* Control Panel */
         .controls { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
         input { padding: 12px; width: 250px; border: 2px solid #1a2a6c; border-radius: 5px; font-size: 16px; outline: none; }
         button { padding: 12px 25px; background: #1a2a6c; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-left: 10px; }
+        button:hover { background: #b21f1f; }
 
+        /* Certificate Styling */
         #certificate-area {
             width: 850px;
             height: 600px;
@@ -31,10 +34,9 @@
             background-image: radial-gradient(#fff 70%, #fdfbf0);
         }
 
-        /* Top Main Logo */
         .header-logo {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             margin-top: 20px;
             object-fit: contain;
         }
@@ -42,8 +44,10 @@
         .serial-no { position: absolute; top: 20px; right: 30px; font-size: 12px; font-weight: bold; color: #555; }
 
         h1 { font-family: 'Georgia', serif; font-size: 50px; color: #1a2a6c; margin: 10px 0 0 0; }
-        .sub-title { font-size: 18px; letter-spacing: 4px; color: #b21f1f; margin-bottom: 20px; font-weight: bold; }
+        .sub-title { font-size: 18px; letter-spacing: 4px; color: #b21f1f; margin-bottom: 30px; font-weight: bold; }
         
+        .main-text { font-size: 20px; color: #333; }
+
         #display-name {
             font-size: 55px;
             font-family: 'Brush Script MT', cursive;
@@ -56,39 +60,33 @@
 
         .content { width: 80%; text-align: center; line-height: 1.6; font-size: 18px; color: #444; }
 
-        /* Footer Section Updates */
         .footer-section {
             width: 90%;
-            margin-top: 50px;
+            margin-top: 40px;
             display: flex;
             justify-content: space-around;
             align-items: flex-end;
         }
 
-        .sig-box { text-align: center; width: 200px; position: relative; }
+        .sig-box { text-align: center; width: 180px; }
         
-        /* Shining Logo as Stamp - 90 Degree Rotated */
-        .bottom-stamp {
-            width: 90px;
-            height: 90px;
+        /* Bottom Logo/Stamp */
+        .bottom-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: -10px;
             object-fit: contain;
-            transform: rotate(90deg);
-            position: absolute;
-            top: -75px; /* Signature line ke upar */
-            left: 50%;
-            margin-left: -45px; /* Center alignment */
-            opacity: 0.85;
         }
 
-        .sig-line { border-top: 2px solid #333; margin-top: 5px; font-weight: bold; padding-top: 5px; font-family: 'Georgia', serif; font-style: italic; }
-        .label { font-size: 12px; color: #777; text-transform: uppercase; margin-top: 5px; font-weight: bold; }
+        .sig-line { border-top: 2px solid #333; margin-top: 5px; font-weight: bold; padding-top: 5px; }
+        .label { font-size: 12px; color: #777; text-transform: uppercase; margin-top: 5px; }
     </style>
 </head>
 <body>
 
     <div class="controls">
         <input type="text" id="nameInput" placeholder="अपना नाम यहाँ लिखें..." oninput="updateName()">
-        <button onclick="download()">सर्टिफिकेट डाउनलोड करें</button>
+        <button onclick="download()">डाउनलोड करें</button>
     </div>
 
     <div id="certificate-area">
@@ -100,50 +98,48 @@
             <h1>प्रमाण पत्र</h1>
             <p class="sub-title">CERTIFICATE OF COMPLETION</p>
             
-            <p style="font-size: 20px; color: #333;">यह प्रमाणित किया जाता है कि</p>
+            <p class="main-text">यह प्रमाणित किया जाता है कि</p>
             <div id="display-name">Susheelcoder</div>
             
             <p class="content">
-                ने डिजिटल कौशल और वेब डेवलपमेंट के क्षेत्र में उत्कृष्ट प्रदर्शन करते हुए 
-                सफलतापूर्वक अपना प्रशिक्षण पूरा किया है।
+                ने हमारे ऑनलाइन प्लेटफॉर्म के माध्यम से अपनी दक्षता और कौशल का प्रदर्शन करते हुए 
+                सफलतापूर्वक इस पाठ्यक्रम को पूर्ण किया है।
             </p>
 
             <div class="footer-section">
                 <div class="sig-box">
-                    <img src="https://lh3.googleusercontent.com/d/1D_xZSF47SB2ccpTQJrOCFMJvKzp62540" alt="Stamp" class="bottom-stamp">
+                    <img src="https://lh3.googleusercontent.com/d/1D_xZSF47SB2ccpTQJrOCFMJvKzp62540" alt="Stamp" class="bottom-logo">
                     <div class="sig-line">Susheelcoder</div>
-                    <div class="label">अधिकृत हस्ताक्षर (Sign)</div>
+                    <div class="label">अधिकृत हस्ताक्षर</div>
                 </div>
-
                 <div class="sig-box" style="padding-bottom: 10px;">
                     <div class="sig-line" id="current-date"></div>
-                    <div class="label">दिनांक (Date)</div>
+                    <div class="label">दिनांक</div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Auto ID & Date
+        // ऑटोमैटिक सीरियल नंबर और डेट
         document.getElementById('cert-id').innerText = "SC-" + Math.floor(Math.random() * 900000 + 100000);
         const d = new Date();
-        const options = { day: '2-digit', month: 'short', year: 'numeric' };
-        document.getElementById('current-date').innerText = d.toLocaleDateString('hi-IN', options);
+        document.getElementById('current-date').innerText = d.getDate() + "/" + (d.getMonth()+1) + "/" + d.getFullYear();
 
+        // नाम अपडेट करना
         function updateName() {
             const val = document.getElementById('nameInput').value;
             document.getElementById('display-name').innerText = val || "Susheelcoder";
         }
 
+        // डाउनलोड फंक्शन
         function download() {
             const name = document.getElementById('nameInput').value;
             if(!name) { alert("कृपया नाम डालें!"); return; }
 
-            html2canvas(document.querySelector("#certificate-area"), { 
-                useCORS: true, 
-                scale: 3, 
-                backgroundColor: null 
-            }).then(canvas => {
+            const area = document.getElementById('certificate-area');
+            // useCORS ज़रूरी है ताकि गूगल ड्राइव की फोटो डाउनलोड में आए
+            html2canvas(area, { useCORS: true, scale: 2 }).then(canvas => {
                 let link = document.createElement('a');
                 link.download = name + '-Certificate.png';
                 link.href = canvas.toDataURL("image/png");
@@ -153,3 +149,4 @@
     </script>
 </body>
 </html>
+Ismein logon ke jagah per signature and signature ki jagah per logon karo
