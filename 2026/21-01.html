@@ -6,11 +6,11 @@
     <title>Susheelcoder Professional Certificate</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        body { font-family: 'Arial', sans-serif; display: flex; flex-direction: column; align-items: center; background-color: #f0f0f0; padding: 20px; }
+        body { font-family: 'Arial', sans-serif; display: flex; flex-direction: column; align-items: center; background-color: #f4f7f6; padding: 20px; }
         
-        .controls { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        input { padding: 12px; width: 250px; border: 2px solid #1a2a6c; border-radius: 5px; outline: none; }
-        button { padding: 12px 25px; background: #1a2a6c; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .controls { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        input { padding: 12px; width: 250px; border: 2px solid #1a2a6c; border-radius: 5px; font-size: 16px; outline: none; }
+        button { padding: 12px 25px; background: #1a2a6c; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-left: 10px; }
 
         #certificate-area {
             width: 850px;
@@ -18,8 +18,8 @@
             background: white;
             border: 15px solid #1a2a6c;
             position: relative;
+            padding: 10px;
             box-sizing: border-box;
-            overflow: hidden;
         }
 
         .inner-border {
@@ -28,106 +28,107 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #fff;
-            background-image: url('https://www.transparenttextures.com/patterns/pinstriped-suit.png');
+            background-image: radial-gradient(#fff 70%, #fdfbf0);
         }
 
         /* Top Main Logo */
-        .main-logo {
-            width: 110px;
-            height: 110px;
-            margin-top: 25px;
+        .header-logo {
+            width: 100px;
+            height: 100px;
+            margin-top: 20px;
             object-fit: contain;
         }
 
-        h1 { font-family: 'Georgia', serif; font-size: 50px; color: #1a2a6c; margin: 10px 0; }
-        .sub-title { font-size: 18px; letter-spacing: 3px; color: #b21f1f; font-weight: bold; margin-bottom: 20px; }
+        .serial-no { position: absolute; top: 20px; right: 30px; font-size: 12px; font-weight: bold; color: #555; }
+
+        h1 { font-family: 'Georgia', serif; font-size: 50px; color: #1a2a6c; margin: 10px 0 0 0; }
+        .sub-title { font-size: 18px; letter-spacing: 4px; color: #b21f1f; margin-bottom: 20px; font-weight: bold; }
         
         #display-name {
-            font-size: 52px;
+            font-size: 55px;
             font-family: 'Brush Script MT', cursive;
             color: #1a2a6c;
             margin: 15px 0;
-            border-bottom: 2px solid #ccc;
+            border-bottom: 2px solid #b21f1f;
             min-width: 400px;
             text-align: center;
         }
 
-        .content { width: 80%; text-align: center; line-height: 1.6; font-size: 19px; color: #333; }
+        .content { width: 80%; text-align: center; line-height: 1.6; font-size: 18px; color: #444; }
 
-        /* Footer and Stamp Section */
+        /* Footer Section Updates */
         .footer-section {
             width: 90%;
             margin-top: 50px;
             display: flex;
             justify-content: space-around;
             align-items: flex-end;
-            position: relative;
         }
 
         .sig-box { text-align: center; width: 200px; position: relative; }
         
-        /* Shining Logo rotated 90 degrees */
-        .shining-stamp {
+        /* Shining Logo as Stamp - 90 Degree Rotated */
+        .bottom-stamp {
             width: 90px;
             height: 90px;
             object-fit: contain;
-            transform: rotate(90deg); /* 90 degree par ghumaya gaya */
+            transform: rotate(90deg);
             position: absolute;
-            top: -70px; /* Signature ke upar set kiya */
-            left: 55px;
-            opacity: 0.8;
+            top: -75px; /* Signature line ke upar */
+            left: 50%;
+            margin-left: -45px; /* Center alignment */
+            opacity: 0.85;
         }
 
-        .sig-line { border-top: 2px solid #333; padding-top: 5px; font-weight: bold; }
-        .label { font-size: 12px; color: #777; font-weight: bold; }
-        
-        .serial-no { position: absolute; top: 15px; right: 20px; font-size: 12px; font-weight: bold; }
+        .sig-line { border-top: 2px solid #333; margin-top: 5px; font-weight: bold; padding-top: 5px; font-family: 'Georgia', serif; font-style: italic; }
+        .label { font-size: 12px; color: #777; text-transform: uppercase; margin-top: 5px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="controls">
-        <input type="text" id="nameInput" placeholder="नाम लिखें..." oninput="updateName()">
-        <button onclick="download()">डाउनलोड</button>
+        <input type="text" id="nameInput" placeholder="अपना नाम यहाँ लिखें..." oninput="updateName()">
+        <button onclick="download()">सर्टिफिकेट डाउनलोड करें</button>
     </div>
 
     <div id="certificate-area">
         <div class="inner-border">
-            <div class="serial-no">ID: <span id="cert-id"></span></div>
+            <div class="serial-no">UID: <span id="cert-id"></span></div>
             
-            <img src="https://lh3.googleusercontent.com/d/1YMrh4MyQ2yQwskJV9rW0q0HVPFmerhOk" alt="Main Logo" class="main-logo">
+            <img src="https://lh3.googleusercontent.com/d/1YMrh4MyQ2yQwskJV9rW0q0HVPFmerhOk" alt="Main Logo" class="header-logo">
             
             <h1>प्रमाण पत्र</h1>
-            <p class="sub-title">CERTIFICATE OF EXCELLENCE</p>
+            <p class="sub-title">CERTIFICATE OF COMPLETION</p>
             
-            <p style="font-size: 20px; margin: 0;">यह गर्व के साथ प्रदान किया जाता है</p>
+            <p style="font-size: 20px; color: #333;">यह प्रमाणित किया जाता है कि</p>
             <div id="display-name">Susheelcoder</div>
             
             <p class="content">
-                इनकी कड़ी मेहनत और विशिष्ट उपलब्धियों को मान्यता देते हुए यह सम्मान दिया जाता है। 
-                हम इनके भविष्य के सभी प्रयासों के लिए शुभकामनाएँ देते हैं।
+                ने डिजिटल कौशल और वेब डेवलपमेंट के क्षेत्र में उत्कृष्ट प्रदर्शन करते हुए 
+                सफलतापूर्वक अपना प्रशिक्षण पूरा किया है।
             </p>
 
             <div class="footer-section">
                 <div class="sig-box">
-                    <img src="https://lh3.googleusercontent.com/d/1D_xZSF47SB2ccpTQJrOCFMJvKzp62540" alt="Stamp" class="shining-stamp">
+                    <img src="https://lh3.googleusercontent.com/d/1D_xZSF47SB2ccpTQJrOCFMJvKzp62540" alt="Stamp" class="bottom-stamp">
                     <div class="sig-line">Susheelcoder</div>
-                    <div class="label">AUTHORIZED SIGNATURE</div>
+                    <div class="label">अधिकृत हस्ताक्षर (Sign)</div>
                 </div>
-                <div class="sig-box">
+
+                <div class="sig-box" style="padding-bottom: 10px;">
                     <div class="sig-line" id="current-date"></div>
-                    <div class="label">DATE</div>
+                    <div class="label">दिनांक (Date)</div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Auto ID and Date
-        document.getElementById('cert-id').innerText = "SC-" + Math.floor(Math.random() * 899999 + 100000);
+        // Auto ID & Date
+        document.getElementById('cert-id').innerText = "SC-" + Math.floor(Math.random() * 900000 + 100000);
         const d = new Date();
-        document.getElementById('current-date').innerText = d.getDate() + "/" + (d.getMonth()+1) + "/" + d.getFullYear();
+        const options = { day: '2-digit', month: 'short', year: 'numeric' };
+        document.getElementById('current-date').innerText = d.toLocaleDateString('hi-IN', options);
 
         function updateName() {
             const val = document.getElementById('nameInput').value;
@@ -136,9 +137,13 @@
 
         function download() {
             const name = document.getElementById('nameInput').value;
-            if(!name) { alert("Please enter a name"); return; }
+            if(!name) { alert("कृपया नाम डालें!"); return; }
 
-            html2canvas(document.querySelector("#certificate-area"), { useCORS: true, scale: 3 }).then(canvas => {
+            html2canvas(document.querySelector("#certificate-area"), { 
+                useCORS: true, 
+                scale: 3, 
+                backgroundColor: null 
+            }).then(canvas => {
                 let link = document.createElement('a');
                 link.download = name + '-Certificate.png';
                 link.href = canvas.toDataURL("image/png");
