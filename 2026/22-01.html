@@ -3,22 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SusheelCoder - Photo Upload Form</title>
+    <title>SusheelCoder - Smart Photo Form</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); width: 100%; max-width: 450px; }
-        h2 { text-align: center; color: #007bff; }
-        label { font-weight: bold; display: block; margin-top: 15px; }
-        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
-        /* File input style */
-        input[type="file"] { background: #f8f9fa; cursor: pointer; }
+        h2 { text-align: center; color: #007bff; margin-bottom: 20px; }
+        label { font-weight: bold; display: block; margin-top: 15px; color: #555; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 15px; }
+        input[type="file"] { background: #fafafa; cursor: pointer; border: 1px dashed #007bff; }
         button { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.3s; }
         .btn-submit { background-color: #007bff; color: white; }
-        .btn-submit:hover { background-color: #0056b3; }
-        .btn-list { background-color: #28a745; color: white; }
-        #listSection { width: 100%; max-width: 600px; display: none; background: white; padding: 20px; border-radius: 15px; margin-top: 20px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        .btn-submit:hover { background-color: #0056b3; transform: translateY(-2px); }
+        .btn-list { background-color: #28a745; color: white; margin-top: 20px; }
+        .btn-list:hover { background-color: #218838; }
+        
+        #listSection { width: 100%; max-width: 650px; display: none; background: white; padding: 25px; border-radius: 15px; margin-top: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        h3 { color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; border: 1px solid #eee; text-align: left; }
+        th { background-color: #f8f9fa; color: #007bff; }
+        tr:nth-child(even) { background-color: #fafafa; }
     </style>
 </head>
 <body>
@@ -26,9 +30,8 @@
     <div class="container">
         <h2>🌸 SusheelCoder Form</h2>
         <form id="registrationForm">
-
             <label>Pura Naam:</label>
-            <input type="text" id="userName" placeholder="Naam likhein" required>
+            <input type="text" id="userName" placeholder="Apna naam yahan likhein" required>
 
             <label>Email Address:</label>
             <input type="email" id="userEmail" placeholder="example@mail.com" required>
@@ -43,7 +46,7 @@
     </div>
 
     <div id="listSection">
-        <h3>Form Users:</h3>
+        <h3>Registered Users List:</h3>
         <table>
             <thead>
                 <tr>
@@ -57,57 +60,79 @@
     </div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbzi2uzylqjhBPTZ79O_0RyG9oJiPTVF7w4mQbPpAeRFEs318roUTo028DDTXQ3pZfcIgA/exec'; 
+        // Aapka naya Deployment URL yahan add kar diya gaya hai
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbze8r47KASISusYG18f8RcvPqJW5kVVHRKrtqHXfRL81_49kAVBtE5zz_50HdGrYn1cjg/exec'; 
         const form = document.getElementById('registrationForm');
+        const showListBtn = document.getElementById('showListBtn');
+        const listSection = document.getElementById('listSection');
 
+        // 1. Form Submit Logic
         form.addEventListener('submit', e => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
-            btn.innerHTML = "Saving...";
+            btn.innerHTML = "Saving Data... ⏳";
             btn.disabled = true;
 
             const photoFile = document.getElementById('userPhoto').files[0];
-
             const formData = new FormData();
             formData.append('full_name', document.getElementById('userName').value);
             formData.append('email', document.getElementById('userEmail').value);
-            formData.append('photo', photoFile.name); // Sirf photo ka naam sheet mein jayega
+            formData.append('photo', photoFile.name); // File ka naam sheet mein jayega
 
             fetch(scriptURL, { method: 'POST', body: formData })
                 .then(res => res.text())
                 .then(result => {
                     if (result === "Duplicate") {
-                        alert("❌ Ye Email pehle se hai!");
+                        alert("❌ Dost, Is email se pehle hi entry ho chuki hai!");
                     } else {
-                        alert("✅ Sheet mein data save ho gaya!");
+                        alert("✅ Badhai ho! Data Google Sheet mein save ho gaya.");
                         form.reset();
                     }
                     btn.innerHTML = "Data Save Karein 🚀";
                     btn.disabled = false;
                 })
                 .catch(err => {
-                    alert("Error! Check internet or Script URL");
+                    alert("Error! Script URL ya Internet check karein.");
+                    console.error(err);
                     btn.disabled = false;
                 });
         });
 
-        // List dikhane ka logic pehle jaisa hi rahega...
-        document.getElementById('showListBtn').addEventListener('click', () => {
-            const section = document.getElementById('listSection');
+        // 2. Data Fetch/Show Logic
+        showListBtn.addEventListener('click', () => {
             const tableBody = document.getElementById('tableBody');
-            section.style.display = section.style.display === "block" ? "none" : "block";
+            
+            // Toggle Visibility
+            if(listSection.style.display === "block") {
+                listSection.style.display = "none";
+                showListBtn.innerHTML = "Bhari Hui List Dekhein 📋";
+            } else {
+                listSection.style.display = "block";
+                showListBtn.innerHTML = "List Chupayein ❌";
+                tableBody.innerHTML = "<tr><td colspan='3' style='text-align:center;'>Loading Database... ⏳</td></tr>";
 
-            if(section.style.display === "block") {
-                tableBody.innerHTML = "<tr><td colspan='3'>Loading...</td></tr>";
-                fetch(scriptURL).then(res => res.json()).then(data => {
-                    tableBody.innerHTML = "";
-                    data.forEach(row => {
-                        tableBody.innerHTML += `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td></tr>`;
+                fetch(scriptURL)
+                    .then(res => res.json())
+                    .then(data => {
+                        tableBody.innerHTML = "";
+                        if(data.length === 0) {
+                            tableBody.innerHTML = "<tr><td colspan='3' style='text-align:center;'>Abhi koi data nahi hai.</td></tr>";
+                        } else {
+                            data.forEach(row => {
+                                tableBody.innerHTML += `
+                                    <tr>
+                                        <td>${row[0]}</td>
+                                        <td>${row[1]}</td>
+                                        <td>${row[2]}</td>
+                                    </tr>`;
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        tableBody.innerHTML = "<tr><td colspan='3' style='color:red;'>Data fetch nahi ho paya!</td></tr>";
                     });
-                });
             }
         });
     </script>
 </body>
 </html>
-
