@@ -3,26 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Certificate with Logo</title>
+    <title>Susheelcoder Certificate Generator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        body { font-family: 'Arial', sans-serif; display: flex; flex-direction: column; align-items: center; background-color: #e9ecef; padding: 20px; }
+        body { font-family: 'Arial', sans-serif; display: flex; flex-direction: column; align-items: center; background-color: #f4f7f6; padding: 20px; }
         
         /* Control Panel */
-        .controls { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        input { padding: 12px; width: 250px; border: 2px solid #ddd; border-radius: 6px; outline: none; }
-        button { padding: 12px 25px; background: #1a2a6c; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-left: 10px; }
+        .controls { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        input { padding: 12px; width: 250px; border: 2px solid #1a2a6c; border-radius: 5px; font-size: 16px; outline: none; }
+        button { padding: 12px 25px; background: #1a2a6c; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-left: 10px; }
         button:hover { background: #b21f1f; }
 
-        /* Certificate Area */
+        /* Certificate Styling */
         #certificate-area {
             width: 850px;
             height: 600px;
             background: white;
-            border: 20px solid #1a2a6c;
+            border: 15px solid #1a2a6c;
             position: relative;
+            padding: 10px;
             box-sizing: border-box;
-            box-shadow: 0 0 30px rgba(0,0,0,0.2);
         }
 
         .inner-border {
@@ -31,109 +31,118 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            background-image: radial-gradient(#fff 70%, #fdfbf0);
         }
 
-        /* Logo Styling */
-        .logo {
-            width: 100px;
-            height: 100px;
-            margin-bottom: 10px;
+        .header-logo {
+            width: 120px;
+            height: 120px;
+            margin-top: 20px;
             object-fit: contain;
         }
 
-        .serial-no { position: absolute; top: 15px; right: 20px; font-size: 13px; font-weight: bold; color: #666; }
+        .serial-no { position: absolute; top: 20px; right: 30px; font-size: 12px; font-weight: bold; color: #555; }
 
-        h1 { font-family: 'Times New Roman', serif; font-size: 55px; color: #1a2a6c; margin: 5px 0; text-transform: uppercase; }
-        .sub-text { font-size: 20px; color: #444; margin: 5px 0; letter-spacing: 2px; }
+        h1 { font-family: 'Georgia', serif; font-size: 50px; color: #1a2a6c; margin: 10px 0 0 0; }
+        .sub-title { font-size: 18px; letter-spacing: 4px; color: #b21f1f; margin-bottom: 30px; font-weight: bold; }
         
+        .main-text { font-size: 20px; color: #333; }
+
         #display-name {
-            font-size: 48px;
+            font-size: 55px;
             font-family: 'Brush Script MT', cursive;
-            color: #b21f1f;
+            color: #1a2a6c;
             margin: 15px 0;
-            border-bottom: 2px solid #ccc;
-            min-width: 350px;
+            border-bottom: 2px solid #b21f1f;
+            min-width: 400px;
             text-align: center;
         }
 
-        .content { width: 85%; text-align: center; line-height: 1.5; font-size: 18px; color: #333; }
+        .content { width: 80%; text-align: center; line-height: 1.6; font-size: 18px; color: #444; }
 
-        .signature-section {
+        .footer-section {
             width: 90%;
-            margin-top: 50px;
+            margin-top: 40px;
             display: flex;
             justify-content: space-around;
+            align-items: flex-end;
         }
 
-        .sig-box { text-align: center; width: 200px; }
-        .sig-line { border-top: 2px solid #333; padding-top: 5px; font-weight: bold; font-style: italic; }
-        .label { font-size: 13px; color: #777; font-weight: bold; text-transform: uppercase; }
+        .sig-box { text-align: center; width: 180px; }
+        
+        /* Bottom Logo/Stamp */
+        .bottom-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: -10px;
+            object-fit: contain;
+        }
+
+        .sig-line { border-top: 2px solid #333; margin-top: 5px; font-weight: bold; padding-top: 5px; }
+        .label { font-size: 12px; color: #777; text-transform: uppercase; margin-top: 5px; }
     </style>
 </head>
 <body>
 
     <div class="controls">
-        <input type="text" id="nameInput" placeholder="Apna Naam Likhen..." oninput="updateName()">
-        <button onclick="download()">Download Certificate</button>
+        <input type="text" id="nameInput" placeholder="अपना नाम यहाँ लिखें..." oninput="updateName()">
+        <button onclick="download()">डाउनलोड करें</button>
     </div>
 
     <div id="certificate-area">
         <div class="inner-border">
-            <div class="serial-no">ID: <span id="cert-id"></span></div>
+            <div class="serial-no">UID: <span id="cert-id"></span></div>
             
-            <img src="https://lh3.googleusercontent.com/d/1D_xZSF47SB2ccpTQJrOCFMJvKzp62540" alt="Logo" class="logo">
+            <img src="https://lh3.googleusercontent.com/d/1YMrh4MyQ2yQwskJV9rW0q0HVPFmerhOk" alt="Main Logo" class="header-logo">
             
-            <h1>PRASHANSA PATRA</h1>
-            <p class="sub-text">CERTIFICATE OF APPRECIATION</p>
+            <h1>प्रमाण पत्र</h1>
+            <p class="sub-title">CERTIFICATE OF COMPLETION</p>
             
-            <p class="content" style="margin-top: 20px;">Yah pramanit kiya jata hai ki</p>
+            <p class="main-text">यह प्रमाणित किया जाता है कि</p>
             <div id="display-name">Susheelcoder</div>
             
             <p class="content">
-                Ne is vishesh karyakram mein apni utkrisht bhagidari aur pradarshan se 
-                safalta hasil ki hai. Hum inke sundar bhavishya ki kamna karte hain.
+                ने हमारे ऑनलाइन प्लेटफॉर्म के माध्यम से अपनी दक्षता और कौशल का प्रदर्शन करते हुए 
+                सफलतापूर्वक इस पाठ्यक्रम को पूर्ण किया है।
             </p>
 
-            <div class="signature-section">
+            <div class="footer-section">
                 <div class="sig-box">
+                    <img src="https://lh3.googleusercontent.com/d/1D_xZSF47SB2ccpTQJrOCFMJvKzp62540" alt="Stamp" class="bottom-logo">
                     <div class="sig-line">Susheelcoder</div>
-                    <div class="label">Authorized Signatory</div>
+                    <div class="label">अधिकृत हस्ताक्षर</div>
                 </div>
-                <div class="sig-box">
+                <div class="sig-box" style="padding-bottom: 10px;">
                     <div class="sig-line" id="current-date"></div>
-                    <div class="label">Date</div>
+                    <div class="label">दिनांक</div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Serial Number Generator
-        document.getElementById('cert-id').innerText = "SC-" + Math.floor(100000 + Math.random() * 900000);
-
-        // Date Generator
+        // ऑटोमैटिक सीरियल नंबर और डेट
+        document.getElementById('cert-id').innerText = "SC-" + Math.floor(Math.random() * 900000 + 100000);
         const d = new Date();
         document.getElementById('current-date').innerText = d.getDate() + "/" + (d.getMonth()+1) + "/" + d.getFullYear();
 
-        // Name Update Function
+        // नाम अपडेट करना
         function updateName() {
             const val = document.getElementById('nameInput').value;
-            document.getElementById('display-name').innerText = val || "Aapka Naam";
+            document.getElementById('display-name').innerText = val || "Susheelcoder";
         }
 
-        // Download Function
+        // डाउनलोड फंक्शन
         function download() {
             const name = document.getElementById('nameInput').value;
-            if(!name) { alert("Pehle naam likhen!"); return; }
+            if(!name) { alert("कृपया नाम डालें!"); return; }
 
             const area = document.getElementById('certificate-area');
-            html2canvas(area, { useCORS: true }).then(canvas => {
+            // useCORS ज़रूरी है ताकि गूगल ड्राइव की फोटो डाउनलोड में आए
+            html2canvas(area, { useCORS: true, scale: 2 }).then(canvas => {
                 let link = document.createElement('a');
                 link.download = name + '-Certificate.png';
-                link.href = canvas.toDataURL();
+                link.href = canvas.toDataURL("image/png");
                 link.click();
             });
         }
