@@ -7,7 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body { font-family: 'Arial', sans-serif; display: flex; flex-direction: column; align-items: center; background-color: #f4f7f6; padding: 20px; }
-        
+
         /* Control Panel */
         .controls { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
         input { padding: 12px; width: 250px; border: 2px solid #1a2a6c; border-radius: 5px; font-size: 16px; outline: none; }
@@ -21,7 +21,7 @@
             background: white;
             border: 15px solid #1a2a6c;
             position: relative;
-            padding: 10px;
+            padding: 15px; /* Padding adjusted */
             box-sizing: border-box;
         }
 
@@ -31,55 +31,58 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: space-between; /* Space elements evenly */
             background-image: radial-gradient(#fff 70%, #fdfbf0);
+            padding: 20px 0; /* Vertical padding inside */
+            box-sizing: border-box;
         }
 
+        .header-section { text-align: center; }
+
         .header-logo {
-            width: 120px;
-            height: 120px;
-            margin-top: 20px;
+            width: 100px; /* Reduced slightly */
+            height: 100px;
             object-fit: contain;
         }
 
-        .serial-no { position: absolute; top: 20px; right: 30px; font-size: 12px; font-weight: bold; color: #555; }
+        .serial-no { position: absolute; top: 25px; right: 35px; font-size: 12px; font-weight: bold; color: #555; }
 
-        h1 { font-family: 'Georgia', serif; font-size: 50px; color: #1a2a6c; margin: 10px 0 0 0; }
-        .sub-title { font-size: 18px; letter-spacing: 4px; color: #b21f1f; margin-bottom: 30px; font-weight: bold; }
-        
-        .main-text { font-size: 20px; color: #333; }
+        h1 { font-family: 'Georgia', serif; font-size: 45px; color: #1a2a6c; margin: 5px 0; }
+        .sub-title { font-size: 16px; letter-spacing: 4px; color: #b21f1f; margin-bottom: 10px; font-weight: bold; }
+
+        .main-text { font-size: 18px; color: #333; margin: 10px 0; }
 
         #display-name {
-            font-size: 55px;
+            font-size: 50px;
             font-family: 'Brush Script MT', cursive;
             color: #1a2a6c;
-            margin: 15px 0;
+            margin: 10px 0;
             border-bottom: 2px solid #b21f1f;
             min-width: 400px;
             text-align: center;
         }
 
-        .content { width: 80%; text-align: center; line-height: 1.6; font-size: 18px; color: #444; }
+        .content { width: 80%; text-align: center; line-height: 1.5; font-size: 17px; color: #444; margin-bottom: 20px; }
 
         .footer-section {
             width: 90%;
-            margin-top: 40px;
             display: flex;
             justify-content: space-around;
             align-items: flex-end;
+            margin-bottom: 10px; /* Ensure gap from bottom */
         }
 
         .sig-box { text-align: center; width: 180px; }
-        
-        /* Bottom Logo/Stamp */
+
         .bottom-logo {
-            width: 80px;
-            height: 80px;
-            margin-bottom: -10px;
+            width: 70px;
+            height: 70px;
+            margin-bottom: -5px;
             object-fit: contain;
         }
 
-        .sig-line { border-top: 2px solid #333; margin-top: 5px; font-weight: bold; padding-top: 5px; }
-        .label { font-size: 12px; color: #777; text-transform: uppercase; margin-top: 5px; }
+        .sig-line { border-top: 2px solid #333; margin-top: 5px; font-weight: bold; padding-top: 5px; font-size: 16px; }
+        .label { font-size: 11px; color: #777; text-transform: uppercase; margin-top: 3px; }
     </style>
 </head>
 <body>
@@ -92,15 +95,16 @@
     <div id="certificate-area">
         <div class="inner-border">
             <div class="serial-no">UID: <span id="cert-id"></span></div>
-            
-            <img src="https://lh3.googleusercontent.com/d/1YMrh4MyQ2yQwskJV9rW0q0HVPFmerhOk" alt="Main Logo" class="header-logo">
-            
-            <h1>प्रमाण पत्र</h1>
-            <p class="sub-title">CERTIFICATE OF COMPLETION</p>
-            
+
+            <div class="header-section">
+                <img src="https://via.placeholder.com/100" alt="Main Logo" class="header-logo">
+                <h1>प्रमाण पत्र</h1>
+                <p class="sub-title">CERTIFICATE OF COMPLETION</p>
+            </div>
+
             <p class="main-text">यह प्रमाणित किया जाता है कि</p>
             <div id="display-name">Susheelcoder</div>
-            
+
             <p class="content">
                 ने हमारे ऑनलाइन प्लेटफॉर्म के माध्यम से अपनी दक्षता और कौशल का प्रदर्शन करते हुए 
                 सफलतापूर्वक इस पाठ्यक्रम को पूर्ण किया है।
@@ -108,11 +112,11 @@
 
             <div class="footer-section">
                 <div class="sig-box">
-                    <img src="https://lh3.googleusercontent.com/d/1D_xZSF47SB2ccpTQJrOCFMJvKzp62540" alt="Stamp" class="bottom-logo">
+                    <img src="https://via.placeholder.com/70" alt="Stamp" class="bottom-logo">
                     <div class="sig-line">Susheelcoder</div>
                     <div class="label">अधिकृत हस्ताक्षर</div>
                 </div>
-                <div class="sig-box" style="padding-bottom: 10px;">
+                <div class="sig-box">
                     <div class="sig-line" id="current-date"></div>
                     <div class="label">दिनांक</div>
                 </div>
@@ -126,19 +130,16 @@
         const d = new Date();
         document.getElementById('current-date').innerText = d.getDate() + "/" + (d.getMonth()+1) + "/" + d.getFullYear();
 
-        // नाम अपडेट करना
         function updateName() {
             const val = document.getElementById('nameInput').value;
             document.getElementById('display-name').innerText = val || "Susheelcoder";
         }
 
-        // डाउनलोड फंक्शन
         function download() {
             const name = document.getElementById('nameInput').value;
             if(!name) { alert("कृपया नाम डालें!"); return; }
 
             const area = document.getElementById('certificate-area');
-            // useCORS ज़रूरी है ताकि गूगल ड्राइव की फोटो डाउनलोड में आए
             html2canvas(area, { useCORS: true, scale: 2 }).then(canvas => {
                 let link = document.createElement('a');
                 link.download = name + '-Certificate.png';
