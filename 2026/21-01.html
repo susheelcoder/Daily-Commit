@@ -3,27 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Certificate Generator</title>
+    <title>Professional Certificate with Logo</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body { font-family: 'Arial', sans-serif; display: flex; flex-direction: column; align-items: center; background-color: #e9ecef; padding: 20px; }
         
-        /* कंट्रोल पैनल */
-        .controls { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin-bottom: 30px; }
-        input { padding: 12px; width: 280px; border: 2px solid #ddd; border-radius: 6px; outline: none; transition: 0.3s; }
-        input:focus { border-color: #1a2a6c; }
-        button { padding: 12px 25px; background: linear-gradient(135deg, #1a2a6c, #b21f1f); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        button:hover { opacity: 0.9; }
+        /* Control Panel */
+        .controls { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        input { padding: 12px; width: 250px; border: 2px solid #ddd; border-radius: 6px; outline: none; }
+        button { padding: 12px 25px; background: #1a2a6c; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-left: 10px; }
+        button:hover { background: #b21f1f; }
 
-        /* सर्टिफिकेट डिजाइन */
+        /* Certificate Area */
         #certificate-area {
             width: 850px;
             height: 600px;
             background: white;
             border: 20px solid #1a2a6c;
-            padding: 10px;
             position: relative;
-            box-shadow: 0 0 50px rgba(0,0,0,0.2);
+            box-sizing: border-box;
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
         }
 
         .inner-border {
@@ -32,98 +31,106 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
             background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
         }
 
-        /* सीरियल नंबर स्टाइल */
-        .serial-no { position: absolute; top: 20px; right: 30px; font-size: 14px; font-weight: bold; color: #555; }
+        /* Logo Styling */
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 10px;
+            object-fit: contain;
+        }
 
-        h1 { font-family: 'Times New Roman', serif; font-size: 60px; color: #1a2a6c; margin: 0; }
-        .sub-text { font-size: 22px; color: #444; margin: 10px 0; }
+        .serial-no { position: absolute; top: 15px; right: 20px; font-size: 13px; font-weight: bold; color: #666; }
+
+        h1 { font-family: 'Times New Roman', serif; font-size: 55px; color: #1a2a6c; margin: 5px 0; text-transform: uppercase; }
+        .sub-text { font-size: 20px; color: #444; margin: 5px 0; letter-spacing: 2px; }
         
         #display-name {
-            font-size: 50px;
-            font-family: 'Brush Script MT', cursive, serif;
+            font-size: 48px;
+            font-family: 'Brush Script MT', cursive;
             color: #b21f1f;
-            margin: 20px 0;
+            margin: 15px 0;
             border-bottom: 2px solid #ccc;
-            min-width: 400px;
+            min-width: 350px;
             text-align: center;
         }
 
-        .content { width: 80%; text-align: center; line-height: 1.6; font-size: 18px; }
+        .content { width: 85%; text-align: center; line-height: 1.5; font-size: 18px; color: #333; }
 
         .signature-section {
-            width: 85%;
-            margin-top: 60px;
+            width: 90%;
+            margin-top: 50px;
             display: flex;
             justify-content: space-around;
         }
 
         .sig-box { text-align: center; width: 200px; }
-        .sig-line { border-top: 2px solid #333; margin-bottom: 5px; font-family: 'Georgia', serif; font-weight: bold; font-style: italic; }
-        .label { font-size: 14px; color: #777; font-weight: bold; text-transform: uppercase; }
+        .sig-line { border-top: 2px solid #333; padding-top: 5px; font-weight: bold; font-style: italic; }
+        .label { font-size: 13px; color: #777; font-weight: bold; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
     <div class="controls">
-        <input type="text" id="nameInput" placeholder="नाम लिखें..." oninput="updateName()">
-        <button onclick="download()">सर्टिफिकेट डाउनलोड करें</button>
+        <input type="text" id="nameInput" placeholder="Apna Naam Likhen..." oninput="updateName()">
+        <button onclick="download()">Download Certificate</button>
     </div>
 
     <div id="certificate-area">
         <div class="inner-border">
-            <div class="serial-no">S.No: <span id="cert-id"></span></div>
+            <div class="serial-no">ID: <span id="cert-id"></span></div>
             
-            <h1>प्रमाण पत्र</h1>
-            <p class="sub-text">प्रशंसा का प्रमाण</p>
+            <img src="https://lh3.googleusercontent.com/d/1D_xZSF47SB2ccpTQJrOCFMJvKzp62540" alt="Logo" class="logo">
             
-            <p class="content">यह गर्व के साथ प्रमाणित किया जाता है कि</p>
-            <div id="display-name">आपका नाम</div>
+            <h1>PRASHANSA PATRA</h1>
+            <p class="sub-text">CERTIFICATE OF APPRECIATION</p>
+            
+            <p class="content" style="margin-top: 20px;">Yah pramanit kiya jata hai ki</p>
+            <div id="display-name">Susheelcoder</div>
             
             <p class="content">
-                ने डिजिटल साक्षरता और वेब डेवलपमेंट प्रोजेक्ट में अपनी उत्कृष्ट प्रतिभा और समर्पण का परिचय दिया है। 
-                हम इनके उज्जवल भविष्य और निरंतर सफलता की कामना करते हैं।
+                Ne is vishesh karyakram mein apni utkrisht bhagidari aur pradarshan se 
+                safalta hasil ki hai. Hum inke sundar bhavishya ki kamna karte hain.
             </p>
 
             <div class="signature-section">
                 <div class="sig-box">
                     <div class="sig-line">Susheelcoder</div>
-                    <div class="label">अधिकृत हस्ताक्षर</div>
+                    <div class="label">Authorized Signatory</div>
                 </div>
                 <div class="sig-box">
                     <div class="sig-line" id="current-date"></div>
-                    <div class="label">दिनांक</div>
+                    <div class="label">Date</div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // 1. ऑटोमैटिक सीरियल नंबर जनरेट करना
-        const randomId = "CERT-" + new Date().getFullYear() + "-" + Math.floor(1000 + Math.random() * 9000);
-        document.getElementById('cert-id').innerText = randomId;
+        // Serial Number Generator
+        document.getElementById('cert-id').innerText = "SC-" + Math.floor(100000 + Math.random() * 900000);
 
-        // 2. ऑटोमैटिक आज की तारीख डालना
-        const today = new Date();
-        const dateOptions = { year: 'numeric', month: 'short', day: 'numeric' };
-        document.getElementById('current-date').innerText = today.toLocaleDateString('hi-IN', dateOptions);
+        // Date Generator
+        const d = new Date();
+        document.getElementById('current-date').innerText = d.getDate() + "/" + (d.getMonth()+1) + "/" + d.getFullYear();
 
-        // नाम अपडेट करना
+        // Name Update Function
         function updateName() {
             const val = document.getElementById('nameInput').value;
-            document.getElementById('display-name').innerText = val || "आपका नाम";
+            document.getElementById('display-name').innerText = val || "Aapka Naam";
         }
 
-        // डाउनलोड फंक्शन
+        // Download Function
         function download() {
             const name = document.getElementById('nameInput').value;
-            if(!name) return alert("कृपया नाम डालें!");
+            if(!name) { alert("Pehle naam likhen!"); return; }
 
-            html2canvas(document.querySelector("#certificate-area")).then(canvas => {
+            const area = document.getElementById('certificate-area');
+            html2canvas(area, { useCORS: true }).then(canvas => {
                 let link = document.createElement('a');
                 link.download = name + '-Certificate.png';
                 link.href = canvas.toDataURL();
