@@ -2,122 +2,134 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>AI Image to URL Form</title>
+    <title>AI Video - Working URL Connector</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; padding: 40px; text-align: center; }
-        .form-container { background: #1e1e1e; padding: 25px; border-radius: 15px; max-width: 500px; margin: auto; border: 1px solid #333; }
-        input[type="text"] { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #444; background: #000; color: #00f2fe; box-sizing: border-box; }
-        .upload-area { border: 2px dashed #00f2fe; padding: 20px; cursor: pointer; margin-bottom: 20px; border-radius: 10px; }
-        .loader { display: none; color: #ffeb3b; font-size: 14px; margin-bottom: 10px; }
-        label { display: block; text-align: left; margin-top: 10px; color: #ccc; }
-        button { background: #00f2fe; color: black; border: none; padding: 12px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+        :root { --accent: #00f2fe; --bg: #0f172a; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; padding: 20px; display: flex; justify-content: center; }
+        .card { background: #1e293b; padding: 30px; border-radius: 20px; width: 100%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .upload-zone { border: 2px dashed var(--accent); padding: 30px; border-radius: 15px; cursor: pointer; margin-bottom: 20px; transition: 0.3s; }
+        .upload-zone:hover { background: rgba(0, 242, 254, 0.1); }
+        input[type="text"] { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: var(--accent); box-sizing: border-box; font-family: monospace; font-size: 12px; }
+        .preview-img { width: 100%; max-height: 250px; object-fit: contain; border-radius: 10px; margin-top: 15px; display: none; border: 1px solid #444; }
+        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
+        button { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-gen { background: var(--accent); color: #0f172a; }
+        .btn-check { background: #475569; color: white; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        #loader { color: var(--accent); font-size: 14px; margin: 10px 0; display: none; }
+        video { width: 100%; border-radius: 10px; margin-top: 20px; display: none; box-shadow: 0 0 20px rgba(0,242,254,0.2); }
     </style>
 </head>
 <body>
 
-<div class="form-container">
-    <h2>🔗 Image to URL Connector</h2>
+<div class="card">
+    <h2>🚀 AI Video URL Form</h2>
     
-    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-        <span id="uploadLabel">Photo select karein</span>
-        <input type="file" id="fileInput" hidden accept="image/*" onchange="uploadAndGetUrl(event)">
+    <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+        <div id="uploadLabel">📁 Click to Upload Photo</div>
+        <img id="imgPreview" class="preview-img">
+    </div>
+    <input type="file" id="fileInput" hidden accept="image/*" onchange="uploadToCloud(event)">
+
+    <div id="loader">⚙️ URL Generating...</div>
+
+    <label style="font-size: 13px; color: #94a3b8;">Generated Image URL:</label>
+    <input type="text" id="imageUrlOutput" placeholder="Upload a photo to get public URL..." readonly>
+    
+    <div class="btn-group">
+        <button class="btn-check" onclick="openUrl()">🔗 Open Link</button>
+        <button class="btn-gen" id="genBtn" onclick="createVideo()">🎬 Generate Video</button>
     </div>
 
-    <div id="loader" class="loader">⚙️ URL generate ho raha hai...</div>
-
-    <form id="mainForm">
-        <label>Image Ka Seedha URL (Auto-filled):</label>
-        <input type="text" id="imageUrlOutput" name="image_url" placeholder="Yahan URL apne aap aayega..." readonly>
-        
-        <label>Video Prompt:</label>
-        <input type="text" id="prompt" placeholder="Ex: cinematic motion, wave effect">
-        
-        <button type="button" onclick="generateVideoNow()">Video Generate Karein</button>
-    </form>
-
-    <div id="videoContainer">
-        <video id="finalVideo" controls style="width:100%; margin-top:20px; display:none; border-radius:10px;"></video>
-    </div>
+    <video id="finalVideo" controls autoplay loop></video>
 </div>
 
 <script>
     const API_KEY = "C5952036-e030-4e09-af40-fde35b647d91:dbf537440b309a29ec17b45d60975b98";
 
-    // Step 1: Photo upload karke URL field mein bharna
-    async function uploadAndGetUrl(event) {
+    // 1. File Upload karke Public URL banana
+    async function uploadToCloud(event) {
         const file = event.target.files[0];
         if (!file) return;
 
         const loader = document.getElementById('loader');
         const urlInput = document.getElementById('imageUrlOutput');
-        const uploadLabel = document.getElementById('uploadLabel');
+        const preview = document.getElementById('imgPreview');
+        const label = document.getElementById('uploadLabel');
 
         loader.style.display = "block";
-        uploadLabel.innerText = "Uploading: " + file.name;
+        label.style.display = "none";
 
         try {
-            const response = await fetch('https://rest.alpha.fal.ai/storage/upload', {
+            const res = await fetch('https://rest.alpha.fal.ai/storage/upload', {
                 method: 'POST',
                 headers: { 'Authorization': `Key ${API_KEY}` },
                 body: file
             });
-            const data = await response.json();
+            const data = await res.json();
             
-            // YAHAN CONNECT HO RAHA HAI: File ka URL input box mein daal diya
+            // Link ko input box mein daalna
             urlInput.value = data.url; 
+            // Preview dikhana taaki pata chale URL work kar raha hai
+            preview.src = data.url;
+            preview.style.display = "block";
+            
             loader.style.display = "none";
-            uploadLabel.innerText = "✅ Upload Successful!";
         } catch (err) {
-            alert("Upload failed!");
+            alert("Upload failed! Check your API key.");
             loader.style.display = "none";
+            label.style.display = "block";
         }
     }
 
-    // Step 2: Form ke URL ko use karke video banana
-    async function generateVideoNow() {
-        const videoUrl = document.getElementById('imageUrlOutput').value;
-        const promptText = document.getElementById('prompt').value || "natural movement";
-
-        if (!videoUrl) {
-            alert("Pehle photo upload hone dein!");
-            return;
+    // 2. URL ko test karne ke liye function
+    function openUrl() {
+        const url = document.getElementById('imageUrlOutput').value;
+        if (url) {
+            window.open(url, '_blank');
+        } else {
+            alert("Pehle photo upload karein!");
         }
+    }
 
-        document.getElementById('loader').innerText = "🎥 AI Video process kar raha hai...";
-        document.getElementById('loader').style.display = "block";
+    // 3. AI Video banana
+    async function createVideo() {
+        const url = document.getElementById('imageUrlOutput').value;
+        if (!url) return alert("URL zaroori hai!");
+
+        const btn = document.getElementById('genBtn');
+        const loader = document.getElementById('loader');
+        btn.disabled = true;
+        loader.innerText = "🎥 AI is creating your video...";
+        loader.style.display = "block";
 
         try {
-            const res = await fetch('https://queue.fal.run/fal-ai/kling-video/v1.5/standard/image-to-video', {
+            const response = await fetch('https://queue.fal.run/fal-ai/kling-video/v1.5/standard/image-to-video', {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Key ${API_KEY}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    image_url: videoUrl,
-                    prompt: promptText
-                })
+                headers: { 'Authorization': `Key ${API_KEY}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image_url: url, prompt: "natural cinematic motion" })
             });
-            const data = await res.json();
-            pollStatus(data.request_id);
-        } catch (err) {
+            const queue = await response.json();
+            pollVideo(queue.request_id);
+        } catch (e) {
             alert("Error!");
+            btn.disabled = false;
         }
     }
 
-    async function pollStatus(requestId) {
-        const timer = setInterval(async () => {
-            const res = await fetch(`https://queue.fal.run/fal-ai/kling-video/requests/${requestId}`, {
+    async function pollVideo(rid) {
+        const check = setInterval(async () => {
+            const res = await fetch(`https://queue.fal.run/fal-ai/kling-video/requests/${rid}`, {
                 headers: { 'Authorization': `Key ${API_KEY}` }
             });
-            const result = await res.json();
-
-            if (result.status === "COMPLETED") {
-                clearInterval(timer);
-                const video = document.getElementById('finalVideo');
-                video.src = result.video.url;
-                video.style.display = "block";
+            const data = await res.json();
+            if (data.status === "COMPLETED") {
+                clearInterval(check);
+                const v = document.getElementById('finalVideo');
+                v.src = data.video.url;
+                v.style.display = "block";
                 document.getElementById('loader').style.display = "none";
+                document.getElementById('genBtn').disabled = false;
             }
         }, 5000);
     }
