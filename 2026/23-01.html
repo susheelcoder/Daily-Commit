@@ -1,1 +1,70 @@
-i
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image to Video Converter</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; text-align: center; padding: 50px; }
+        .container { max-width: 600px; margin: auto; background: #1e1e1e; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        input[type="text"] { width: 90%; padding: 12px; margin: 10px 0; border-radius: 5px; border: none; }
+        button { background: #6200ee; color: white; padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #3700b3; }
+        #result { margin-top: 20px; }
+        video { width: 100%; border-radius: 10px; margin-top: 15px; display: none; }
+        .loader { display: none; color: #bb86fc; margin: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🖼️ Image to AI Video</h2>
+    <p>Apni Image ka URL niche dalein:</p>
+    
+    <input type="text" id="imageUrl" placeholder="https://example.com/my-photo.jpg">
+    <br>
+    <button onclick="generateVideo()">Video Banayein</button>
+
+    <div id="loader" class="loader">AI Video generate kar raha hai... Kripya 1-2 minute intezar karein.</div>
+    
+    <div id="result">
+        <video id="outputVideo" controls></video>
+    </div>
+</div>
+
+<script>
+    async function generateVideo() {
+        const imgUrl = document.getElementById('imageUrl').value;
+        const loader = document.getElementById('loader');
+        const videoElement = document.getElementById('outputVideo');
+
+        if (!imgUrl) {
+            alert("Kripya image URL dalein!");
+            return;
+        }
+
+        loader.style.display = "block";
+        videoElement.style.display = "none";
+
+        // Note: Real implementation mein aapko Backend (Node.js/Python) use karna chahiye 
+        // taaki aapki API Key secure rahe. Ye sirf ek example flow hai.
+        
+        try {
+            // Yahan aap Fal.ai ya Runway ki API call karenge
+            console.log("Generating video for:", imgUrl);
+            
+            // Dummy delay for simulation
+            setTimeout(() => {
+                loader.style.display = "none";
+                alert("API Key ke bina ye sirf UI demo hai. Aapko backend set karna hoga!");
+            }, 3000);
+
+        } catch (error) {
+            alert("Kuch error aaya!");
+            loader.style.display = "none";
+        }
+    }
+</script>
+
+</body>
+</html>
