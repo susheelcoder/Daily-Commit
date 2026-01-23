@@ -3,66 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Image to Video Converter</title>
+    <title>AI Video Generator - Upload</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; text-align: center; padding: 50px; }
-        .container { max-width: 600px; margin: auto; background: #1e1e1e; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        input[type="text"] { width: 90%; padding: 12px; margin: 10px 0; border-radius: 5px; border: none; }
-        button { background: #6200ee; color: white; padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        button:hover { background: #3700b3; }
-        #result { margin-top: 20px; }
-        video { width: 100%; border-radius: 10px; margin-top: 15px; display: none; }
-        .loader { display: none; color: #bb86fc; margin: 10px; }
+        body { font-family: 'Arial', sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: #1e293b; padding: 2rem; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); width: 100%; max-width: 450px; text-align: center; }
+        .upload-area { border: 2px dashed #38bdf8; padding: 30px; border-radius: 15px; margin-bottom: 20px; cursor: pointer; transition: 0.3s; }
+        .upload-area:hover { background: #334155; }
+        #preview { width: 100%; border-radius: 10px; display: none; margin-bottom: 15px; }
+        input[type="file"] { display: none; }
+        .btn { background: #38bdf8; color: #0f172a; border: none; padding: 12px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 16px; }
+        .btn:disabled { background: #64748b; cursor: not-allowed; }
+        .loader { display: none; margin-top: 15px; color: #38bdf8; }
+        video { width: 100%; border-radius: 10px; margin-top: 20px; display: none; box-shadow: 0 0 20px rgba(56,189,248,0.3); }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>🖼️ Image to AI Video</h2>
-    <p>Apni Image ka URL niche dalein:</p>
-    
-    <input type="text" id="imageUrl" placeholder="https://example.com/my-photo.jpg">
-    <br>
-    <button onclick="generateVideo()">Video Banayein</button>
+<div class="card">
+    <h2>🎬 Image to Video AI</h2>
+    <p style="color: #94a3b8;">Apni photo upload karein aur AI video banayein</p>
 
-    <div id="loader" class="loader">AI Video generate kar raha hai... Kripya 1-2 minute intezar karein.</div>
-    
-    <div id="result">
-        <video id="outputVideo" controls></video>
+    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+        <span id="uploadText">Click karke photo chunein</span>
+        <img id="preview" src="" alt="Preview">
     </div>
+    <input type="file" id="fileInput" accept="image/*" onchange="previewImage(event)">
+
+    <button id="genBtn" class="btn" onclick="startGeneration()">Video Generate Karein</button>
+
+    <div id="loader" class="loader">
+        <p>⏳ AI kaam kar raha hai... <br><small>Isme 30-60 seconds lag sakte hain</small></p>
+    </div>
+
+    <video id="outputVideo" controls></video>
 </div>
 
 <script>
-    async function generateVideo() {
-        const imgUrl = document.getElementById('imageUrl').value;
-        const loader = document.getElementById('loader');
-        const videoElement = document.getElementById('outputVideo');
+    let selectedFile = null;
 
-        if (!imgUrl) {
-            alert("Kripya image URL dalein!");
+    function previewImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            selectedFile = file;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('preview');
+                const text = document.getElementById('uploadText');
+                preview.src = e.target.result;
+                preview.style.display = "block";
+                text.style.display = "none";
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    async function startGeneration() {
+        if (!selectedFile) {
+            alert("Pehle ek photo select karein!");
             return;
         }
 
+        const btn = document.getElementById('genBtn');
+        const loader = document.getElementById('loader');
+        const video = document.getElementById('outputVideo');
+
+        btn.disabled = true;
         loader.style.display = "block";
-        videoElement.style.display = "none";
+        video.style.display = "none";
 
-        // Note: Real implementation mein aapko Backend (Node.js/Python) use karna chahiye 
-        // taaki aapki API Key secure rahe. Ye sirf ek example flow hai.
+        // --- API LOGIC START ---
+        // Yahan aap Fal.ai ya Runway ka API call karenge.
+        // Kyunki ye front-end hai, asli API call ke liye aapko Backend (Node.js) chahiye hoga.
         
-        try {
-            // Yahan aap Fal.ai ya Runway ki API call karenge
-            console.log("Generating video for:", imgUrl);
-            
-            // Dummy delay for simulation
-            setTimeout(() => {
-                loader.style.display = "none";
-                alert("API Key ke bina ye sirf UI demo hai. Aapko backend set karna hoga!");
-            }, 3000);
+        console.log("File ready for upload:", selectedFile.name);
 
-        } catch (error) {
-            alert("Kuch error aaya!");
+        // Simulation (Asli API integrate karne ke liye backend zaroori hai)
+        setTimeout(() => {
             loader.style.display = "none";
-        }
+            btn.disabled = false;
+            alert("Yeh ek Demo hai! Isse asli video banane ke liye aapko 'Fal.ai' ya 'Runway' ki API Key ko backend mein connect karna hoga.");
+        }, 4000);
     }
 </script>
 
