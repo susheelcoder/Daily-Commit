@@ -3,165 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body { margin: 0; background-color: #f0f2f5; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: 'Segoe UI', Arial, sans-serif; }
+    <title>Chhath Puja Winner 2024 - Vishnupur SMR</title>
+    <meta name="description" content="Vishnupur SMR Chhath Puja program winner announcement. Congratulations to the winner of the cultural event 2024.">
+    <meta name="keywords" content="Vishnupur SMR, Chhath Puja 2024, Winner, Program, Vishnupur, Bihar">
 
-        /* Profile Container (Compact 55-60vh) */
-        .profile-card {
-            width: 92%;
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "विजय कुमार सिंह",
+      "jobTitle": "Chhath Puja Winner 2024",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Vishnupur",
+        "addressRegion": "Bihar"
+      }
+    }
+    </script>
+
+    <style>
+        :root { --primary: #e64a19; --gold: #ffb300; --bg: #fff5f2; }
+        body { margin: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; }
+
+        .profile-container {
+            width: 90%;
             max-width: 360px;
-            height: 58vh; 
-            background: white;
-            border-radius: 25px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            height: 58vh; /* Tight constraints */
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            position: relative;
-            border: 1px solid #eee;
+            border: 2px solid var(--gold);
         }
 
-        /* Top Cover Branding */
-        .cover-photo {
-            height: 25%;
-            background: linear-gradient(45deg, #ff512f, #dd2476);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Hero/Cover Section */
+        header {
+            height: 30%;
+            background: var(--primary);
             color: white;
-            font-size: 0.8rem;
-            font-weight: bold;
-            letter-spacing: 1px;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-        }
-
-        /* Profile Image Section */
-        .profile-image-container {
-            width: 100px;
-            height: 100px;
-            background: white;
-            border-radius: 50%;
-            margin: -50px auto 0; /* Half up on cover */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 4px solid white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-
-        .profile-image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .placeholder-icon {
-            font-size: 3rem;
-            color: #ddd;
-        }
-
-        /* Profile Details */
-        .profile-info {
-            flex-grow: 1;
-            padding: 10px 20px;
             text-align: center;
-        }
-
-        .winner-title {
-            background: #fff3e0;
-            color: #e65100;
-            font-size: 0.75rem;
-            font-weight: bold;
-            padding: 4px 12px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 8px;
-            border: 1px solid #ffe0b2;
-        }
-
-        .name {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #1a1a1a;
-            margin: 0;
-        }
-
-        .location {
-            color: #666;
-            font-size: 0.85rem;
-            margin: 5px 0 15px;
-        }
-
-        /* Stats/Details Section */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            border-top: 1px solid #f0f0f0;
             padding-top: 15px;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
         }
 
-        .stat-item {
+        h1 { font-size: 1rem; margin: 0; letter-spacing: 1px; }
+
+        /* Profile Section */
+        .profile-main {
+            flex-grow: 1;
+            margin-top: -45px;
             text-align: center;
+            padding: 0 15px;
         }
 
-        .stat-label {
-            font-size: 0.7rem;
-            color: #888;
-            display: block;
-            text-transform: uppercase;
+        .img-box {
+            width: 85px;
+            height: 85px;
+            background: #eee;
+            margin: 0 auto;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        .stat-value {
-            font-size: 0.9rem;
-            font-weight: bold;
+        .winner-name {
+            font-size: 1.4rem;
             color: #333;
+            margin: 10px 0 2px;
+            font-weight: bold;
         }
 
-        /* Footer Quote */
-        .blessing {
-            background: #fdf2f2;
-            padding: 8px;
+        .category-tag {
             font-size: 0.75rem;
-            color: #d32f2f;
-            font-style: italic;
-            border-top: 1px solid #eee;
+            color: var(--primary);
+            font-weight: bold;
+            background: #ffebe6;
+            padding: 3px 12px;
+            border-radius: 15px;
+        }
+
+        /* Details (Ditiya) Section - SEO Friendly List */
+        article {
+            margin-top: 15px;
+            padding: 10px;
+            background: #fafafa;
+            border-radius: 12px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        footer {
+            background: #333;
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 8px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-<div class="profile-card">
-    <div class="cover-photo">
-        VISHNUPUR SMR CHHATH UTSAV
-    </div>
-    
-    <div class="profile-image-container">
-        <div class="placeholder-icon">👤</div>
-    </div>
+<main class="profile-container">
+    <header>
+        <h1>VISHNUPUR SMR</h1>
+        <small>OFFICIAL WINNER PROFILE</small>
+    </header>
 
-    <div class="profile-info">
-        <span class="winner-title">🏆 छठ विजेता - 2024</span>
-        <h2 class="name">विजय कुमार सिंह</h2>
-        <p class="location">📍 विष्णुपूर, बेगूसराय (SMR)</p>
-
-        <div class="stats-grid">
-            <div class="stat-item">
-                <span class="stat-label">प्रतियोगिता</span>
-                <span class="stat-value">सांस्कृतिक कार्यक्रम</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">पुरस्कार</span>
-                <span class="stat-value">स्वर्ण पदक</span>
-            </div>
+    <section class="profile-main">
+        <div class="img-box">
+            <span style="font-size: 40px; line-height: 85px;">👤</span>
         </div>
-    </div>
 
-    <div class="blessing">
-        "छठी मैया की कृपा आप पर सदा बनी रहे"
-    </div>
-</div>
+        <h2 class="winner-name">विजय कुमार सिंह</h2>
+        <span class="category-tag">प्रथम स्थान - छठ महोत्सव</span>
+
+        <article>
+            <div class="info-row">
+                <strong>प्रतियोगिता:</strong>
+                <span>सांस्कृतिक कार्यक्रम</span>
+            </div>
+            <div class="info-row">
+                <strong>स्थान:</strong>
+                <span>विष्णुपूर, बेगूसराय</span>
+            </div>
+            <div class="info-row">
+                <strong>वर्ष:</strong>
+                <span>2024-25</span>
+            </div>
+        </article>
+    </section>
+
+    <footer>
+        © 2024 Vishnupur SMR Committee | Jai Chhathi Maiya
+    </footer>
+</main>
 
 </body>
 </html>
