@@ -1,177 +1,88 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vishnupur SMR | Champion Profile</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Kalam:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #004d26;
-            --accent: #FFD700;
-            --bg: #f8fbf9;
-            --glass: rgba(255, 255, 255, 0.8);
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Montserrat', sans-serif;
-            background: var(--bg);
-            color: #333;
-            display: flex;
-            justify-content: center;
-        }
-
-        /* Dashboard Container */
-        .dashboard {
-            width: 100%;
-            max-width: 1100px; /* Laptop standard size */
-            padding: 40px 20px;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 Column Grid for Desktop */
-            grid-gap: 20px;
-        }
-
-        /* 1. Profile Header (Takes 3 columns) */
-        .profile-card {
-            grid-column: span 3;
-            background: linear-gradient(135deg, var(--primary), #007a3d);
-            color: white;
-            border-radius: 24px;
-            padding: 30px;
-            display: flex;
-            align-items: center;
-            gap: 25px;
-            box-shadow: 0 10px 30px rgba(0,77,38,0.2);
-        }
-
-        .profile-img {
-            width: 150px;
-            height: 150px;
+        .winner-card {
+            width: 90%;
+            max-width: 400px;
+            height: 50vh; /* 40vh-60vh ke beech perfect fit */
+            margin: 20px auto;
+            background: linear-gradient(135deg, #ff9933, #ff4500);
             border-radius: 20px;
-            object-fit: cover;
-            border: 4px solid var(--accent);
-            transform: rotate(-3deg);
-            transition: 0.3s;
-        }
-
-        .profile-card:hover .profile-img { transform: rotate(0deg) scale(1.05); }
-
-        .info h1 { font-family: 'Kalam', cursive; font-size: 3rem; margin: 0; }
-        .rank-tag { background: var(--accent); color: #000; padding: 5px 15px; border-radius: 50px; font-weight: bold; font-size: 0.8rem; }
-
-        /* 2. Rank Widget (Takes 1 column) */
-        .rank-widget {
-            grid-column: span 1;
-            background: white;
-            border-radius: 24px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            border: 1px solid #eee;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-        }
-        .rank-widget h2 { font-size: 4rem; margin: 0; color: var(--accent); }
-
-        /* 3. Stats Widgets */
-        .stat-card {
-            grid-column: span 1;
-            background: white;
-            padding: 20px;
-            border-radius: 24px;
+            justify-content: center;
             text-align: center;
-            border-bottom: 5px solid var(--primary);
-            transition: 0.3s;
-        }
-        .stat-card:hover { background: var(--primary); color: white; transform: translateY(-5px); }
-        .stat-card h3 { font-size: 1.5rem; margin: 5px 0; }
-        .stat-card p { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* 4. Story Section (Takes 2 columns) */
-        .story-card {
-            grid-column: span 2;
-            background: #fff9e6;
-            padding: 25px;
-            border-radius: 24px;
-            border-left: 8px solid var(--accent);
-            line-height: 1.6;
-        }
-
-        /* 5. Contact/Share Widget */
-        .action-card {
-            grid-column: span 2;
-            background: #25D366;
             color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 24px;
-            cursor: pointer;
-            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            border: 4px solid #ffd700;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .winner-card::before {
+            content: "✨";
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+        }
+
+        .title {
             font-size: 1.2rem;
-            transition: 0.3s;
-        }
-        .action-card:hover { filter: brightness(1.1); }
-
-        /* RESPONSIVE: Laptop vs Phone */
-        @media (max-width: 992px) {
-            .dashboard { grid-template-columns: repeat(2, 1fr); }
-            .profile-card, .story-card, .action-card { grid-column: span 2; }
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
         }
 
-        @media (max-width: 600px) {
-            .dashboard { grid-template-columns: 1fr; }
-            .profile-card, .rank-widget, .stat-card, .story-card, .action-card { grid-column: span 1; }
-            .profile-card { flex-direction: column; text-align: center; }
-            .info h1 { font-size: 2rem; }
+        .event-name {
+            font-size: 0.9rem;
+            background: rgba(0,0,0,0.2);
+            padding: 5px 15px;
+            border-radius: 50px;
+            margin-bottom: 15px;
+        }
+
+        .winner-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+        }
+
+        .winner-name {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin: 0;
+        }
+
+        .location {
+            font-size: 1rem;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
     </style>
 </head>
 <body>
 
-    <div class="dashboard">
-        <div class="profile-card">
-            <img src="https://via.placeholder.com/150" class="profile-img">
-            <div class="info">
-                <span class="rank-tag">CHAMPION OF THE YEAR</span>
-                <h1>Rameshwar Sharma</h1>
-                <p>📍 Vishnupur SMR, Bihar | Kabaddi Prodigy</p>
-            </div>
-        </div>
-
-        <div class="rank-widget">
-            <p>RANK</p>
-            <h2>#1</h2>
-        </div>
-
-        <div class="stat-card">
-            <p>Score</p>
-            <h3>98/100</h3>
-        </div>
-        <div class="stat-card" style="border-color: #00bcd4;">
-            <p>Inaam</p>
-            <h3>₹11,000</h3>
-        </div>
-        <div class="stat-card" style="border-color: #e91e63;">
-            <p>Matches</p>
-            <h3>12 Wins</h3>
-        </div>
-        <div class="stat-card" style="border-color: #673ab7;">
-            <p>Khel</p>
-            <h3>Kabaddi</h3>
-        </div>
-
-        <div class="story-card">
-            <h3 style="margin-top: 0; color: var(--primary);">Jeet Ka Safar 🏆</h3>
-            Rameshwar Sharma ne apne jazbe aur Vishnupur SMR ki mitti ka maan rakhte hue, Varshik Khel Pratiyogita mein pehla sthaan prapt kiya. Inki phurti aur raid karne ki technique ne sabko hairan kar diya.
-        </div>
-
-        <div class="action-card" onclick="alert('Sharing to WhatsApp...')">
-            Badhai Sandesh Bheinje 📲
-        </div>
-    </div>
+<div class="winner-card">
+    <div class="title">🏆 विजेता घोषित 🏆</div>
+    <div class="event-name">vishnupur SMR chhath puja</div>
+    
+    <div class="winner-icon">🥇</div>
+    
+    <div class="winner-name">विजय कुमार</div> <div class="location">📍 विष्णुपूर SMR</div>
+</div>
 
 </body>
 </html>
