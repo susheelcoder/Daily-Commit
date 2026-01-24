@@ -1,15 +1,119 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Mera Pehla Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Widget Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --primary-color: #4a90e2;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            display: flex;
+        }
+
+        /* Sidebar Style */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #1a1a1a;
+            color: white;
+            padding: 20px;
+            position: fixed;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 270px;
+            padding: 20px;
+            width: 100%;
+        }
+
+        /* The Widget Grid */
+        .widget-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-auto-rows: 200px; /* Base height for widgets */
+            gap: 20px;
+            grid-auto-flow: dense; /* Khali jagah bharne ke liye */
+        }
+
+        /* Generic Widget Style */
+        .widget {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Widget Variations (Size Control) */
+        .widget.large { grid-column: span 2; grid-row: span 2; }
+        .widget.wide { grid-column: span 2; }
+        .widget.tall { grid-row: span 2; }
+
+        h2 { color: var(--text-color); }
+        .widget-title { font-weight: bold; margin-bottom: 10px; color: var(--primary-color); }
+    </style>
 </head>
 <body>
 
-    <h1>Welcome to My Website!</h1>
-    <p>Yeh mera pehla HTML page hai. Seekhna kaafi mazedaar hai!</p>
-    
-    <a href="https://www.google.com">Google par jaane ke liye yahan click karein</a>
+    <div class="sidebar">
+        <h2>Dashboard</h2>
+        <p>🏠 Home</p>
+        <p>📈 Analytics</p>
+        <p>⚙️ Settings</p>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h1>Welcome Back, User!</h1>
+        </header>
+
+        <div class="widget-grid">
+            <div class="widget">
+                <div class="widget-title">Followers</div>
+                <h1 style="font-size: 3rem; margin: 0;">12.4K</h1>
+            </div>
+
+            <div class="widget large">
+                <div class="widget-title">Engagement Overview</div>
+                <p>Yahan aapka graph ya chart aayega...</p>
+                <div style="height: 70%; background: #f9f9f9; border: 1px dashed #ccc; border-radius: 10px;"></div>
+            </div>
+
+            <div class="widget">
+                <div class="widget-title">Weather</div>
+                <p>☀️ 28°C - Noida</p>
+            </div>
+
+            <div class="widget tall">
+                <div class="widget-title">Recent Activity</div>
+                <ul style="padding-left: 20px; line-height: 2;">
+                    <li>Post shared</li>
+                    <li>Profile updated</li>
+                    <li>New follower</li>
+                    <li>Image uploaded</li>
+                </ul>
+            </div>
+
+            <div class="widget wide" style="background: linear-gradient(45deg, #4a90e2, #9b51e0); color: white;">
+                <div class="widget-title" style="color: white;">Pro Tip</div>
+                <p>Apne profile ko 100% complete karein aur naye widgets unlock karein!</p>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>
