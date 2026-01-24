@@ -1,94 +1,165 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { margin: 0; background: #f4f4f4; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        
-        .winner-box {
-            width: 90%;
-            max-width: 380px;
-            height: 55vh; /* Aapke bataye mutabik compact height */
-            background: #fff;
-            border-radius: 15px;
+        body { margin: 0; background-color: #f0f2f5; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: 'Segoe UI', Arial, sans-serif; }
+
+        /* Profile Container (Compact 55-60vh) */
+        .profile-card {
+            width: 92%;
+            max-width: 360px;
+            height: 58vh; 
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
             overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            border: 3px solid #ff5722;
             display: flex;
             flex-direction: column;
+            position: relative;
+            border: 1px solid #eee;
+        }
+
+        /* Top Cover Branding */
+        .cover-photo {
+            height: 25%;
+            background: linear-gradient(45deg, #ff512f, #dd2476);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+
+        /* Profile Image Section */
+        .profile-image-container {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            margin: -50px auto 0; /* Half up on cover */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .profile-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .placeholder-icon {
+            font-size: 3rem;
+            color: #ddd;
+        }
+
+        /* Profile Details */
+        .profile-info {
+            flex-grow: 1;
+            padding: 10px 20px;
             text-align: center;
         }
 
-        .header {
-            background: #ff5722;
-            color: white;
-            padding: 10px;
+        .winner-title {
+            background: #fff3e0;
+            color: #e65100;
+            font-size: 0.75rem;
             font-weight: bold;
-            font-size: 1.1rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 8px;
+            border: 1px solid #ffe0b2;
         }
 
-        .content {
-            padding: 15px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            background: linear-gradient(to bottom, #fffcf5, #fff3e0);
-        }
-
-        .congrats-text {
-            color: #d32f2f;
-            font-size: 0.9rem;
-            font-weight: bold;
+        .name {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1a1a1a;
             margin: 0;
         }
 
-        .winner-name {
-            font-size: 2rem;
-            color: #2e7d32;
-            margin: 5px 0;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 800;
-        }
-
-        .details-table {
-            width: 100%;
+        .location {
+            color: #666;
             font-size: 0.85rem;
-            color: #333;
-            margin: 10px 0;
-            border-top: 1px dashed #ff5722;
-            padding-top: 10px;
+            margin: 5px 0 15px;
         }
 
-        .footer-msg {
-            font-size: 0.75rem;
-            color: #ff5722;
-            font-style: italic;
+        /* Stats/Details Section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: #888;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 0.9rem;
             font-weight: bold;
+            color: #333;
         }
 
-        .stamps { font-size: 1.5rem; }
+        /* Footer Quote */
+        .blessing {
+            background: #fdf2f2;
+            padding: 8px;
+            font-size: 0.75rem;
+            color: #d32f2f;
+            font-style: italic;
+            border-top: 1px solid #eee;
+        }
     </style>
 </head>
 <body>
 
-<div class="winner-box">
-    <div class="header">✨ छठ पूजा प्रतियोगिता 2024 ✨</div>
+<div class="profile-card">
+    <div class="cover-photo">
+        VISHNUPUR SMR CHHATH UTSAV
+    </div>
     
-    <div class="content">
-        <p class="congrats-text">🎊 हार्दिक बधाई! आप बने हैं 🎊</p>
-        
-        <div class="stamps">🏆</div>
-        <h2 class="winner-name">प्रथम विजेता</h2>
-        
-        <div class="details-table">
-            <div style="margin-bottom: 5px;"><strong>आयोजन:</strong> विष्णुपूर SMR घाट</div>
-            <div style="margin-bottom: 5px;"><strong>श्रेणी:</strong> सर्वश्रेष्ठ सजावट/सेवा</div>
-            <div><strong>दिनांक:</strong> 07-08 नवंबर 2024</div>
-        </div>
+    <div class="profile-image-container">
+        <div class="placeholder-icon">👤</div>
+    </div>
 
-        <p class="footer-msg">"जय छठी मैया - आपकी मनोकामना पूर्ण हो"</p>
+    <div class="profile-info">
+        <span class="winner-title">🏆 छठ विजेता - 2024</span>
+        <h2 class="name">विजय कुमार सिंह</h2>
+        <p class="location">📍 विष्णुपूर, बेगूसराय (SMR)</p>
+
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-label">प्रतियोगिता</span>
+                <span class="stat-value">सांस्कृतिक कार्यक्रम</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">पुरस्कार</span>
+                <span class="stat-value">स्वर्ण पदक</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="blessing">
+        "छठी मैया की कृपा आप पर सदा बनी रहे"
     </div>
 </div>
 
