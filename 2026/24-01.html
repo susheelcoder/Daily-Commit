@@ -3,146 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Village Champion Profile</title>
+    <title>Vishnupur SMR Champion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <style>
         :root {
+            --village-theme: #006400; /* Deep Green for Village Pride */
             --gold: #FFD700;
-            --dark-gold: #B8860B;
-            --glass: rgba(255, 255, 255, 0.15);
+            --white: #ffffff;
         }
 
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: white;
+            background: #f4f7f6;
+            color: #333;
+        }
+
+        /* Header Section */
+        .header-banner {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1500382017468-9049fee74a62?auto=format&fit=crop&w=1000&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 250px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
-            padding: 40px 20px;
-        }
-
-        /* Winner Card Container */
-        .winner-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 2px solid var(--gold);
-            border-radius: 30px;
-            max-width: 800px;
-            width: 100%;
-            padding: 40px;
+            align-items: center;
+            color: white;
             text-align: center;
+        }
+
+        .header-banner h1 {
+            font-family: 'Kalam', cursive;
+            font-size: 3rem;
+            margin: 0;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* Main Profile Card */
+        .profile-container {
+            max-width: 900px;
+            margin: -60px auto 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+            padding-bottom: 30px;
+        }
+
+        .top-info {
+            display: flex;
+            align-items: center;
+            padding: 40px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .profile-pic-area {
             position: relative;
-            box-shadow: 0 0 50px rgba(255, 215, 0, 0.2);
         }
 
-        /* Golden Badge */
-        .badge {
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--gold);
-            color: #000;
-            padding: 10px 30px;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        /* Profile Image with Golden Ring */
-        .profile-img {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            border: 5px solid var(--gold);
-            margin: 20px auto;
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 15px;
             object-fit: cover;
-            display: block;
-            box-shadow: 0 0 25px var(--gold);
+            border: 4px solid var(--gold);
         }
 
-        h1 { font-size: 2.5rem; margin: 10px 0; color: var(--gold); }
-        .village-name { font-size: 1.2rem; opacity: 0.8; }
+        .winner-tag {
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+            background: var(--gold);
+            color: black;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        }
 
-        /* Stats/Performance Section */
-        .stats-row {
+        .name-details {
+            margin-left: 30px;
+        }
+
+        .name-details h2 {
+            margin: 0;
+            font-size: 2rem;
+            color: var(--village-theme);
+        }
+
+        .village-tag {
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Achievements Widget Grid */
+        .widget-row {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin: 30px 0;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px 40px;
         }
 
-        .stat-box {
-            background: var(--glass);
+        .info-card {
+            background: #f9fbf9;
             padding: 20px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 15px;
+            border-left: 5px solid var(--village-theme);
+            text-align: center;
         }
 
-        .stat-box h3 { margin: 0; font-size: 1.5rem; color: var(--gold); }
-        .stat-box p { margin: 5px 0 0; font-size: 0.9rem; }
+        .info-card i { font-size: 1.5rem; display: block; margin-bottom: 10px; }
+        .info-card span { font-size: 0.9rem; color: #777; }
+        .info-card h4 { margin: 5px 0; font-size: 1.3rem; }
 
-        /* Achievement Section */
-        .achievement-content {
-            text-align: left;
-            background: var(--glass);
-            padding: 20px;
-            border-radius: 20px;
-            line-height: 1.6;
+        /* Story Section */
+        .story-section {
+            padding: 20px 40px;
         }
 
-        /* Celebration Animation */
-        .confetti {
+        .story-box {
+            background: #fff9e6;
+            padding: 25px;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .story-box::before {
+            content: "🏆";
             font-size: 2rem;
             position: absolute;
-            animation: fall 3s infinite;
+            top: -20px;
+            right: 20px;
         }
 
-        @keyframes fall {
-            0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(500px) rotate(360deg); opacity: 0; }
+        /* Button */
+        .share-btn {
+            display: block;
+            width: fit-content;
+            margin: 20px auto;
+            background: var(--village-theme);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
         }
+
+        .share-btn:hover {
+            background: #004d00;
+            transform: scale(1.05);
+        }
+
     </style>
 </head>
 <body>
 
-    <div class="winner-card">
-        <div class="badge">🥇 PROGRAM VIJETA (1st RANK)</div>
-        
-        <img src="https://via.placeholder.com/180" alt="Winner Photo" class="profile-img">
-        
-        <h1>Rahul Kumar</h1>
-        <p class="village-name">📍 Rampur Village Sports Meet 2026</p>
-
-        <div class="stats-row">
-            <div class="stat-box">
-                <h3>98/100</h3>
-                <p>Total Score</p>
-            </div>
-            <div class="stat-box">
-                <h3>00:45</h3>
-                <p>Time Record</p>
-            </div>
-            <div class="stat-box">
-                <h3>₹11,000</h3>
-                <p>Prize Won</p>
-            </div>
-        </div>
-
-        <div class="achievement-content">
-            <h3 style="color: var(--gold);">🏆 Shandaar Jeet ki Kahani</h3>
-            <p>Rahul ne is saal ke "Khel Mahotsav" mein sabse tez daud aur dimaagi muqabale mein pehla sthaan prapt kiya hai. Unki mehnat aur lagan ne poore gaon ka naam roshan kiya hai.</p>
-        </div>
-
-        <button onclick="alert('Congratulations Shared!')" style="margin-top: 30px; padding: 12px 30px; border-radius: 50px; border: none; background: var(--gold); font-weight: bold; cursor: pointer;">
-            Badhai Sandesh Bheinje 👏
-        </button>
+    <div class="header-banner">
+        <h1>Vishnupur SMR News</h1>
+        <p>Hamaare Gaon Ka Garv (Pride of Our Village)</p>
     </div>
 
-    <div class="confetti" style="left: 10%; animation-delay: 0s;">✨</div>
-    <div class="confetti" style="right: 15%; animation-delay: 1.5s;">🎉</div>
-    <div class="confetti" style="left: 20%; animation-delay: 2.5s;">⭐</div>
+    <div class="profile-container">
+        <div class="top-info">
+            <div class="profile-pic-area">
+                <img src="https://via.placeholder.com/150" alt="Winner Name" class="profile-pic">
+                <div class="winner-tag">1st RANK 🥇</div>
+            </div>
+            <div class="name-details">
+                <h2>Rameshwar Sharma</h2>
+                <p class="village-tag">📍 Vishnupur SMR, Bihar</p>
+                <p><strong>Program:</strong> Varshik Khel-Kud Pratiyogita 2026</p>
+            </div>
+        </div>
+
+        <div class="widget-row">
+            <div class="info-card">
+                <span>Inaam Raashi</span>
+                <h4>₹5,001/-</h4>
+            </div>
+            <div class="info-card">
+                <span>Pratiyogita</span>
+                <h4>Kabaddi</h4>
+            </div>
+            <div class="info-card">
+                <span>Speciality</span>
+                <h4>Top Raider</h4>
+            </div>
+        </div>
+
+        <div class="story-section">
+            <div class="story-box">
+                <h3 style="margin-top: 0; color: #b8860b;">Vijeta ki Kahani</h3>
+                <p>Vishnupur SMR ke is honhaar khiladi ne apne adbhut pradarshan se sabka dil jeet liya. Inhone final match mein aakhri samay mein point lekar team ko jeet dilayi. Poora Vishnupur SMR inki is uplabdhi par garv karta hai!</p>
+            </div>
+        </div>
+
+        <a href="#" class="share-btn">Poore Gaon Mein Share Karein 📲</a>
+    </div>
 
 </body>
 </html>
