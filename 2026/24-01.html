@@ -1,119 +1,148 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universal Widget Dashboard</title>
+    <title>Village Champion Profile</title>
     <style>
         :root {
-            --bg-color: #f0f2f5;
-            --card-bg: #ffffff;
-            --primary-color: #4a90e2;
-            --text-color: #333;
+            --gold: #FFD700;
+            --dark-gold: #B8860B;
+            --glass: rgba(255, 255, 255, 0.15);
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
             margin: 0;
-            display: flex;
-        }
-
-        /* Sidebar Style */
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            background: #1a1a1a;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: white;
-            padding: 20px;
-            position: fixed;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
         }
 
-        /* Main Content */
-        .main-content {
-            margin-left: 270px;
-            padding: 20px;
+        /* Winner Card Container */
+        .winner-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--gold);
+            border-radius: 30px;
+            max-width: 800px;
             width: 100%;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.2);
         }
 
-        /* The Widget Grid */
-        .widget-grid {
+        /* Golden Badge */
+        .badge {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gold);
+            color: #000;
+            padding: 10px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Profile Image with Golden Ring */
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 5px solid var(--gold);
+            margin: 20px auto;
+            object-fit: cover;
+            display: block;
+            box-shadow: 0 0 25px var(--gold);
+        }
+
+        h1 { font-size: 2.5rem; margin: 10px 0; color: var(--gold); }
+        .village-name { font-size: 1.2rem; opacity: 0.8; }
+
+        /* Stats/Performance Section */
+        .stats-row {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            grid-auto-rows: 200px; /* Base height for widgets */
-            gap: 20px;
-            grid-auto-flow: dense; /* Khali jagah bharne ke liye */
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 30px 0;
         }
 
-        /* Generic Widget Style */
-        .widget {
-            background: var(--card-bg);
-            border-radius: 15px;
+        .stat-box {
+            background: var(--glass);
             padding: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
+            border-radius: 20px;
+            border: 1px solid rgba(255,215,0,0.3);
         }
 
-        .widget:hover {
-            transform: translateY(-5px);
+        .stat-box h3 { margin: 0; font-size: 1.5rem; color: var(--gold); }
+        .stat-box p { margin: 5px 0 0; font-size: 0.9rem; }
+
+        /* Achievement Section */
+        .achievement-content {
+            text-align: left;
+            background: var(--glass);
+            padding: 20px;
+            border-radius: 20px;
+            line-height: 1.6;
         }
 
-        /* Widget Variations (Size Control) */
-        .widget.large { grid-column: span 2; grid-row: span 2; }
-        .widget.wide { grid-column: span 2; }
-        .widget.tall { grid-row: span 2; }
+        /* Celebration Animation */
+        .confetti {
+            font-size: 2rem;
+            position: absolute;
+            animation: fall 3s infinite;
+        }
 
-        h2 { color: var(--text-color); }
-        .widget-title { font-weight: bold; margin-bottom: 10px; color: var(--primary-color); }
+        @keyframes fall {
+            0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(500px) rotate(360deg); opacity: 0; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <h2>Dashboard</h2>
-        <p>🏠 Home</p>
-        <p>📈 Analytics</p>
-        <p>⚙️ Settings</p>
-    </div>
+    <div class="winner-card">
+        <div class="badge">🥇 PROGRAM VIJETA (1st RANK)</div>
+        
+        <img src="https://via.placeholder.com/180" alt="Winner Photo" class="profile-img">
+        
+        <h1>Rahul Kumar</h1>
+        <p class="village-name">📍 Rampur Village Sports Meet 2026</p>
 
-    <div class="main-content">
-        <header>
-            <h1>Welcome Back, User!</h1>
-        </header>
-
-        <div class="widget-grid">
-            <div class="widget">
-                <div class="widget-title">Followers</div>
-                <h1 style="font-size: 3rem; margin: 0;">12.4K</h1>
+        <div class="stats-row">
+            <div class="stat-box">
+                <h3>98/100</h3>
+                <p>Total Score</p>
             </div>
-
-            <div class="widget large">
-                <div class="widget-title">Engagement Overview</div>
-                <p>Yahan aapka graph ya chart aayega...</p>
-                <div style="height: 70%; background: #f9f9f9; border: 1px dashed #ccc; border-radius: 10px;"></div>
+            <div class="stat-box">
+                <h3>00:45</h3>
+                <p>Time Record</p>
             </div>
-
-            <div class="widget">
-                <div class="widget-title">Weather</div>
-                <p>☀️ 28°C - Noida</p>
-            </div>
-
-            <div class="widget tall">
-                <div class="widget-title">Recent Activity</div>
-                <ul style="padding-left: 20px; line-height: 2;">
-                    <li>Post shared</li>
-                    <li>Profile updated</li>
-                    <li>New follower</li>
-                    <li>Image uploaded</li>
-                </ul>
-            </div>
-
-            <div class="widget wide" style="background: linear-gradient(45deg, #4a90e2, #9b51e0); color: white;">
-                <div class="widget-title" style="color: white;">Pro Tip</div>
-                <p>Apne profile ko 100% complete karein aur naye widgets unlock karein!</p>
+            <div class="stat-box">
+                <h3>₹11,000</h3>
+                <p>Prize Won</p>
             </div>
         </div>
+
+        <div class="achievement-content">
+            <h3 style="color: var(--gold);">🏆 Shandaar Jeet ki Kahani</h3>
+            <p>Rahul ne is saal ke "Khel Mahotsav" mein sabse tez daud aur dimaagi muqabale mein pehla sthaan prapt kiya hai. Unki mehnat aur lagan ne poore gaon ka naam roshan kiya hai.</p>
+        </div>
+
+        <button onclick="alert('Congratulations Shared!')" style="margin-top: 30px; padding: 12px 30px; border-radius: 50px; border: none; background: var(--gold); font-weight: bold; cursor: pointer;">
+            Badhai Sandesh Bheinje 👏
+        </button>
     </div>
+
+    <div class="confetti" style="left: 10%; animation-delay: 0s;">✨</div>
+    <div class="confetti" style="right: 15%; animation-delay: 1.5s;">🎉</div>
+    <div class="confetti" style="left: 20%; animation-delay: 2.5s;">⭐</div>
 
 </body>
 </html>
