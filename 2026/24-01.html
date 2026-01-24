@@ -3,220 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vishnupur SMR Champion - Profile</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@700&family=Montserrat:wght@400;700&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
-    
+    <title>Vishnupur SMR Champion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #004d26; /* Deep Village Green */
-            --accent: #FFD700;  /* Gold */
-            --glass-bg: rgba(255, 255, 255, 0.9);
-            --shadow: 0 20px 40px rgba(0,0,0,0.15);
+            --primary: #004d26;
+            --gold: #FFD700;
+            --silver: #C0C0C0;
+            --bronze: #CD7F32;
+            --card-width: 900px; /* Fixed Max Width for Desktop */
         }
 
         body {
             margin: 0;
-            font-family: 'Montserrat', sans-serif;
-            background: #eef2f3;
-            background: linear-gradient(to right, #8e9eab, #eef2f3);
-            color: #2d3436;
-        }
-
-        /* Animated Header Area */
-        .hero-banner {
-            background: linear-gradient(45deg, rgba(0,77,38,0.9), rgba(0,100,0,0.7)), 
-                        url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1000&q=80');
-            height: 350px;
-            background-size: cover;
-            background-attachment: fixed;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #f0f2f5;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+        }
+
+        /* Header Fix */
+        .header {
+            width: 100%;
+            background: var(--primary);
             color: white;
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%);
+            padding: 40px 0 80px 0;
+            text-align: center;
+            clip-path: ellipse(100% 100% at 50% 0%);
         }
 
-        .hero-banner h1 {
-            font-family: 'Kalam', cursive;
-            font-size: 4rem;
+        .header h1 { 
+            font-family: 'Kalam', cursive; 
+            font-size: clamp(2rem, 5vw, 3.5rem); 
             margin: 0;
-            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
         }
 
-        /* Main Container */
-        .main-container {
-            max-width: 1000px;
-            margin: -100px auto 50px;
-            padding: 0 20px;
+        /* Main Container - Best Size Fix */
+        .container {
+            width: 95%;
+            max-width: var(--card-width);
+            margin-top: -60px; /* Overlap effect */
+            margin-bottom: 50px;
         }
 
-        /* Profile Glass Card */
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
-            padding: 40px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-
-        /* Identity Section */
-        .profile-header {
+        /* Profile Card */
+        .profile-box {
+            background: white;
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* Top Identity Section */
+        .top-section {
+            display: grid;
+            grid-template-columns: 180px 1fr;
             gap: 30px;
             align-items: center;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 30px;
-        }
-
-        .img-wrapper {
-            position: relative;
-            width: 200px;
-            height: 200px;
         }
 
         .profile-img {
-            width: 100%;
-            height: 100%;
-            border-radius: 25% 75% 70% 30% / 30% 30% 70% 70%; /* Blob Shape */
+            width: 180px;
+            height: 180px;
+            border-radius: 20px;
             object-fit: cover;
-            border: 6px solid var(--accent);
-            animation: blobShape 8s linear infinite;
+            border: 5px solid var(--gold);
         }
 
-        @keyframes blobShape {
-            0%, 100% { border-radius: 25% 75% 70% 30% / 30% 30% 70% 70%; }
-            50% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-        }
-
-        .identity h2 {
-            font-size: 2.8rem;
-            margin: 0;
-            color: var(--primary);
-            font-family: 'Playfair Display', serif;
-        }
-
-        .tagline {
-            background: var(--accent);
+        .name-info h2 { margin: 0; font-size: 2.2rem; color: #333; }
+        .rank-badge {
+            background: var(--gold);
             padding: 5px 15px;
-            border-radius: 50px;
+            border-radius: 8px;
             font-weight: bold;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
+            display: inline-block;
+            margin-top: 10px;
         }
 
-        /* Bento Box Grid for Widgets */
-        .widget-grid {
+        /* Bento Grid Widgets - Best for Data */
+        .bento-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-top: 30px;
+            gap: 15px;
         }
 
         .widget {
-            background: white;
-            padding: 25px;
-            border-radius: 20px;
+            background: #f8faf9;
+            padding: 20px;
+            border-radius: 18px;
             text-align: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            transition: 0.4s;
-            border-bottom: 4px solid var(--accent);
-        }
-
-        .widget:hover { transform: translateY(-10px); background: var(--primary); color: white; }
-        .widget i { font-size: 2rem; margin-bottom: 10px; display: block; }
-        .widget h4 { margin: 10px 0 5px; font-size: 1.4rem; }
-        .widget p { font-size: 0.9rem; margin: 0; opacity: 0.8; }
-
-        /* Story Area */
-        .story-section {
-            margin-top: 40px;
-            background: #fff;
-            padding: 30px;
-            border-radius: 25px;
-            border-left: 10px solid var(--primary);
-            font-style: italic;
-            line-height: 1.8;
-        }
-
-        /* Action Buttons */
-        .btn-group {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 40px;
-        }
-
-        .btn {
-            padding: 15px 35px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: bold;
+            border: 1px solid #eee;
             transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-outline { border: 2px solid var(--primary); color: var(--primary); }
+        .widget:hover { border-color: var(--primary); background: #fff; }
+        .widget h4 { margin: 5px 0; color: var(--primary); font-size: 1.3rem; }
+        .widget p { margin: 0; font-size: 0.85rem; color: #777; }
 
-        .btn:hover { transform: scale(1.1); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+        /* Story Section */
+        .story-box {
+            background: #fff9e6;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 6px solid var(--gold);
+            line-height: 1.6;
+        }
 
+        /* Responsive Fix for Mobile */
         @media (max-width: 768px) {
-            .widget-grid { grid-template-columns: 1fr; }
-            .profile-header { text-align: center; justify-content: center; }
-            .hero-banner h1 { font-size: 2.5rem; }
+            .top-section {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .profile-img { margin: 0 auto; }
+            .bento-grid { grid-template-columns: 1fr; } /* Stack on mobile */
         }
     </style>
 </head>
 <body>
 
-    <div class="hero-banner">
+    <div class="header">
         <h1>Vishnupur SMR</h1>
-        <p>Gaurav Gatha (The Hall of Fame)</p>
+        <p>Champion Spotlight 2026</p>
     </div>
 
-    <div class="main-container">
-        <div class="glass-card">
-            <div class="profile-header">
-                <div class="img-wrapper">
-                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=500&q=80" class="profile-img">
-                </div>
-                <div class="identity">
-                    <span class="tagline">🥇 VILLAGE CHAMPION 2026</span>
+    <div class="container">
+        <div class="profile-box">
+            <div class="top-section">
+                <img src="https://via.placeholder.com/180" class="profile-img" alt="Winner">
+                <div class="name-info">
+                    <span class="rank-badge">🥇 No. 1 - Winner</span>
                     <h2>Rameshwar Sharma</h2>
-                    <p style="color: #666; font-size: 1.1rem;">📍 SMR Tola, Vishnupur, Bihar</p>
+                    <p style="color: #666;">📍 SMR Tola, Vishnupur, Bihar</p>
                 </div>
             </div>
 
-            <div class="widget-grid">
+            <div class="bento-grid">
                 <div class="widget">
-                    <i>🏆</i>
-                    <h4>Kabaddi</h4>
                     <p>Mukhya Khel</p>
+                    <h4>Kabaddi</h4>
                 </div>
-                <div class="widget" style="border-color: #00bcd4;">
-                    <i>💰</i>
+                <div class="widget">
+                    <p>Inaam Raashi</p>
                     <h4>₹11,000</h4>
-                    <p>Samman Rashi</p>
                 </div>
-                <div class="widget" style="border-color: #e91e63;">
-                    <i>⭐</i>
-                    <h4>Raider</h4>
-                    <p>Vardaan (Skill)</p>
+                <div class="widget">
+                    <p>Speciality</p>
+                    <h4>Best Raider</h4>
                 </div>
             </div>
 
-            <div class="story-section">
-                <h3 style="color: var(--primary); font-style: normal;">Jeet Ka Safar:</h3>
-                "Vishnupur SMR ke mitti se jude Rameshwar ne dikha diya ki agar jazba ho toh koi bhi manzil door nahi. Final muqabale mein unki fhirtee ne sabko hairan kar diya. Aaj poora gaon unhe palkan par bitha raha hai."
+            <div class="story-box">
+                <strong style="color: #b8860b;">Kamyabi ki Baat:</strong><br>
+                Rameshwar ne is saal ke program mein shandaar pradarshan kiya. Final raid mein inhone 3 points lekar Vishnupur SMR ki team ko ek tarfa jeet dilayi.
             </div>
 
-            <div class="btn-group">
-                <a href="#" class="btn btn-primary">Badhai Dein 👏</a>
-                <a href="#" class="btn btn-outline">Gallery Dekhein 📸</a>
-            </div>
+            <button style="width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer;">
+                Whatsapp par Badhai Bheinje 📲
+            </button>
         </div>
     </div>
 
