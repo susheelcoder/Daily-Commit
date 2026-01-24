@@ -11,117 +11,132 @@
             --gold: #FFD700;
             --silver: #C0C0C0;
             --bronze: #CD7F32;
-            --card-width: 900px; /* Fixed Max Width for Desktop */
         }
 
         body {
             margin: 0;
             padding: 0;
             font-family: 'Poppins', sans-serif;
-            background: #f0f2f5;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            background: #f4f7f6;
         }
 
-        /* Header Fix */
+        /* Header: Mobile par height thodi kam ki hai */
         .header {
             width: 100%;
             background: var(--primary);
             color: white;
-            padding: 40px 0 80px 0;
+            padding: 30px 0 60px 0;
             text-align: center;
-            clip-path: ellipse(100% 100% at 50% 0%);
+            clip-path: ellipse(120% 100% at 50% 0%);
         }
 
         .header h1 { 
             font-family: 'Kalam', cursive; 
-            font-size: clamp(2rem, 5vw, 3.5rem); 
+            font-size: 2.2rem; 
             margin: 0;
         }
 
-        /* Main Container - Best Size Fix */
+        /* Container: Mobile par 92% width taaki corners touch na hon */
         .container {
-            width: 95%;
-            max-width: var(--card-width);
-            margin-top: -60px; /* Overlap effect */
-            margin-bottom: 50px;
+            width: 92%;
+            max-width: 800px;
+            margin: -40px auto 30px;
         }
 
-        /* Profile Card */
         .profile-box {
             background: white;
-            border-radius: 25px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
         }
 
-        /* Top Identity Section */
+        /* Top Section: Desktop par side-by-side, Mobile par upar-niche */
         .top-section {
-            display: grid;
-            grid-template-columns: 180px 1fr;
-            gap: 30px;
+            display: flex;
+            flex-direction: column; /* Mobile Default */
             align-items: center;
+            text-align: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        /* Desktop View (768px se upar) */
+        @media (min-width: 768px) {
+            .top-section {
+                flex-direction: row;
+                text-align: left;
+            }
+            .bento-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+            }
         }
 
         .profile-img {
-            width: 180px;
-            height: 180px;
-            border-radius: 20px;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%; /* Mobile par gol zyada accha lagta hai */
             object-fit: cover;
-            border: 5px solid var(--gold);
+            border: 4px solid var(--gold);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        .name-info h2 { margin: 0; font-size: 2.2rem; color: #333; }
+        .name-info h2 { margin: 5px 0; font-size: 1.8rem; color: #222; }
+        
         .rank-badge {
             background: var(--gold);
-            padding: 5px 15px;
-            border-radius: 8px;
+            padding: 4px 12px;
+            border-radius: 6px;
             font-weight: bold;
-            display: inline-block;
-            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #000;
         }
 
-        /* Bento Grid Widgets - Best for Data */
+        /* Bento Grid: Mobile par 1 column, Desktop par 3 */
         .bento-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            grid-template-columns: 1fr; /* Default Mobile */
+            gap: 12px;
+            margin: 20px 0;
         }
 
         .widget {
-            background: #f8faf9;
-            padding: 20px;
-            border-radius: 18px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 15px;
             text-align: center;
             border: 1px solid #eee;
-            transition: 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
         }
 
-        .widget:hover { border-color: var(--primary); background: #fff; }
-        .widget h4 { margin: 5px 0; color: var(--primary); font-size: 1.3rem; }
-        .widget p { margin: 0; font-size: 0.85rem; color: #777; }
+        .widget h4 { margin: 5px 0; color: var(--primary); font-size: 1.2rem; }
+        .widget p { margin: 0; font-size: 0.8rem; color: #888; text-transform: uppercase; }
 
         /* Story Section */
         .story-box {
             background: #fff9e6;
-            padding: 20px;
+            padding: 18px;
             border-radius: 15px;
-            border-left: 6px solid var(--gold);
-            line-height: 1.6;
+            border-left: 5px solid var(--gold);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
         }
 
-        /* Responsive Fix for Mobile */
-        @media (max-width: 768px) {
-            .top-section {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            .profile-img { margin: 0 auto; }
-            .bento-grid { grid-template-columns: 1fr; } /* Stack on mobile */
+        .whatsapp-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 15px;
+            background: #25D366; /* WhatsApp Green */
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -129,43 +144,43 @@
 
     <div class="header">
         <h1>Vishnupur SMR</h1>
-        <p>Champion Spotlight 2026</p>
+        <p>Vijeta Profile ✨</p>
     </div>
 
     <div class="container">
         <div class="profile-box">
             <div class="top-section">
-                <img src="https://via.placeholder.com/180" class="profile-img" alt="Winner">
+                <img src="https://via.placeholder.com/150" class="profile-img" alt="Winner">
                 <div class="name-info">
-                    <span class="rank-badge">🥇 No. 1 - Winner</span>
+                    <span class="rank-badge">🥇 1st Rank - Champion</span>
                     <h2>Rameshwar Sharma</h2>
-                    <p style="color: #666;">📍 SMR Tola, Vishnupur, Bihar</p>
+                    <p style="margin: 5px 0; color: #666;">📍 SMR Tola, Vishnupur, Bihar</p>
                 </div>
             </div>
 
             <div class="bento-grid">
                 <div class="widget">
-                    <p>Mukhya Khel</p>
+                    <p>Khel</p>
                     <h4>Kabaddi</h4>
                 </div>
                 <div class="widget">
-                    <p>Inaam Raashi</p>
+                    <p>Inaam</p>
                     <h4>₹11,000</h4>
                 </div>
                 <div class="widget">
-                    <p>Speciality</p>
+                    <p>Special</p>
                     <h4>Best Raider</h4>
                 </div>
             </div>
 
             <div class="story-box">
-                <strong style="color: #b8860b;">Kamyabi ki Baat:</strong><br>
-                Rameshwar ne is saal ke program mein shandaar pradarshan kiya. Final raid mein inhone 3 points lekar Vishnupur SMR ki team ko ek tarfa jeet dilayi.
+                <strong style="color: #b8860b;">Safar:</strong><br>
+                Rameshwar ne kadi mehnat se Vishnupur SMR ka naam roshan kiya hai. Final match mein unka pradarshan bemisaal tha.
             </div>
 
-            <button style="width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer;">
-                Whatsapp par Badhai Bheinje 📲
-            </button>
+            <a href="https://wa.me/?text=Check out this Champion!" class="whatsapp-btn">
+                Badhai Bheinje 📲
+            </a>
         </div>
     </div>
 
