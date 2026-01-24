@@ -3,185 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vishnupur SMR Champion</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <title>SMR Champion Compact</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #004d26;
-            --gold: #FFD700;
-            --silver: #C0C0C0;
-            --bronze: #CD7F32;
-        }
-
         body {
             margin: 0;
-            padding: 0;
+            padding: 10px;
             font-family: 'Poppins', sans-serif;
-            background: #f4f7f6;
-        }
-
-        /* Header: Mobile par height thodi kam ki hai */
-        .header {
-            width: 100%;
-            background: var(--primary);
-            color: white;
-            padding: 30px 0 60px 0;
-            text-align: center;
-            clip-path: ellipse(120% 100% at 50% 0%);
-        }
-
-        .header h1 { 
-            font-family: 'Kalam', cursive; 
-            font-size: 2.2rem; 
-            margin: 0;
-        }
-
-        /* Container: Mobile par 92% width taaki corners touch na hon */
-        .container {
-            width: 92%;
-            max-width: 800px;
-            margin: -40px auto 30px;
-        }
-
-        .profile-box {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-        }
-
-        /* Top Section: Desktop par side-by-side, Mobile par upar-niche */
-        .top-section {
+            background: #f0f2f5;
             display: flex;
-            flex-direction: column; /* Mobile Default */
-            align-items: center;
-            text-align: center;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        /* Desktop View (768px se upar) */
-        @media (min-width: 768px) {
-            .top-section {
-                flex-direction: row;
-                text-align: left;
-            }
-            .bento-grid {
-                grid-template-columns: repeat(3, 1fr) !important;
-            }
-        }
-
-        .profile-img {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%; /* Mobile par gol zyada accha lagta hai */
-            object-fit: cover;
-            border: 4px solid var(--gold);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .name-info h2 { margin: 5px 0; font-size: 1.8rem; color: #222; }
-        
-        .rank-badge {
-            background: var(--gold);
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            color: #000;
-        }
-
-        /* Bento Grid: Mobile par 1 column, Desktop par 3 */
-        .bento-grid {
-            display: grid;
-            grid-template-columns: 1fr; /* Default Mobile */
-            gap: 12px;
-            margin: 20px 0;
-        }
-
-        .widget {
-            background: #fff;
-            padding: 15px;
-            border-radius: 15px;
-            text-align: center;
-            border: 1px solid #eee;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-        }
-
-        .widget h4 { margin: 5px 0; color: var(--primary); font-size: 1.2rem; }
-        .widget p { margin: 0; font-size: 0.8rem; color: #888; text-transform: uppercase; }
-
-        /* Story Section */
-        .story-box {
-            background: #fff9e6;
-            padding: 18px;
-            border-radius: 15px;
-            border-left: 5px solid var(--gold);
-            font-size: 0.95rem;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-
-        .whatsapp-btn {
-            display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 10px;
+        }
+
+        /* Sabse Main Card - Fixed size for better feel */
+        .compact-card {
             width: 100%;
-            padding: 15px;
-            background: #25D366; /* WhatsApp Green */
+            max-width: 380px; /* Phone width ke hisaab se perfect */
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid #ddd;
+        }
+
+        /* Chota Header */
+        .mini-header {
+            background: #004d26;
             color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.9rem;
             font-weight: bold;
+        }
+
+        /* Profile Area - Chota size */
+        .profile-area {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            gap: 12px;
+            background: linear-gradient(to bottom, #f9fffb, #ffffff);
+        }
+
+        .img-box {
+            position: relative;
+        }
+
+        .user-img {
+            width: 80px; /* Choti image */
+            height: 80px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid #FFD700;
+        }
+
+        .rank-tag {
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #FFD700;
+            font-size: 0.6rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .user-info h2 {
+            margin: 0;
+            font-size: 1.2rem; /* Compact Font */
+            color: #222;
+        }
+
+        .user-info p {
+            margin: 2px 0;
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        /* Horizontal Widgets - Jo kam jagah lein */
+        .mini-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding: 0 15px 15px;
+        }
+
+        .m-widget {
+            background: #fdfdfd;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 8px 4px;
+            text-align: center;
+        }
+
+        .m-widget span {
+            display: block;
+            font-size: 0.6rem;
+            color: #999;
+            text-transform: uppercase;
+        }
+
+        .m-widget b {
+            font-size: 0.85rem;
+            color: #004d26;
+        }
+
+        /* Short Story */
+        .short-story {
+            padding: 10px 15px;
+            background: #fffbef;
+            margin: 0 15px 15px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            color: #444;
+            border-left: 3px solid #FFD700;
+        }
+
+        /* Compact Button */
+        .btn-sm {
+            display: block;
+            margin: 0 15px 15px;
+            background: #25D366;
+            color: white;
+            text-align: center;
+            padding: 10px;
             text-decoration: none;
-            cursor: pointer;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>Vishnupur SMR</h1>
-        <p>Vijeta Profile ✨</p>
-    </div>
-
-    <div class="container">
-        <div class="profile-box">
-            <div class="top-section">
-                <img src="https://via.placeholder.com/150" class="profile-img" alt="Winner">
-                <div class="name-info">
-                    <span class="rank-badge">🥇 1st Rank - Champion</span>
-                    <h2>Rameshwar Sharma</h2>
-                    <p style="margin: 5px 0; color: #666;">📍 SMR Tola, Vishnupur, Bihar</p>
-                </div>
+    <div class="compact-card">
+        <div class="mini-header">VISHNUPUR SMR 🏆</div>
+        
+        <div class="profile-area">
+            <div class="img-box">
+                <img src="https://via.placeholder.com/100" class="user-img">
+                <span class="rank-tag">1st RANK</span>
             </div>
-
-            <div class="bento-grid">
-                <div class="widget">
-                    <p>Khel</p>
-                    <h4>Kabaddi</h4>
-                </div>
-                <div class="widget">
-                    <p>Inaam</p>
-                    <h4>₹11,000</h4>
-                </div>
-                <div class="widget">
-                    <p>Special</p>
-                    <h4>Best Raider</h4>
-                </div>
+            <div class="user-info">
+                <h2>Rameshwar Sharma</h2>
+                <p>📍 SMR Tola, Vishnupur</p>
+                <p>🎖️ Top Kabaddi Raider</p>
             </div>
-
-            <div class="story-box">
-                <strong style="color: #b8860b;">Safar:</strong><br>
-                Rameshwar ne kadi mehnat se Vishnupur SMR ka naam roshan kiya hai. Final match mein unka pradarshan bemisaal tha.
-            </div>
-
-            <a href="https://wa.me/?text=Check out this Champion!" class="whatsapp-btn">
-                Badhai Bheinje 📲
-            </a>
         </div>
+
+        <div class="mini-grid">
+            <div class="m-widget">
+                <span>Inaam</span>
+                <b>₹11,000</b>
+            </div>
+            <div class="m-widget">
+                <span>Points</span>
+                <b>98/100</b>
+            </div>
+            <div class="m-widget">
+                <span>Record</span>
+                <b>0:45s</b>
+            </div>
+        </div>
+
+        <div class="short-story">
+            <b>Winner:</b> Vishnupur SMR ki shaan, Rameshwar ne final mein 3 points lekar jeet pakki ki. Unka pradarshan bemisaal raha.
+        </div>
+
+        <a href="#" class="btn-sm">Whatsapp Par Badhai Dein 📲</a>
     </div>
 
 </body>
