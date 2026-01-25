@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>First Winner – Event Recognition</title>
+<title>First Position Winner</title>
 
 <style>
     *{
@@ -14,13 +14,14 @@
     }
 
     body{
-        min-height:100vh;
         background: linear-gradient(135deg,#1e3c72,#2a5298);
-        display:flex;
-        align-items:center;
-        justify-content:center;
         color:#fff;
         padding:20px;
+    }
+
+    .container{
+        max-width:700px;
+        margin:auto;
     }
 
     .winner-card{
@@ -28,10 +29,9 @@
         backdrop-filter: blur(12px);
         border-radius:24px;
         padding:40px 30px;
-        max-width:420px;
-        width:100%;
         text-align:center;
         box-shadow:0 25px 60px rgba(0,0,0,0.45);
+        margin-bottom:30px;
     }
 
     .badge{
@@ -43,12 +43,6 @@
         font-size:2.2rem;
         color:#ffd700;
         margin-bottom:8px;
-        letter-spacing:1px;
-    }
-
-    h2{
-        font-size:1.6rem;
-        margin-bottom:10px;
     }
 
     .position{
@@ -61,50 +55,104 @@
         margin-bottom:20px;
     }
 
+    h2{
+        font-size:1.6rem;
+        margin-bottom:10px;
+    }
+
     p{
         font-size:1.05rem;
-        opacity:0.95;
         line-height:1.6;
-        margin-bottom:18px;
+        opacity:0.95;
+        margin-bottom:15px;
     }
 
     .event{
         font-size:0.95rem;
-        opacity:0.8;
+        opacity:0.85;
+    }
+
+    .use-card{
+        background: rgba(0,0,0,0.25);
+        border-radius:18px;
+        padding:25px;
+    }
+
+    .use-card h3{
+        color:#00ffd5;
+        margin-bottom:15px;
+        font-size:1.4rem;
+    }
+
+    ul{
+        list-style:none;
+    }
+
+    ul li{
+        margin-bottom:12px;
+        font-size:1.05rem;
     }
 
     footer{
-        margin-top:25px;
+        text-align:center;
+        margin-top:30px;
         font-size:0.85rem;
         opacity:0.7;
+    }
+
+    @media print{
+        body{
+            background:#fff;
+            color:#000;
+        }
+        .winner-card,.use-card{
+            box-shadow:none;
+            background:#fff;
+        }
     }
 </style>
 </head>
 
 <body>
 
-<div class="winner-card">
-    <div class="badge">🏆</div>
+<div class="container">
 
-    <h1>First Winner</h1>
-    <div class="position">🥇 प्रथम स्थान</div>
+    <!-- Winner Section -->
+    <div class="winner-card">
+        <div class="badge">🏆</div>
+        <h1>First Position Winner</h1>
+        <div class="position">🥇 प्रथम स्थान</div>
 
-    <h2>Winner Name</h2>
-    <!-- yahan winner ka naam likhna -->
+        <h2>Winner Name</h2>
+        <!-- yahan winner ka naam likho -->
 
-    <p>
-        शानदार प्रदर्शन के लिए आपको हार्दिक बधाई।  
-        आपने इस प्रतियोगिता में प्रथम स्थान प्राप्त कर
-        सभी को गौरवान्वित किया।
-    </p>
+        <p>
+            शानदार प्रदर्शन के लिए आपको हार्दिक बधाई।  
+            आपने इस प्रतियोगिता में प्रथम स्थान प्राप्त कर
+            सभी को गौरवान्वित किया।
+        </p>
 
-    <p class="event">
-        आदर्श नवयुवक मित्रगण – छठ पूजा समिति
-    </p>
+        <p class="event">
+            आदर्श नवयुवक मित्रगण – छठ पूजा समिति  
+            <br>आयोजक: सुशील कुमार
+        </p>
+    </div>
+
+    <!-- Page Use Section -->
+    <div class="use-card">
+        <h3>✅ Is Page ka Use</h3>
+        <ul>
+            <li>🥇 Sirf 1st Position Winner ke liye</li>
+            <li>📜 Certificate ke sath Online Recognition</li>
+            <li>📢 Result / Announcement Page</li>
+            <li>📱🖨 Mobile + Print Friendly Design</li>
+        </ul>
+    </div>
 
     <footer>
-        आयोजक: सुशील कुमार
+        © Event Recognition Page | WINAR Spirit ✨
     </footer>
+
 </div>
 
 </body>
