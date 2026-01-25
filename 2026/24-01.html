@@ -1,151 +1,107 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMR Chhath Winner Profile</title>
-    <style>
-        :root {
-            --gold: #FFD700;
-            --dark: #0a0a0a;
-            --red: #D32F2F;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Winter Vibes ❄️</title>
 
-        body {
-            margin: 0;
-            background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            font-family: 'Arial', sans-serif;
-            color: white;
-        }
+<style>
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family: 'Segoe UI', sans-serif;
+    }
 
-        .award-card {
-            width: 90%;
-            max-width: 380px;
-            height: 60vh; /* Fixed height under 60vh */
-            background: linear-gradient(145deg, #1a1a1a, #000);
-            border-radius: 25px;
-            border: 2px solid var(--gold);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
-        }
+    body{
+        height:100vh;
+        background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+        color:#fff;
+        overflow:hidden;
+    }
 
-        /* Banner */
-        .header {
-            background: var(--red);
-            padding: 8px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-        }
+    /* Snow Effect */
+    .snow{
+        position: absolute;
+        top:-10px;
+        width:100%;
+        height:100%;
+        pointer-events:none;
+        background-image:
+        radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+        radial-gradient(2px 2px at 40px 70px, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 90px 40px, #fff, transparent),
+        radial-gradient(2px 2px at 130px 80px, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 160px 120px, #fff, transparent);
+        background-size:200px 200px;
+        animation:snowfall 10s linear infinite;
+    }
 
-        /* Profile & Name */
-        .profile-area {
-            text-align: center;
-            padding: 10px 0;
-        }
+    @keyframes snowfall{
+        0%{transform:translateY(0);}
+        100%{transform:translateY(200px);}
+    }
 
-        .avatar {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: 3px solid var(--gold);
-            margin-bottom: 5px;
-        }
+    .container{
+        position:relative;
+        z-index:2;
+        height:100%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        padding:20px;
+    }
 
-        .winner-name {
-            font-size: 1.4rem;
-            color: var(--gold);
-            margin: 0;
-        }
+    .card{
+        background: rgba(255,255,255,0.12);
+        backdrop-filter: blur(10px);
+        padding:40px;
+        border-radius:20px;
+        max-width:400px;
+        box-shadow:0 20px 40px rgba(0,0,0,0.4);
+    }
 
-        /* Program Story Section - Essential Update */
-        .program-story {
-            background: rgba(255, 255, 255, 0.05);
-            margin: 10px 15px;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            line-height: 1.4;
-            border-left: 4px solid var(--gold);
-        }
+    h1{
+        font-size:2.5rem;
+        margin-bottom:10px;
+    }
 
-        .program-story h3 {
-            margin: 0 0 5px 0;
-            font-size: 0.9rem;
-            color: var(--gold);
-        }
+    p{
+        font-size:1.1rem;
+        opacity:0.9;
+        margin-bottom:25px;
+    }
 
-        /* Highlights */
-        .highlights {
-            display: flex;
-            justify-content: space-around;
-            padding: 5px 15px;
-        }
+    button{
+        padding:12px 28px;
+        border:none;
+        border-radius:30px;
+        background:#00d4ff;
+        color:#000;
+        font-size:1rem;
+        cursor:pointer;
+        transition:0.3s;
+    }
 
-        .stat {
-            text-align: center;
-            font-size: 0.75rem;
-        }
-
-        .stat b {
-            display: block;
-            color: var(--gold);
-            font-size: 0.9rem;
-        }
-
-        /* Footer Action */
-        .footer-action {
-            margin-top: auto;
-            display: flex;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            font-weight: bold;
-            text-decoration: none;
-            font-size: 0.85rem;
-        }
-
-        .wa-btn { background: #25D366; color: white; }
-        .details-btn { background: var(--gold); color: black; }
-    </style>
+    button:hover{
+        background:#fff;
+        transform:scale(1.05);
+    }
+</style>
 </head>
+
 <body>
 
-    <div class="award-card">
-        <div class="header">विष्णुपूर SMR छठ पूजा समारोह 2024</div>
+<div class="snow"></div>
 
-        <div class="profile-area">
-            <img src="https://via.placeholder.com/70" alt="Winner" class="avatar">
-            <h2 class="winner-name">विजय कुमार सिंह</h2>
-            <p style="font-size: 0.7rem; margin: 2px;">विजेता: सांस्कृतिक एवं सेवा कार्यक्रम</p>
-        </div>
-
-        <div class="program-story">
-            <h3>कार्यक्रम का विवरण:</h3>
-            SMR घाट पर आयोजित भव्य प्रतियोगिता में कुल 150 प्रतिभागियों ने हिस्सा लिया। <b>विजय जी</b> ने घाट की सजावट और छठ व्रतियों की निःस्वार्थ सेवा में प्रथम स्थान प्राप्त किया। उनके समर्पण और अनुशासन ने जजों का दिल जीत लिया।
-        </div>
-
-        <div class="highlights">
-            <div class="stat"><b>₹7501</b> पुरस्कार</div>
-            <div class="stat"><b>A+</b> ग्रेड</div>
-            <div class="stat"><b>SMR</b> स्थान</div>
-        </div>
-
-        <div class="footer-action">
-            <a href="#" class="details-btn">पूर्ण जानकारी</a>
-            <a href="#" class="wa-btn">WhatsApp बधाई</a>
-        </div>
+<div class="container">
+    <div class="card">
+        <h1>❄️ Winter Season ❄️</h1>
+        <p>Feel the cold breeze, calm nights, and cozy winter vibes.</p>
+        <button>Enjoy Winter</button>
     </div>
+</div>
 
 </body>
 </html>
