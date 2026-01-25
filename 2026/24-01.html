@@ -1,92 +1,156 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WINAR – Be a Winner</title>
+<title>Event Winners & Recognition</title>
 
 <style>
     *{
         margin:0;
         padding:0;
         box-sizing:border-box;
-        font-family: 'Segoe UI', sans-serif;
+        font-family: "Segoe UI", sans-serif;
     }
 
     body{
-        height:100vh;
-        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
         color:#fff;
-        display:flex;
-        align-items:center;
-        justify-content:center;
+        padding:20px;
     }
 
-    .card{
-        background: rgba(255,255,255,0.1);
-        backdrop-filter: blur(12px);
-        padding:45px 35px;
-        border-radius:22px;
-        text-align:center;
-        max-width:420px;
-        box-shadow:0 25px 60px rgba(0,0,0,0.45);
+    .container{
+        max-width:900px;
+        margin:auto;
     }
 
     h1{
-        font-size:3rem;
-        letter-spacing:3px;
+        text-align:center;
         margin-bottom:10px;
+        font-size:2.5rem;
         color:#00ffd5;
     }
 
-    h1 span{
-        color:#fff;
-    }
-
-    p{
-        font-size:1.1rem;
+    .subtitle{
+        text-align:center;
         opacity:0.9;
         margin-bottom:30px;
+    }
+
+    .card{
+        background:rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        border-radius:18px;
+        padding:25px;
+        margin-bottom:25px;
+        box-shadow:0 15px 40px rgba(0,0,0,0.4);
+    }
+
+    .card h2{
+        color:#00ffd5;
+        margin-bottom:15px;
+        border-bottom:1px solid rgba(255,255,255,0.2);
+        padding-bottom:8px;
+    }
+
+    .person{
+        margin-bottom:12px;
         line-height:1.6;
     }
 
-    .btn{
-        display:inline-block;
-        padding:14px 34px;
-        border-radius:40px;
-        background: linear-gradient(90deg,#00ffd5,#00b3ff);
-        color:#000;
-        font-weight:600;
-        text-decoration:none;
-        transition:0.3s;
+    .person span{
+        opacity:0.85;
+        font-size:0.95rem;
     }
 
-    .btn:hover{
-        transform:translateY(-4px) scale(1.05);
-        box-shadow:0 12px 30px rgba(0,255,213,0.4);
+    .members{
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+        gap:15px;
     }
 
-    .tag{
-        margin-top:25px;
+    .member{
+        background:rgba(0,0,0,0.25);
+        padding:15px;
+        border-radius:12px;
+    }
+
+    .award{
+        text-align:center;
+        font-size:1.1rem;
+        margin-top:10px;
+        color:#ffdf6c;
+    }
+
+    footer{
+        text-align:center;
+        margin-top:40px;
         font-size:0.9rem;
         opacity:0.7;
-        letter-spacing:1px;
     }
 </style>
 </head>
 
 <body>
 
-<div class="card">
-    <h1>WI<span>NAR</span></h1>
-    <p>
-        Dream big.  
-        Work smart.  
-        Stay focused.  
-        <br>Because winners are not born — they are made.
-    </p>
-    <a href="#" class="btn">Start Winning</a>
-    <div class="tag">#BeWinar #SuccessMindset</div>
+<div class="container">
+
+    <h1>🏆 Event Winners & Recognition 🏆</h1>
+    <p class="subtitle">Recognized Students of the Event</p>
+
+    <!-- Organizer -->
+    <div class="card">
+        <h2>आयोजक</h2>
+        <div class="person">
+            <strong>सुशील कुमार</strong>
+        </div>
+    </div>
+
+    <!-- President -->
+    <div class="card">
+        <h2>अध्यक्ष</h2>
+        <div class="person">
+            <strong>रितु जायसवाल</strong>
+        </div>
+    </div>
+
+    <!-- Committee Members -->
+    <div class="card">
+        <h2>आदर्श नवयुवक मित्रगण – छठ पूजा समिति</h2>
+
+        <div class="members">
+            <div class="member">
+                <strong>अजय शाह</strong><br>
+                <span>सदस्य</span><br>
+                📞 7644889780
+            </div>
+
+            <div class="member">
+                <strong>सोगारथ शाह</strong><br>
+                <span>सदस्य</span><br>
+                📞 97088 96384
+            </div>
+
+            <div class="member">
+                <strong>आकाश कुमार</strong><br>
+                <span>सदस्य</span><br>
+                📞 88099 03631
+            </div>
+        </div>
+    </div>
+
+    <!-- Award Info -->
+    <div class="card">
+        <h2>🎖 पुरस्कार एवं सम्मान</h2>
+        <p class="award">
+            सभी प्रतिभागियों को <strong>प्रमाणपत्र, मेडल और गिफ्ट</strong> प्रदान किया जाएगा।
+        </p>
+    </div>
+
+    <footer>
+        © Event Recognition Page | WINAR Spirit ✨
+    </footer>
+
 </div>
 
 </body>
