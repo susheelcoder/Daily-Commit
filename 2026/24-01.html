@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Event Winners & Recognition</title>
+<title>First Winner – Event Recognition</title>
 
 <style>
     *{
@@ -14,78 +14,68 @@
     }
 
     body{
-        background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+        min-height:100vh;
+        background: linear-gradient(135deg,#1e3c72,#2a5298);
+        display:flex;
+        align-items:center;
+        justify-content:center;
         color:#fff;
         padding:20px;
     }
 
-    .container{
-        max-width:900px;
-        margin:auto;
+    .winner-card{
+        background: rgba(255,255,255,0.12);
+        backdrop-filter: blur(12px);
+        border-radius:24px;
+        padding:40px 30px;
+        max-width:420px;
+        width:100%;
+        text-align:center;
+        box-shadow:0 25px 60px rgba(0,0,0,0.45);
+    }
+
+    .badge{
+        font-size:3.5rem;
+        margin-bottom:10px;
     }
 
     h1{
-        text-align:center;
+        font-size:2.2rem;
+        color:#ffd700;
+        margin-bottom:8px;
+        letter-spacing:1px;
+    }
+
+    h2{
+        font-size:1.6rem;
         margin-bottom:10px;
-        font-size:2.5rem;
-        color:#00ffd5;
     }
 
-    .subtitle{
-        text-align:center;
-        opacity:0.9;
-        margin-bottom:30px;
+    .position{
+        display:inline-block;
+        background:#ffd700;
+        color:#000;
+        padding:6px 18px;
+        border-radius:20px;
+        font-weight:600;
+        margin-bottom:20px;
     }
 
-    .card{
-        background:rgba(255,255,255,0.1);
-        backdrop-filter: blur(10px);
-        border-radius:18px;
-        padding:25px;
-        margin-bottom:25px;
-        box-shadow:0 15px 40px rgba(0,0,0,0.4);
-    }
-
-    .card h2{
-        color:#00ffd5;
-        margin-bottom:15px;
-        border-bottom:1px solid rgba(255,255,255,0.2);
-        padding-bottom:8px;
-    }
-
-    .person{
-        margin-bottom:12px;
+    p{
+        font-size:1.05rem;
+        opacity:0.95;
         line-height:1.6;
+        margin-bottom:18px;
     }
 
-    .person span{
-        opacity:0.85;
+    .event{
         font-size:0.95rem;
-    }
-
-    .members{
-        display:grid;
-        grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-        gap:15px;
-    }
-
-    .member{
-        background:rgba(0,0,0,0.25);
-        padding:15px;
-        border-radius:12px;
-    }
-
-    .award{
-        text-align:center;
-        font-size:1.1rem;
-        margin-top:10px;
-        color:#ffdf6c;
+        opacity:0.8;
     }
 
     footer{
-        text-align:center;
-        margin-top:40px;
-        font-size:0.9rem;
+        margin-top:25px;
+        font-size:0.85rem;
         opacity:0.7;
     }
 </style>
@@ -93,64 +83,28 @@
 
 <body>
 
-<div class="container">
+<div class="winner-card">
+    <div class="badge">🏆</div>
 
-    <h1>🏆 Event Winners & Recognition 🏆</h1>
-    <p class="subtitle">Recognized Students of the Event</p>
+    <h1>First Winner</h1>
+    <div class="position">🥇 प्रथम स्थान</div>
 
-    <!-- Organizer -->
-    <div class="card">
-        <h2>आयोजक</h2>
-        <div class="person">
-            <strong>सुशील कुमार</strong>
-        </div>
-    </div>
+    <h2>Winner Name</h2>
+    <!-- yahan winner ka naam likhna -->
 
-    <!-- President -->
-    <div class="card">
-        <h2>अध्यक्ष</h2>
-        <div class="person">
-            <strong>रितु जायसवाल</strong>
-        </div>
-    </div>
+    <p>
+        शानदार प्रदर्शन के लिए आपको हार्दिक बधाई।  
+        आपने इस प्रतियोगिता में प्रथम स्थान प्राप्त कर
+        सभी को गौरवान्वित किया।
+    </p>
 
-    <!-- Committee Members -->
-    <div class="card">
-        <h2>आदर्श नवयुवक मित्रगण – छठ पूजा समिति</h2>
-
-        <div class="members">
-            <div class="member">
-                <strong>अजय शाह</strong><br>
-                <span>सदस्य</span><br>
-                📞 7644889780
-            </div>
-
-            <div class="member">
-                <strong>सोगारथ शाह</strong><br>
-                <span>सदस्य</span><br>
-                📞 97088 96384
-            </div>
-
-            <div class="member">
-                <strong>आकाश कुमार</strong><br>
-                <span>सदस्य</span><br>
-                📞 88099 03631
-            </div>
-        </div>
-    </div>
-
-    <!-- Award Info -->
-    <div class="card">
-        <h2>🎖 पुरस्कार एवं सम्मान</h2>
-        <p class="award">
-            सभी प्रतिभागियों को <strong>प्रमाणपत्र, मेडल और गिफ्ट</strong> प्रदान किया जाएगा।
-        </p>
-    </div>
+    <p class="event">
+        आदर्श नवयुवक मित्रगण – छठ पूजा समिति
+    </p>
 
     <footer>
-        © Event Recognition Page | WINAR Spirit ✨
+        आयोजक: सुशील कुमार
     </footer>
-
 </div>
 
 </body>
