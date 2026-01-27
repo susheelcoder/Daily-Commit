@@ -1,70 +1,190 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>C Programming Summary</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C Programming Basic Notes</title>
     <style>
-        body{
-            font-family: Arial, sans-serif;
-            background:#f4f6f8;
-            padding:20px;
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.6;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
         }
-        .card{
-            background:#fff;
-            padding:20px;
-            max-width:700px;
-            margin:auto;
-            border-radius:8px;
-            box-shadow:0 4px 10px rgba(0,0,0,0.1);
+        header {
+            background: #0d6efd;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
         }
-        h1{
-            color:#2c3e50;
+        main {
+            max-width: 1000px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
         }
-        h2{
-            color:#34495e;
-            margin-top:15px;
+        h2 {
+            color: #0d6efd;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
         }
-        p, li{
-            color:#555;
-            line-height:1.6;
+        pre {
+            background: #111;
+            color: #0f0;
+            padding: 15px;
+            overflow-x: auto;
+            border-radius: 6px;
+        }
+        code {
+            color: #0f0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        ul {
+            margin-left: 20px;
+        }
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: #222;
+            color: #fff;
+            margin-top: 30px;
         }
     </style>
 </head>
-<body>
+<body><header>
+    <h1>C Programming – Basic Complete Notes</h1>
+    <p>For Beginners | BCA | Practical + Theory</p>
+</header><main><h2>1. Introduction to C Language</h2>
+<p>C ek general-purpose programming language hai jo 1972 me Dennis Ritchie ne develop ki.</p>
+<ul>
+    <li>Fast</li>
+    <li>Portable</li>
+    <li>Structured</li>
+    <li>System Programming ke liye best</li>
+</ul>
 
-<div class="card">
-    <h1>C Programming – Short Summary</h1>
+<h2>2. Structure of C Program</h2>
+<pre><code>#include &lt;stdio.h&gt;
 
-    <p>
-        C Programming ek powerful aur general-purpose programming language hai,
-        jiska use system software, application development aur embedded systems
-        banane ke liye hota hai.
-    </p>
+int main() { printf("Hello World"); return 0; }</code></pre>
 
-    <h2>Key Points:</h2>
-    <ul>
-        <li>C language structured aur fast hoti hai</li>
-        <li>Low-level memory access provide karti hai</li>
-        <li>Portable language hai (different systems par run hoti hai)</li>
-        <li>Operating systems jaise UNIX aur Linux C me likhe gaye hain</li>
-    </ul>
+<h2>3. Tokens in C</h2>
+<ul>
+    <li>Keywords</li>
+    <li>Identifiers</li>
+    <li>Constants</li>
+    <li>Strings</li>
+    <li>Operators</li>
+    <li>Special Symbols</li>
+</ul>
 
-    <h2>Main Concepts:</h2>
-    <ul>
-        <li>Variables & Data Types</li>
-        <li>Operators</li>
-        <li>Control Statements (if, switch, loops)</li>
-        <li>Functions</li>
-        <li>Arrays & Strings</li>
-        <li>Pointers</li>
-        <li>Structures & Files</li>
-    </ul>
+<h2>4. Data Types</h2>
+<table>
+    <tr>
+        <th>Type</th>
+        <th>Size</th>
+        <th>Example</th>
+    </tr>
+    <tr>
+        <td>int</td>
+        <td>4 bytes</td>
+        <td>10</td>
+    </tr>
+    <tr>
+        <td>float</td>
+        <td>4 bytes</td>
+        <td>3.14</td>
+    </tr>
+    <tr>
+        <td>double</td>
+        <td>8 bytes</td>
+        <td>3.14159</td>
+    </tr>
+    <tr>
+        <td>char</td>
+        <td>1 byte</td>
+        <td>'A'</td>
+    </tr>
+</table>
 
-    <p>
-        C Programming beginners ke liye ek strong base create karti hai
-        jo aage chal kar C++, Java aur Python jaise languages seekhne me madad karti hai.
-    </p>
-</div>
+<h2>5. Variables</h2>
+<pre><code>int a = 10;
 
-</body>
+float b = 5.5; char c = 'A';</code></pre>
+
+<h2>6. Input / Output</h2>
+<pre><code>printf("Enter number:");
+
+scanf("%d", &a);</code></pre>
+
+<h2>7. Operators</h2>
+<ul>
+    <li>Arithmetic: + - * / %</li>
+    <li>Relational: &gt; &lt; == !=</li>
+    <li>Logical: && || !</li>
+    <li>Assignment: = += -=</li>
+    <li>Increment / Decrement: ++ --</li>
+</ul>
+
+<h2>8. Control Statements</h2>
+<pre><code>if(a &gt; b) {
+printf("A is big");
+
+} else { printf("B is big"); }</code></pre>
+
+<h2>9. Loops</h2>
+<pre><code>for(int i = 1; i &lt;= 5; i++) {
+printf("%d", i);
+
+}</code></pre>
+
+<h2>10. Functions</h2>
+<pre><code>int add(int a, int b) {
+return a + b;
+
+}</code></pre>
+
+<h2>11. Arrays</h2>
+<pre><code>int a[5] = {1,2,3,4,5};</code></pre>
+
+<h2>12. Pointers</h2>
+<pre><code>int a = 10;
+
+int *p = &a;</code></pre>
+
+<h2>13. Structure</h2>
+<pre><code>struct Student {
+int id;
+char name[20];
+
+};</code></pre>
+
+<h2>14. File Handling</h2>
+<pre><code>FILE *fp;
+
+fp = fopen("data.txt", "w"); fprintf(fp, "Hello"); fclose(fp);</code></pre>
+
+<h2>15. Memory Management</h2>
+<ul>
+    <li>malloc()</li>
+    <li>calloc()</li>
+    <li>realloc()</li>
+    <li>free()</li>
+</ul>
+
+</main><footer>
+    <p>Prepared by Sushil Kumar | BCA IMS Noida</p>
+</footer></body>
 </html>
