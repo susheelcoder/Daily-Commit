@@ -1,22 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>PWA 28</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <title>App 28 – Standalone Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="manifest" id="manifest28">
+  <!-- PWA META -->
+  <meta name="theme-color" content="#0a0c10">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <link rel="icon" href="https://susheelcoder.netlify.app/1.IMG/b.jpg">
+  <link rel="manifest" id="manifest28">
+
+  <style>
+    body{
+      margin:0;
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+      background:#0a0c10;
+      color:#00ff9d;
+      font-family:system-ui;
+      text-align:center;
+    }
+    button{
+      padding:14px 28px;
+      border:none;
+      border-radius:12px;
+      font-size:1.1rem;
+      font-weight:700;
+      background:#00ff9d;
+      cursor:pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Page 28</h1>
+  <p>This page can be installed as App-28</p>
+
+  <button onclick="installApp()">📲 Install App-28</button>
 
 <script>
-/* ===== MANIFEST 28 ===== */
+/* ================= MANIFEST (ONLY 28 PAGE) ================= */
 const manifest28 = {
   name: "App 28",
   short_name: "App28",
   start_url: "/2026/28-01.html",
-  scope: "/2026/28-01.html",
+  scope: "/2026/28-01.html",   // 🔒 ONLY THIS PAGE
   display: "standalone",
-  theme_color: "#0a0c10",
   background_color: "#0a0c10",
+  theme_color: "#00ff9d",
   icons: [{
     src: "https://susheelcoder.netlify.app/1.IMG/b.jpg",
     sizes: "192x192",
@@ -27,36 +64,34 @@ const manifest28 = {
 const blob28 = new Blob([JSON.stringify(manifest28)], {type:"application/json"});
 document.getElementById("manifest28").href = URL.createObjectURL(blob28);
 
-/* ===== SERVICE WORKER 28 ===== */
+/* ================= INSTALL HANDLER ================= */
+let installPrompt;
+window.addEventListener("beforeinstallprompt", e => {
+  e.preventDefault();
+  installPrompt = e;
+});
+
+function installApp(){
+  installPrompt?.prompt();
+}
+
+/* ================= SERVICE WORKER ================= */
 if ("serviceWorker" in navigator) {
-  const sw28 = `
+  const swCode = `
     self.addEventListener("install", e => self.skipWaiting());
+    self.addEventListener("activate", e => self.clients.claim());
     self.addEventListener("fetch", e => {
       if (e.request.url.includes("28-01.html")) {
         e.respondWith(fetch(e.request));
       }
     });
   `;
-  navigator.serviceWorker.register(URL.createObjectURL(
-    new Blob([sw28], {type:"text/javascript"})
-  ), { scope: "/2026/28-01.html" });
+  const swBlob = new Blob([swCode], {type:"text/javascript"});
+  navigator.serviceWorker.register(URL.createObjectURL(swBlob), {
+    scope: "/2026/28-01.html"
+  });
 }
 </script>
-</head>
 
-<body>
-<h1>Page 28</h1>
-<button onclick="install()">Install Page 28</button>
-
-<script>
-let promptEvent;
-window.addEventListener("beforeinstallprompt", e=>{
-  e.preventDefault();
-  promptEvent = e;
-});
-function install(){
-  promptEvent?.prompt();
-}
-</script>
 </body>
 </html>
