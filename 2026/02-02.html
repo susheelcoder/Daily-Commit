@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Haproven PWA</title>
+  <!-- Theme -->
+  <meta name="theme-color" content="#0a0a0a">
+  <!-- Manifest (INLINE via data URL) -->
+  <link rel="manifest" href='data:application/json,{
+    "name":"Haproven",
+    "short_name":"Haproven",
+    "start_url":".",
+    "display":"standalone",
+    "background_color":"#ffffff",
+    "theme_color":"#0a0a0a",
+    "icons":[
+      {
+        "src":"https://via.placeholder.com/192",
+        "sizes":"192x192",
+        "type":"image/png"
+      },
+      {
+        "src":"https://via.placeholder.com/512",
+        "sizes":"512x512",
+        "type":"image/png"
+      }
+    ]
+  }'>
+</head>
+<body>
+  <h1>Haproven PWA</h1>
+  <button id="installBtn" style="display:none;">
+    Install App
+  </button>
+  <script>
+    /******** PWA INSTALL BUTTON ********/
+    let deferredPrompt;
+    const installBtn = document.getElementById("installBtn");
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = "inline-block";
+    });
+    installBtn.addEventListener("click", async () => {
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      installBtn.style.display = "none";
+    });
+    /******** SERVICE WORKER (INLINE) ********/
+    if ("serviceWorker" in navigator) {
+      const swCode = `
+        self.addEventListener('install', e => {
+          self.skipWaiting();
+        });
+        self.addEventListener('fetch', e => {
+          e.respondWith(fetch(e.request));
+        });
+      `;
+      const blob = new Blob([swCode], { type: "text/javascript" });
+      const swURL = URL.createObjectURL(blob);
+      navigator.serviceWorker.register(swURL);
+    }
+  </script>
+</body>
+</html>
