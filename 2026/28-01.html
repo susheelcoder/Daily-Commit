@@ -1,118 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>PWA 28</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>pro-susheel-01 – Install App</title>
+<link rel="manifest" id="manifest28">
 
-  <!-- PWA META -->
-  <meta name="theme-color" content="#0a0c10">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>
+/* ===== MANIFEST 28 ===== */
+const manifest28 = {
+  name: "App 28",
+  short_name: "App28",
+  start_url: "/2026/28-01.html",
+  scope: "/2026/28-01.html",
+  display: "standalone",
+  theme_color: "#0a0c10",
+  background_color: "#0a0c10",
+  icons: [{
+    src: "https://susheelcoder.netlify.app/1.IMG/b.jpg",
+    sizes: "192x192",
+    type: "image/png"
+  }]
+};
 
-  <link rel="icon" href="https://susheelcoder.netlify.app/1.IMG/b.jpg">
-  <link rel="manifest" id="manifestLink">
+const blob28 = new Blob([JSON.stringify(manifest28)], {type:"application/json"});
+document.getElementById("manifest28").href = URL.createObjectURL(blob28);
 
-  <style>
-    body{
-      margin:0;
-      height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:#0a0c10;
-      color:#00ff9d;
-      font-family:Segoe UI,system-ui;
-      flex-direction:column;
-      text-align:center;
-    }
-    button{
-      margin-top:20px;
-      padding:14px 28px;
-      font-size:1.1rem;
-      font-weight:700;
-      border:none;
-      border-radius:12px;
-      background:#00ff9d;
-      color:#000;
-      cursor:pointer;
-    }
-    @media (display-mode: standalone){
-      #installBtn{display:none}
-    }
-  </style>
+/* ===== SERVICE WORKER 28 ===== */
+if ("serviceWorker" in navigator) {
+  const sw28 = `
+    self.addEventListener("install", e => self.skipWaiting());
+    self.addEventListener("fetch", e => {
+      if (e.request.url.includes("28-01.html")) {
+        e.respondWith(fetch(e.request));
+      }
+    });
+  `;
+  navigator.serviceWorker.register(URL.createObjectURL(
+    new Blob([sw28], {type:"text/javascript"})
+  ), { scope: "/2026/28-01.html" });
+}
+</script>
 </head>
 
 <body>
-
-  <h1>pro-susheel-01</h1>
-  <p>Install the App</p>
-
-  <button id="installBtn" onclick="installApp()">📲 Install App</button>
+<h1>Page 28</h1>
+<button onclick="install()">Install Page 28</button>
 
 <script>
-/* ================= STANDALONE REDIRECT ================= */
-if (window.matchMedia('(display-mode: standalone)').matches) {
-  // PWA open hua → install page se direct main page
-  location.replace("/2026/28-01.html");
-}
-
-/* ================= MANIFEST ================= */
-const manifest = {
-  name: "Pro-susheel-01",
-  short_name: "Pro-susheel-01",
-  start_url: "/2026/28-01.html",
-  scope: "/",
-  display: "standalone",
-  background_color: "#0a0c10",
-  theme_color: "#00ff9d",
-  icons: [
-    {
-      src: "https://susheelcoder.netlify.app/1.IMG/b.jpg",
-      sizes: "192x192",
-      type: "image/png"
-    },
-    {
-      src: "https://susheelcoder.netlify.app/1.IMG/b.jpg",
-      sizes: "512x512",
-      type: "image/png"
-    }
-  ]
-};
-
-const blob = new Blob([JSON.stringify(manifest)], { type:"application/json" });
-document.getElementById("manifestLink").href = URL.createObjectURL(blob);
-
-/* ================= INSTALL FUNCTION ================= */
-let deferredPrompt;
-
-window.addEventListener("beforeinstallprompt", e => {
+let promptEvent;
+window.addEventListener("beforeinstallprompt", e=>{
   e.preventDefault();
-  deferredPrompt = e;
+  promptEvent = e;
 });
-
-async function installApp(){
-  if(!deferredPrompt){
-    alert("Browser menu → Install App");
-    return;
-  }
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt = null;
-}
-
-/* ================= SERVICE WORKER ================= */
-if("serviceWorker" in navigator){
-  const swCode = `
-    self.addEventListener("install", e => self.skipWaiting());
-    self.addEventListener("activate", e => self.clients.claim());
-    self.addEventListener("fetch", e => e.respondWith(fetch(e.request)));
-  `;
-  const swBlob = new Blob([swCode], { type:"text/javascript" });
-  navigator.serviceWorker.register(URL.createObjectURL(swBlob));
+function install(){
+  promptEvent?.prompt();
 }
 </script>
-
 </body>
 </html>
