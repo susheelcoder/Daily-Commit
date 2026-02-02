@@ -143,8 +143,8 @@
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      background: #0a0c10;
-      color: #00ff9d;
+      background: #ffffff;
+      color: #000000;
       font-family: system-ui;
     }
 
@@ -154,7 +154,7 @@
       font-weight: 700;
       border: none;
       border-radius: 14px;
-      background: #00ff9d;
+      background: #000000;
       cursor: pointer;
     }
 
@@ -170,16 +170,16 @@
 
  <p>hello</p>
 
-  <h1>Install App 29</h1>
+  <h1>Install App 28</h1>
   <button id="btn" onclick="installApp()">📲 Install</button>
 
   <script>
     /* MANIFEST */
     const manifest = {
-      name: "App 29",
-      short_name: "App29",
-      start_url: "/2026/app-29/index.html",
-      scope: "/2026/app-29/",
+      name: "App 28",
+      short_name: "App28",
+      start_url: "/2026/app-28/index.html",
+      scope: "/2026/app-28/",
       display: "standalone",
       background_color: "#0a0c10",
       theme_color: "#0a0c10",
@@ -188,7 +188,7 @@
           src: "https://susheelcoder.netlify.app/1.IMG/a.jpg",
           sizes: "512x512",
           type: "image/png",
-          purpose: "any"
+          purpose: "maskable any"
         }
       ]
     };
@@ -208,7 +208,7 @@
 
     /* SERVICE WORKER */
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("sw.js", { scope: "/2026/app-29/" });
+      navigator.serviceWorker.register("sw.js", { scope: "/2026/app-28/" });
     }
   </script>
 
