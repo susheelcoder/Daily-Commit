@@ -49,15 +49,21 @@
   <h1>pro-susheel-01</h1>
   <p>Install the App</p>
 
-  <!-- <button id="installBtn" onclick="installApp()">📲 Install App</button> -->
+  <button id="installBtn" onclick="installApp()">📲 Install App</button>
 
 <script>
+/* ================= STANDALONE REDIRECT ================= */
+if (window.matchMedia('(display-mode: standalone)').matches) {
+  // PWA open hua → install page se direct main page
+  location.replace("/2026/28-01.html");
+}
+
 /* ================= MANIFEST ================= */
 const manifest = {
   name: "Pro-susheel-01",
   short_name: "Pro-susheel-01",
   start_url: "/2026/28-01.html",
-  scope: "/2026/28-01.html",
+  scope: "/",
   display: "standalone",
   background_color: "#0a0c10",
   theme_color: "#00ff9d",
