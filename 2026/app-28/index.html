@@ -159,7 +159,7 @@
     }
 
     @media (display-mode: standalone) {
-      body {
+      #btn {
         display: none;
       }
     }
@@ -168,8 +168,10 @@
 
 <body>
 
+ <p>hello</p>
+
   <h1>Install App 29</h1>
-  <button onclick="installApp()">📲 Install</button>
+  <button id="btn" onclick="installApp()">📲 Install</button>
 
   <script>
     /* MANIFEST */
