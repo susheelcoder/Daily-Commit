@@ -5,11 +5,13 @@
 <title>App 28</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<!-- PWA META -->
 <meta name="theme-color" content="#0a0c10">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-<link rel="icon" href="2.png">
-<link rel="manifest" href="manifest.json">
+<link rel="icon" href="./icon-512.png">
+<link rel="manifest" id="manifest">
 
 <style>
 body{
@@ -22,16 +24,26 @@ body{
   background:#0a0c10;
   color:#00ff9d;
   font-family:system-ui;
+  text-align:center;
 }
+
 button{
   padding:16px 36px;
+  font-size:1.1rem;
+  font-weight:700;
   border:none;
   border-radius:14px;
   background:#00ff9d;
-  font-size:1.1rem;
-  font-weight:700;
+  color:#000;
   cursor:pointer;
 }
+
+a{
+  margin-top:20px;
+  color:#fff;
+  text-decoration:underline;
+}
+
 @media (display-mode: standalone){
   #installBtn{display:none}
 }
@@ -41,11 +53,43 @@ button{
 <body>
 
 <h1>App 28</h1>
-<p>Standalone PWA</p>
+<p>This page installs as its own app</p>
 
 <button id="installBtn">📲 Install App</button>
 
+<a href="/2026/29-01.html" target="_blank">
+  Open 29-01 page (Browser only)
+</a>
+
 <script>
+/* ================= MANIFEST ================= */
+const manifest = {
+  name: "App 28",
+  short_name: "App28",
+  start_url: "/2026/28-01.html",
+  scope: "/2026/28-01.html",
+  display: "standalone",
+  background_color: "#0a0c10",
+  theme_color: "#0a0c10",
+  icons: [
+    {
+      src: "/2026/icon-512.png",
+      sizes: "512x512",
+      type: "image/png",
+      purpose: "any"
+    }
+  ]
+};
+
+const manifestBlob = new Blob(
+  [JSON.stringify(manifest)],
+  { type: "application/json" }
+);
+document.getElementById("manifest").href =
+  URL.createObjectURL(manifestBlob);
+
+
+/* ================= INSTALL ================= */
 let deferredPrompt;
 
 window.addEventListener("beforeinstallprompt", e => {
@@ -54,18 +98,40 @@ window.addEventListener("beforeinstallprompt", e => {
 });
 
 document.getElementById("installBtn").onclick = () => {
-  if (!deferredPrompt) {
-    alert("Install not available yet");
-    return;
-  }
-  deferredPrompt.prompt();
+  deferredPrompt?.prompt();
 };
 
-/* REGISTER SERVICE WORKER */
+
+/* ================= SERVICE WORKER ================= */
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js", {
-    scope: "/2026/app-28/"
-  });
+
+  const swCode = `
+    self.addEventListener("install", e => {
+      self.skipWaiting();
+    });
+
+    self.addEventListener("activate", e => {
+      self.clients.claim();
+    });
+
+    self.addEventListener("fetch", e => {
+      const url = new URL(e.request.url);
+
+      // ❌ Do NOT control other pages
+      if (url.pathname !== "/2026/28-01.html") {
+        return;
+      }
+
+      e.respondWith(fetch(e.request));
+    });
+  `;
+
+  const swBlob = new Blob([swCode], { type: "text/javascript" });
+
+  navigator.serviceWorker.register(
+    URL.createObjectURL(swBlob),
+    { scope: "/2026/28-01.html" }
+  );
 }
 </script>
 
