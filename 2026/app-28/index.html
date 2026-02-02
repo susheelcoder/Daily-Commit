@@ -1,95 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>App 28</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- PWA META -->
-<meta name="theme-color" content="#0a0c10">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <title>Haproven Profile – Install App</title>
 
-<link rel="icon" href="./icon-512.png">
-<link rel="manifest" id="manifest">
+  <!-- PWA META -->
+  <meta name="theme-color" content="#0a0c10">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-<style>
-body{
-  margin:0;
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  background:#0a0c10;
-  color:#00ff9d;
-  font-family:system-ui;
-  text-align:center;
-}
+  <link rel="icon" href="https://susheelcoder.netlify.app/1.IMG/b.jpg">
+  <link rel="manifest" id="manifestLink">
 
-button{
-  padding:16px 36px;
-  font-size:1.1rem;
-  font-weight:700;
-  border:none;
-  border-radius:14px;
-  background:#00ff9d;
-  color:#000;
-  cursor:pointer;
-}
-
-a{
-  margin-top:20px;
-  color:#fff;
-  text-decoration:underline;
-}
-
-@media (display-mode: standalone){
-  #installBtn{display:none}
-}
-</style>
+  <style>
+    body{
+      margin:0;
+      height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#0a0c10;
+      color:#00ff9d;
+      font-family:Segoe UI,system-ui;
+      flex-direction:column;
+      text-align:center;
+    }
+    button{
+      margin-top:20px;
+      padding:14px 28px;
+      font-size:1.1rem;
+      font-weight:700;
+      border:none;
+      border-radius:12px;
+      background:#00ff9d;
+      color:#000;
+      cursor:pointer;
+    }
+    @media (display-mode: standalone){
+      #installBtn{display:none}
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>App 28</h1>
-<p>This page installs as its own app</p>
+  <h1>Haproven Timer</h1>
+  <p>Install the App</p>
 
-<button id="installBtn">📲 Install App</button>
-
-<a href="/2026/29-01.html" target="_blank">
-  Open 29-01 page (Browser only)
-</a>
+  <button id="installBtn" onclick="installApp()">📲 Install App</button>
 
 <script>
 /* ================= MANIFEST ================= */
 const manifest = {
-  name: "App 28",
-  short_name: "App28",
-  start_url: "/2026/28-01.html",
-  scope: "/2026/28-01.html",
+  name: "Pro-susheel-01",
+  short_name: "Pro-susheel-01",
+  start_url: "/2026/app-28/",
+  scope: "/2026/app-28/",
   display: "standalone",
   background_color: "#0a0c10",
-  theme_color: "#0a0c10",
+  theme_color: "#00ff9d",
   icons: [
     {
-      src: "/2026/icon-512.png",
+      src: "https://susheelcoder.netlify.app/1.IMG/b.jpg",
+      sizes: "192x192",
+      type: "image/png"
+    },
+    {
+      src: "https://susheelcoder.netlify.app/1.IMG/b.jpg",
       sizes: "512x512",
-      type: "image/png",
-      purpose: "any"
+      type: "image/png"
     }
   ]
 };
 
-const manifestBlob = new Blob(
-  [JSON.stringify(manifest)],
-  { type: "application/json" }
-);
-document.getElementById("manifest").href =
-  URL.createObjectURL(manifestBlob);
+const blob = new Blob([JSON.stringify(manifest)], { type:"application/json" });
+document.getElementById("manifestLink").href = URL.createObjectURL(blob);
 
-
-/* ================= INSTALL ================= */
+/* ================= INSTALL FUNCTION ================= */
 let deferredPrompt;
 
 window.addEventListener("beforeinstallprompt", e => {
@@ -97,41 +86,25 @@ window.addEventListener("beforeinstallprompt", e => {
   deferredPrompt = e;
 });
 
-document.getElementById("installBtn").onclick = () => {
-  deferredPrompt?.prompt();
-};
-
+async function installApp(){
+  if(!deferredPrompt){
+    alert("Browser menu → Install App");
+    return;
+  }
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+}
 
 /* ================= SERVICE WORKER ================= */
-if ("serviceWorker" in navigator) {
-
+if("serviceWorker" in navigator){
   const swCode = `
-    self.addEventListener("install", e => {
-      self.skipWaiting();
-    });
-
-    self.addEventListener("activate", e => {
-      self.clients.claim();
-    });
-
-    self.addEventListener("fetch", e => {
-      const url = new URL(e.request.url);
-
-      // ❌ Do NOT control other pages
-      if (url.pathname !== "/2026/28-01.html") {
-        return;
-      }
-
-      e.respondWith(fetch(e.request));
-    });
+    self.addEventListener("install", e => self.skipWaiting());
+    self.addEventListener("activate", e => self.clients.claim());
+    self.addEventListener("fetch", e => e.respondWith(fetch(e.request)));
   `;
-
-  const swBlob = new Blob([swCode], { type: "text/javascript" });
-
-  navigator.serviceWorker.register(
-    URL.createObjectURL(swBlob),
-    { scope: "/2026/28-01.html" }
-  );
+  const swBlob = new Blob([swCode], { type:"text/javascript" });
+  navigator.serviceWorker.register(URL.createObjectURL(swBlob));
 }
 </script>
 

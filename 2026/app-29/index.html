@@ -1,104 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>App 29</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- PWA META -->
-<meta name="theme-color" content="#0a0c10">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Haproven Profile – Install App</title>
 
-<link rel="icon" href="./icon-511.ico">
-<link rel="manifest" id="manifest">
+  <!-- PWA META -->
+  <meta name="theme-color" content="#0a0c10">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-<style>
-body{
-  margin:0;
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  background:#0a0c10;
-  color:#00ff9d;
-  font-family:system-ui;
-  text-align:center;
-}
-button{
-  padding:16px 36px;
-  font-size:1.1rem;
-  font-weight:700;
-  border:none;
-  border-radius:14px;
-  background:#00ff9d;
-  color:#000;
-  cursor:pointer;
-}
-@media (display-mode: standalone){
-  #installBtn{display:none}
-}
-</style>
+  <link rel="icon" href="https://susheelcoder.netlify.app/1.IMG/b.jpg">
+  <link rel="manifest" id="manifestLink">
+
+  <style>
+    body{
+      margin:0;
+      height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#0a0c10;
+      color:#00ff9d;
+      font-family:Segoe UI,system-ui;
+      flex-direction:column;
+      text-align:center;
+    }
+    button{
+      margin-top:20px;
+      padding:14px 28px;
+      font-size:1.1rem;
+      font-weight:700;
+      border:none;
+      border-radius:12px;
+      background:#00ff9d;
+      color:#000;
+      cursor:pointer;
+    }
+    @media (display-mode: standalone){
+      #installBtn{display:none}
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>App 29</h1>
-<p>Standalone PWA</p>
+  <h1>2.png</h1>
+  <p>Install the App</p>
 
-<button id="installBtn" onclick="installApp()">📲 Install App</button>
+  <button id="installBtn" onclick="installApp()">📲 Install App</button>
 
 <script>
 /* ================= MANIFEST ================= */
 const manifest = {
-  name: "App 29",
-  short_name: "App29",
+  name: "Pro-susheel-01",
+  short_name: "Pro-susheel-01",
   start_url: "/2026/app-29/",
   scope: "/2026/app-29/",
   display: "standalone",
   background_color: "#0a0c10",
-  theme_color: "#0a0c10",
+  theme_color: "#00ff9d",
   icons: [
     {
-      src: "1.ico",
+      src: "2.png",
       sizes: "192x192",
-      type: "image/png",
-      purpose: "any maskable"
+      type: "image/png"
     },
     {
-      src: "1.ico",
+      src: "2.png",
       sizes: "512x512",
-      type: "image/png",
-      purpose: "any maskable"
+      type: "image/png"
     }
   ]
 };
 
-const blob = new Blob([JSON.stringify(manifest)], {type:"application/json"});
-document.getElementById("manifest").href = URL.createObjectURL(blob);
+const blob = new Blob([JSON.stringify(manifest)], { type:"application/json" });
+document.getElementById("manifestLink").href = URL.createObjectURL(blob);
 
-/* ================= INSTALL ================= */
-let promptEvent;
+/* ================= INSTALL FUNCTION ================= */
+let deferredPrompt;
+
 window.addEventListener("beforeinstallprompt", e => {
   e.preventDefault();
-  promptEvent = e;
+  deferredPrompt = e;
 });
 
-function installApp(){
-  promptEvent?.prompt();
+async function installApp(){
+  if(!deferredPrompt){
+    alert("Browser menu → Install App");
+    return;
+  }
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
 }
 
 /* ================= SERVICE WORKER ================= */
-if ("serviceWorker" in navigator) {
-  const sw = `
+if("serviceWorker" in navigator){
+  const swCode = `
     self.addEventListener("install", e => self.skipWaiting());
     self.addEventListener("activate", e => self.clients.claim());
+    self.addEventListener("fetch", e => e.respondWith(fetch(e.request)));
   `;
-  const swBlob = new Blob([sw], {type:"text/javascript"});
-  navigator.serviceWorker.register(URL.createObjectURL(swBlob), {
-    scope: "/2026/app-29/"
-  });
+  const swBlob = new Blob([swCode], { type:"text/javascript" });
+  navigator.serviceWorker.register(URL.createObjectURL(swBlob));
 }
 </script>
 
