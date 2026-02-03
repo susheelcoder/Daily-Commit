@@ -1,42 +1,28 @@
-<section id="github-stats" style="padding: 60px 20px; background: #0d1117; color: white; text-align: center;">
+<section id="github-stats" style="padding: 40px 10px; background: #0d1117; text-align: center;">
     
-    <h2 style="font-size: 2.5rem; margin-bottom: 40px; color: #58a6ff;">My GitHub Analytics</h2>
+    <h2 style="color: #58a6ff; font-family: sans-serif; margin-bottom: 25px;">GitHub Analytics</h2>
 
-    <div style="max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 30px;">
+    <div style="max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
         
-        <div class="stats-card" style="background: #161b22; border: 1px solid #30363d; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-            <h3 style="margin-bottom: 20px; color: #8b949e;">Contribution Calendar</h3>
-            <img src="https://ghchart.rshah.org/58a6ff/Susheelcoder" alt="GitHub Chart" style="width: 100%; height: auto; filter: drop-shadow(0 0 5px #58a6ff33);" />
+        <div style="background: #161b22; padding: 15px; border-radius: 12px; border: 1px solid #30363d;">
+            <p style="color: #8b949e; margin-bottom: 10px;">Contribution Calendar</p>
+            <img src="https://ghchart.rshah.org/58a6ff/Susheelcoder" alt="GitHub Chart" style="width: 100%; height: auto;" />
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
             
-            <div class="stats-card" style="background: #161b22; border: 1px solid #30363d; padding: 15px; border-radius: 15px;">
-                <img src="https://github-readme-stats.vercel.app/api?username=Susheelcoder&show_icons=true&theme=dark&hide_border=true&bg_color=161b22" alt="Stats" style="width: 100%;" />
+            <div style="background: #161b22; border-radius: 12px; border: 1px solid #30363d; overflow: hidden;">
+                <img src="https://github-readme-stats-sigma-five.vercel.app/api?username=Susheelcoder&show_icons=true&theme=dark&hide_border=true&bg_color=161b22" 
+                     onerror="this.src='https://github-readme-stats.vercel.app/api?username=Susheelcoder&show_icons=true&theme=dark&hide_border=true&bg_color=161b22'" 
+                     style="width: 100%; height: auto;" />
             </div>
 
-            <div class="stats-card" style="background: #161b22; border: 1px solid #30363d; padding: 15px; border-radius: 15px;">
-                <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Susheelcoder&layout=compact&theme=dark&hide_border=true&bg_color=161b22" alt="Top Langs" style="width: 100%;" />
-            </div>
-
-            <div class="stats-card" style="background: #161b22; border: 1px solid #30363d; padding: 15px; border-radius: 15px; grid-column: span 1;">
-                <img src="https://github-readme-streak-stats.herokuapp.com/?user=Susheelcoder&theme=dark&hide_border=true&background=161b22" alt="Streak" style="width: 100%;" />
+            <div style="background: #161b22; border-radius: 12px; border: 1px solid #30363d; overflow: hidden;">
+                <img src="https://github-readme-stats-sigma-five.vercel.app/api/top-langs/?username=Susheelcoder&layout=compact&theme=dark&hide_border=true&bg_color=161b22" 
+                     onerror="this.src='https://github-readme-stats.vercel.app/api/top-langs/?username=Susheelcoder&layout=compact&theme=dark&hide_border=true&bg_color=161b22'" 
+                     style="width: 100%; height: auto;" />
             </div>
 
         </div>
     </div>
 </section>
-
-<style>
-    /* Mobile ke liye special adjustment */
-    @media (max-width: 768px) {
-        h2 { font-size: 1.8rem !important; }
-        .stats-card { padding: 10px !important; }
-    }
-    
-    .stats-card:hover {
-        border-color: #58a6ff !important;
-        transform: translateY(-5px);
-        transition: all 0.3s ease;
-    }
-</style>
