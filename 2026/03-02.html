@@ -1,81 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Susheelcoder | GitHub Stats</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0d1117;
-            color: #c9d1d9;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 20px;
-            margin: 0;
-        }
-        h1 { color: #58a6ff; margin-bottom: 30px; }
-        .container {
-            max-width: 900px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            align-items: center;
-        }
-        .card {
-            background: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 10px;
-            padding: 20px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-        .graph-title {
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-            color: #f0f6fc;
-        }
-    </style>
-</head>
-<body>
+<section id="github-stats" style="padding: 60px 20px; background: #0d1117; color: white; text-align: center;">
+    
+    <h2 style="font-size: 2.5rem; margin-bottom: 40px; color: #58a6ff;">My GitHub Analytics</h2>
 
-    <h1>Susheelcoder's Coding Activity</h1>
-
-    <div class="container">
-        <div class="card">
-            <div class="graph-title">Contribution Calendar</div>
-            <img src="https://ghchart.rshah.org/58a6ff/Susheelcoder" alt="GitHub Chart" />
+    <div style="max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 30px;">
+        
+        <div class="stats-card" style="background: #161b22; border: 1px solid #30363d; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <h3 style="margin-bottom: 20px; color: #8b949e;">Contribution Calendar</h3>
+            <img src="https://ghchart.rshah.org/58a6ff/Susheelcoder" alt="GitHub Chart" style="width: 100%; height: auto; filter: drop-shadow(0 0 5px #58a6ff33);" />
         </div>
 
-        <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; width: 100%;">
-            <div class="card" style="flex: 1; min-width: 300px;">
-                <img src="https://github-readme-stats.vercel.app/api?username=Susheelcoder&show_icons=true&theme=dark&hide_border=true" alt="Stats" />
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            
+            <div class="stats-card" style="background: #161b22; border: 1px solid #30363d; padding: 15px; border-radius: 15px;">
+                <img src="https://github-readme-stats.vercel.app/api?username=Susheelcoder&show_icons=true&theme=dark&hide_border=true&bg_color=161b22" alt="Stats" style="width: 100%;" />
             </div>
-            <div class="card" style="flex: 1; min-width: 300px;">
-                <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Susheelcoder&layout=compact&theme=dark&hide_border=true" alt="Top Langs" />
-            </div>
-        </div>
 
-        <div class="card">
-            <img src="https://github-readme-streak-stats.herokuapp.com/?user=Susheelcoder&theme=dark&hide_border=true" alt="GitHub Streak" />
+            <div class="stats-card" style="background: #161b22; border: 1px solid #30363d; padding: 15px; border-radius: 15px;">
+                <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Susheelcoder&layout=compact&theme=dark&hide_border=true&bg_color=161b22" alt="Top Langs" style="width: 100%;" />
+            </div>
+
+            <div class="stats-card" style="background: #161b22; border: 1px solid #30363d; padding: 15px; border-radius: 15px; grid-column: span 1;">
+                <img src="https://github-readme-streak-stats.herokuapp.com/?user=Susheelcoder&theme=dark&hide_border=true&background=161b22" alt="Streak" style="width: 100%;" />
+            </div>
+
         </div>
     </div>
+</section>
 
-<img src="https://github-readme-stats.vercel.app/api?username=Susheelcoder&show_icons=true&theme=radical" alt="Susheelcoder's Stats" />
-
-
-<img src="https://github-readme-streak-stats.herokuapp.com/?user=Susheelcoder&theme=radical" alt="Susheelcoder's Streak" />
-
-
-
-<img src="https://ghchart.rshah.org/Susheelcoder" alt="Susheelcoder's GitHub Chart" />
-
-</body>
-</html>
+<style>
+    /* Mobile ke liye special adjustment */
+    @media (max-width: 768px) {
+        h2 { font-size: 1.8rem !important; }
+        .stats-card { padding: 10px !important; }
+    }
+    
+    .stats-card:hover {
+        border-color: #58a6ff !important;
+        transform: translateY(-5px);
+        transition: all 0.3s ease;
+    }
+</style>
