@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Dashboard Live</title>
+    <script src="https://meet.jit.si/external_api.js"></script>
+    <style>
+        body { background: #0f172a; color: white; font-family: sans-serif; text-align: center; margin: 0; padding: 10px; }
+        #timer { font-size: 40px; color: #38bdf8; margin: 15px 0; font-weight: bold; }
+        .controls { margin-bottom: 15px; display: flex; justify-content: center; gap: 10px; }
+        #call-frame { width: 100%; height: 500px; border-radius: 12px; background: #1e293b; border: 1px solid #334155; overflow: hidden; }
+        button { padding: 10px 15px; cursor: pointer; border-radius: 6px; border: none; font-weight: bold; font-size: 12px; }
+        .btn-team { background: #10b981; color: white; }
+        .btn-lead { background: #3b82f6; color: white; }
+    </style>
+</head>
+<body>
+
+    <div id="timer">02:00:00</div>
+
+    <div class="controls">
+        <button class="btn-team" onclick="joinRoom('MyHackathon_Team_Alpha_2026')">Join Team Call</button>
+        <button class="btn-lead" onclick="joinRoom('MyHackathon_Lead_Support_2026')">Call Project Lead</button>
+    </div>
+
+    <div id="call-frame">
+        <p style="padding-top: 200px; color: #94a3b8;">Click a button to start conversation</p>
+    </div>
+
+    <script>
+        let api = null;
+
+        function joinRoom(roomName) {
+            if (api) api.dispose(); // Purani call band karo
+
+            const options = {
+                roomName: roomName,
+                parentNode: document.querySelector('#call-frame'),
+                width: '100%',
+                height: '100%',
+                interfaceConfigOverwrite: {
+                    TOOLBAR_BUTTONS: ['microphone', 'camera', 'chat', 'desktop', 'hangup', 'raisehand']
+                },
+                configOverwrite: {
+                    startWithAudioMuted: false,
+                    prejoinPageEnabled: false // Direct join ho jayega
+                }
+            };
+            api = new JitsiMeetExternalAPI("meet.jit.si", options);
+        }
+
+        // Timer Logic
+        let time = 7200;
+        setInterval(() => {
+            let h = Math.floor(time / 3600);
+            let m = Math.floor((time % 3600) / 60);
+            let s = time % 60;
+            document.getElementById('timer').innerText = 
+                `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            if(time > 0) time--;
+        }, 1000);
+    </script>
+</body>
+</html>
