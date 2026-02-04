@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Auto WebRTC Call</title>
+<title>Auto WebRTC Call – Stable</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- Firebase -->
@@ -10,49 +10,30 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <style>
-body{
-  font-family: Arial, sans-serif;
-  background:#f2f2f2;
-  text-align:center;
-  padding:15px;
-}
-video{
-  width:45%;
-  background:#000;
-  border-radius:10px;
-}
-.videos{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  margin-top:15px;
-}
-.status{
-  margin-top:10px;
-  font-weight:bold;
-}
+body{font-family:Arial;text-align:center;background:#f4f4f4;padding:10px}
+video{width:45%;background:black;border-radius:10px}
+.videos{display:flex;gap:10px;justify-content:center}
+.status{margin:10px;font-weight:bold}
 </style>
 </head>
 <body>
 
-<h2>🎥 Auto Start Video Call</h2>
-<p>Do alag device par open karo</p>
-<div class="status" id="status">Connecting...</div>
+<h2>🎥 Auto Connect Video Call</h2>
+<div class="status" id="status">Initializing…</div>
 
 <div class="videos">
-  <video id="localVideo" autoplay muted playsinline></video>
-  <video id="remoteVideo" autoplay playsinline></video>
+  <video id="local" autoplay muted playsinline></video>
+  <video id="remote" autoplay playsinline></video>
 </div>
 
 <script>
-/* 🔥 FIREBASE CONFIG (APNA DALO) */
+/* 🔥 FIREBASE CONFIG */
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_PROJECT.firebaseapp.com",
   databaseURL: "https://YOUR_PROJECT.firebaseio.com",
   projectId: "YOUR_PROJECT_ID"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
@@ -61,64 +42,87 @@ const pc = new RTCPeerConnection({
   iceServers:[{urls:"stun:stun.l.google.com:19302"}]
 });
 
-const roomId = "auto-room-1";
+const roomId = "auto-room";
 const roomRef = db.ref(roomId);
 
-const localVideo = document.getElementById("localVideo");
-const remoteVideo = document.getElementById("remoteVideo");
+const localVideo = document.getElementById("local");
+const remoteVideo = document.getElementById("remote");
 const statusEl = document.getElementById("status");
 
-/* 🎤 Camera + Mic */
+let role = null; // caller | joiner
+
+/* 🎤 Media */
 navigator.mediaDevices.getUserMedia({video:true,audio:true})
 .then(stream=>{
   localVideo.srcObject = stream;
-  stream.getTracks().forEach(track=>pc.addTrack(track,stream));
-  autoStart();
+  stream.getTracks().forEach(t=>pc.addTrack(t,stream));
+  decideRole();
 })
 .catch(()=>alert("Camera/Mic allow karo"));
 
-pc.ontrack = e=>{
-  remoteVideo.srcObject = e.streams[0];
-};
+pc.ontrack = e => remoteVideo.srcObject = e.streams[0];
 
+/* ❄ ICE */
 pc.onicecandidate = e=>{
-  if(e.candidate){
-    roomRef.child("candidates").push(e.candidate.toJSON());
-  }
+  if(!e.candidate) return;
+  const path = role === "caller" ? "callerCandidates" : "joinerCandidates";
+  roomRef.child(path).push(e.candidate.toJSON());
 };
 
-/* 🤖 AUTO START LOGIC */
-async function autoStart(){
-  const snap = await roomRef.child("offer").get();
+/* 🧠 ROLE DECISION */
+async function decideRole(){
+  const snap = await roomRef.child("caller").get();
 
   if(!snap.exists()){
-    // 👤 FIRST USER → CALLER
-    statusEl.innerText = "Waiting for another user...";
-    await roomRef.remove(); // clear old data
-    const offer = await pc.createOffer();
-    await pc.setLocalDescription(offer);
-    await roomRef.child("offer").set(offer);
+    role = "caller";
+    statusEl.innerText = "Waiting for another user…";
+    await roomRef.set({ caller:true });
+    startAsCaller();
   }else{
-    // 👤 SECOND USER → JOINER
-    statusEl.innerText = "Connecting...";
-    await pc.setRemoteDescription(new RTCSessionDescription(snap.val()));
-    const answer = await pc.createAnswer();
-    await pc.setLocalDescription(answer);
-    await roomRef.child("answer").set(answer);
+    role = "joiner";
+    statusEl.innerText = "Connecting…";
+    joinAsJoiner();
   }
 }
 
-/* 🔁 ANSWER LISTENER */
-roomRef.child("answer").on("value", snap=>{
-  if(snap.exists() && !pc.currentRemoteDescription){
-    pc.setRemoteDescription(new RTCSessionDescription(snap.val()));
-    statusEl.innerText = "Connected ✅";
-  }
-});
+/* ☎ CALLER */
+async function startAsCaller(){
+  const offer = await pc.createOffer();
+  await pc.setLocalDescription(offer);
+  await roomRef.child("offer").set(offer);
 
-/* ❄ ICE LISTENER */
-roomRef.child("candidates").on("child_added", snap=>{
-  pc.addIceCandidate(new RTCIceCandidate(snap.val()));
+  roomRef.child("answer").on("value", snap=>{
+    if(snap.exists() && !pc.currentRemoteDescription){
+      pc.setRemoteDescription(new RTCSessionDescription(snap.val()));
+      statusEl.innerText = "Connected ✅";
+    }
+  });
+
+  roomRef.child("joinerCandidates").on("child_added", snap=>{
+    pc.addIceCandidate(new RTCIceCandidate(snap.val()));
+  });
+}
+
+/* 📞 JOINER */
+async function joinAsJoiner(){
+  const offerSnap = await roomRef.child("offer").get();
+  if(!offerSnap.exists()) return;
+
+  await pc.setRemoteDescription(new RTCSessionDescription(offerSnap.val()));
+  const answer = await pc.createAnswer();
+  await pc.setLocalDescription(answer);
+  await roomRef.child("answer").set(answer);
+
+  roomRef.child("callerCandidates").on("child_added", snap=>{
+    pc.addIceCandidate(new RTCIceCandidate(snap.val()));
+  });
+
+  statusEl.innerText = "Connected ✅";
+}
+
+/* 🧹 CLEANUP ON CLOSE */
+window.addEventListener("beforeunload", ()=>{
+  roomRef.remove();
 });
 </script>
 
