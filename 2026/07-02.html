@@ -1,65 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Dashboard Live</title>
-    <script src="https://meet.jit.si/external_api.js"></script>
-    <style>
-        body { background: #0f172a; color: white; font-family: sans-serif; text-align: center; margin: 0; padding: 10px; }
-        #timer { font-size: 40px; color: #38bdf8; margin: 15px 0; font-weight: bold; }
-        .controls { margin-bottom: 15px; display: flex; justify-content: center; gap: 10px; }
-        #call-frame { width: 100%; height: 500px; border-radius: 12px; background: #1e293b; border: 1px solid #334155; overflow: hidden; }
-        button { padding: 10px 15px; cursor: pointer; border-radius: 6px; border: none; font-weight: bold; font-size: 12px; }
-        .btn-team { background: #10b981; color: white; }
-        .btn-lead { background: #3b82f6; color: white; }
-    </style>
+<meta charset="UTF-8">
+<title>One Page Video Call Test</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<style>
+  body{
+    font-family: Arial, sans-serif;
+    background:#f2f2f2;
+    text-align:center;
+    padding:20px;
+  }
+  h2{margin-bottom:10px;}
+  .videos{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    margin-top:15px;
+  }
+  video{
+    width:45%;
+    background:#000;
+    border-radius:10px;
+  }
+  button{
+    padding:10px 18px;
+    margin:10px;
+    font-size:16px;
+    cursor:pointer;
+  }
+</style>
 </head>
 <body>
 
-    <div id="timer">02:00:00</div>
+<h2>🎥 One Page WebRTC Call (Test)</h2>
+<p>Do alag device / browser tab me open karo</p>
 
-    <div class="controls">
-        <button class="btn-team" onclick="joinRoom('MyHackathon_Team_Alpha_2026')">Join Team Call</button>
-        <button class="btn-lead" onclick="joinRoom('MyHackathon_Lead_Support_2026')">Call Project Lead</button>
-    </div>
+<div class="videos">
+  <video id="localVideo" autoplay muted></video>
+  <video id="remoteVideo" autoplay></video>
+</div>
 
-    <div id="call-frame">
-        <p style="padding-top: 200px; color: #94a3b8;">Click a button to start conversation</p>
-    </div>
+<button onclick="startCall()">Start Call</button>
+<button onclick="joinCall()">Join Call</button>
 
-    <script>
-        let api = null;
+<script>
+/* 🔥 FIREBASE CONFIG (APNA DALO) */
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT.firebaseio.com",
+  projectId: "YOUR_PROJECT",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "XXXX",
+  appId: "XXXX"
+};
 
-        function joinRoom(roomName) {
-            if (api) api.dispose(); // Purani call band karo
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-            const options = {
-                roomName: roomName,
-                parentNode: document.querySelector('#call-frame'),
-                width: '100%',
-                height: '100%',
-                interfaceConfigOverwrite: {
-                    TOOLBAR_BUTTONS: ['microphone', 'camera', 'chat', 'desktop', 'hangup', 'raisehand']
-                },
-                configOverwrite: {
-                    startWithAudioMuted: false,
-                    prejoinPageEnabled: false // Direct join ho jayega
-                }
-            };
-            api = new JitsiMeetExternalAPI("meet.jit.si", options);
-        }
+/* 🔗 WebRTC */
+const servers = {
+  iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
+};
 
-        // Timer Logic
-        let time = 7200;
-        setInterval(() => {
-            let h = Math.floor(time / 3600);
-            let m = Math.floor((time % 3600) / 60);
-            let s = time % 60;
-            document.getElementById('timer').innerText = 
-                `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-            if(time > 0) time--;
-        }, 1000);
-    </script>
+const pc = new RTCPeerConnection(servers);
+const roomId = "test-room-1";
+
+const localVideo = document.getElementById("localVideo");
+const remoteVideo = document.getElementById("remoteVideo");
+let localStream;
+
+/* 🎤 Camera + Mic */
+navigator.mediaDevices.getUserMedia({ video:true, audio:true })
+.then(stream=>{
+  localStream = stream;
+  localVideo.srcObject = stream;
+  stream.getTracks().forEach(track => pc.addTrack(track, stream));
+})
+.catch(err=>alert("Camera/Mic allow karo"));
+
+pc.ontrack = e => {
+  remoteVideo.srcObject = e.streams[0];
+};
+
+pc.onicecandidate = e => {
+  if(e.candidate){
+    db.ref(roomId+"/candidates").push(JSON.stringify(e.candidate));
+  }
+};
+
+/* 📞 Start Call */
+async function startCall(){
+  const offer = await pc.createOffer();
+  await pc.setLocalDescription(offer);
+  db.ref(roomId+"/offer").set(JSON.stringify(offer));
+}
+
+/* 📞 Join Call */
+async function joinCall(){
+  db.ref(roomId+"/offer").once("value", async snap=>{
+    if(!snap.exists()) return alert("Offer nahi mila");
+    const offer = JSON.parse(snap.val());
+    await pc.setRemoteDescription(offer);
+    const answer = await pc.createAnswer();
+    await pc.setLocalDescription(answer);
+    db.ref(roomId+"/answer").set(JSON.stringify(answer));
+  });
+}
+
+/* 🔁 Answer Listener */
+db.ref(roomId+"/answer").on("value", async snap=>{
+  if(snap.exists()){
+    const answer = JSON.parse(snap.val());
+    if(!pc.currentRemoteDescription){
+      await pc.setRemoteDescription(answer);
+    }
+  }
+});
+
+/* ❄ ICE Candidates */
+db.ref(roomId+"/candidates").on("child_added", snap=>{
+  const candidate = new RTCIceCandidate(JSON.parse(snap.val()));
+  pc.addIceCandidate(candidate);
+});
+</script>
+
 </body>
 </html>
