@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>One Page Video Call Test</title>
+<title>WebRTC Call – Fixed</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- Firebase -->
@@ -10,40 +10,38 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <style>
-  body{
-    font-family: Arial, sans-serif;
-    background:#f2f2f2;
-    text-align:center;
-    padding:20px;
-  }
-  h2{margin-bottom:10px;}
-  .videos{
-    display:flex;
-    gap:10px;
-    justify-content:center;
-    margin-top:15px;
-  }
-  video{
-    width:45%;
-    background:#000;
-    border-radius:10px;
-  }
-  button{
-    padding:10px 18px;
-    margin:10px;
-    font-size:16px;
-    cursor:pointer;
-  }
+body{
+  font-family: Arial, sans-serif;
+  background:#f2f2f2;
+  text-align:center;
+  padding:15px;
+}
+video{
+  width:45%;
+  background:#000;
+  border-radius:10px;
+}
+.videos{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:15px;
+}
+button{
+  padding:10px 18px;
+  margin:8px;
+  font-size:16px;
+}
 </style>
 </head>
 <body>
 
-<h2>🎥 One Page WebRTC Call (Test)</h2>
-<p>Do alag device / browser tab me open karo</p>
+<h2>🎥 WebRTC Video Call (Working)</h2>
+<p>2 alag device / browser use karo</p>
 
 <div class="videos">
-  <video id="localVideo" autoplay muted></video>
-  <video id="remoteVideo" autoplay></video>
+  <video id="localVideo" autoplay muted playsinline></video>
+  <video id="remoteVideo" autoplay playsinline></video>
 </div>
 
 <button onclick="startCall()">Start Call</button>
@@ -55,79 +53,75 @@ const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_PROJECT.firebaseapp.com",
   databaseURL: "https://YOUR_PROJECT.firebaseio.com",
-  projectId: "YOUR_PROJECT",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "XXXX",
-  appId: "XXXX"
+  projectId: "YOUR_PROJECT_ID"
 };
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 /* 🔗 WebRTC */
-const servers = {
-  iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
-};
+const pc = new RTCPeerConnection({
+  iceServers:[{urls:"stun:stun.l.google.com:19302"}]
+});
 
-const pc = new RTCPeerConnection(servers);
-const roomId = "test-room-1";
+const roomId = "webrtc-room-1";
+const roomRef = db.ref(roomId);
 
 const localVideo = document.getElementById("localVideo");
 const remoteVideo = document.getElementById("remoteVideo");
-let localStream;
 
 /* 🎤 Camera + Mic */
-navigator.mediaDevices.getUserMedia({ video:true, audio:true })
+navigator.mediaDevices.getUserMedia({video:true,audio:true})
 .then(stream=>{
-  localStream = stream;
   localVideo.srcObject = stream;
-  stream.getTracks().forEach(track => pc.addTrack(track, stream));
+  stream.getTracks().forEach(track=>pc.addTrack(track,stream));
 })
-.catch(err=>alert("Camera/Mic allow karo"));
+.catch(()=>alert("Camera/Mic allow karo"));
 
-pc.ontrack = e => {
+/* 📡 Remote stream */
+pc.ontrack = e=>{
   remoteVideo.srcObject = e.streams[0];
 };
 
-pc.onicecandidate = e => {
+/* ❄ ICE */
+pc.onicecandidate = e=>{
   if(e.candidate){
-    db.ref(roomId+"/candidates").push(JSON.stringify(e.candidate));
+    roomRef.child("candidates").push(e.candidate.toJSON());
   }
 };
 
-/* 📞 Start Call */
+/* ☎ START CALL */
 async function startCall(){
+  await roomRef.remove(); // 🔥 clear old data
   const offer = await pc.createOffer();
   await pc.setLocalDescription(offer);
-  db.ref(roomId+"/offer").set(JSON.stringify(offer));
+  await roomRef.child("offer").set(offer);
+  alert("Call started, dusre device par Join dabao");
 }
 
-/* 📞 Join Call */
+/* 📞 JOIN CALL */
 async function joinCall(){
-  db.ref(roomId+"/offer").once("value", async snap=>{
-    if(!snap.exists()) return alert("Offer nahi mila");
-    const offer = JSON.parse(snap.val());
-    await pc.setRemoteDescription(offer);
-    const answer = await pc.createAnswer();
-    await pc.setLocalDescription(answer);
-    db.ref(roomId+"/answer").set(JSON.stringify(answer));
-  });
+  const snap = await roomRef.child("offer").get();
+  if(!snap.exists()){
+    alert("Pehle Start Call karo");
+    return;
+  }
+  await pc.setRemoteDescription(new RTCSessionDescription(snap.val()));
+  const answer = await pc.createAnswer();
+  await pc.setLocalDescription(answer);
+  await roomRef.child("answer").set(answer);
 }
 
-/* 🔁 Answer Listener */
-db.ref(roomId+"/answer").on("value", async snap=>{
-  if(snap.exists()){
-    const answer = JSON.parse(snap.val());
-    if(!pc.currentRemoteDescription){
-      await pc.setRemoteDescription(answer);
-    }
+/* 🔁 ANSWER LISTENER */
+roomRef.child("answer").on("value", snap=>{
+  if(snap.exists() && !pc.currentRemoteDescription){
+    pc.setRemoteDescription(new RTCSessionDescription(snap.val()));
   }
 });
 
-/* ❄ ICE Candidates */
-db.ref(roomId+"/candidates").on("child_added", snap=>{
-  const candidate = new RTCIceCandidate(JSON.parse(snap.val()));
-  pc.addIceCandidate(candidate);
+/* ❄ ICE LISTENER */
+roomRef.child("candidates").on("child_added", snap=>{
+  pc.addIceCandidate(new RTCIceCandidate(snap.val()));
 });
 </script>
 
