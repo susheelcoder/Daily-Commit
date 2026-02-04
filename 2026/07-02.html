@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>WebRTC Call – Fixed</title>
+<title>Auto WebRTC Call</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- Firebase -->
@@ -27,25 +27,22 @@ video{
   gap:10px;
   margin-top:15px;
 }
-button{
-  padding:10px 18px;
-  margin:8px;
-  font-size:16px;
+.status{
+  margin-top:10px;
+  font-weight:bold;
 }
 </style>
 </head>
 <body>
 
-<h2>🎥 WebRTC Video Call (Working)</h2>
-<p>2 alag device / browser use karo</p>
+<h2>🎥 Auto Start Video Call</h2>
+<p>Do alag device par open karo</p>
+<div class="status" id="status">Connecting...</div>
 
 <div class="videos">
   <video id="localVideo" autoplay muted playsinline></video>
   <video id="remoteVideo" autoplay playsinline></video>
 </div>
-
-<button onclick="startCall()">Start Call</button>
-<button onclick="joinCall()">Join Call</button>
 
 <script>
 /* 🔥 FIREBASE CONFIG (APNA DALO) */
@@ -64,58 +61,58 @@ const pc = new RTCPeerConnection({
   iceServers:[{urls:"stun:stun.l.google.com:19302"}]
 });
 
-const roomId = "webrtc-room-1";
+const roomId = "auto-room-1";
 const roomRef = db.ref(roomId);
 
 const localVideo = document.getElementById("localVideo");
 const remoteVideo = document.getElementById("remoteVideo");
+const statusEl = document.getElementById("status");
 
 /* 🎤 Camera + Mic */
 navigator.mediaDevices.getUserMedia({video:true,audio:true})
 .then(stream=>{
   localVideo.srcObject = stream;
   stream.getTracks().forEach(track=>pc.addTrack(track,stream));
+  autoStart();
 })
 .catch(()=>alert("Camera/Mic allow karo"));
 
-/* 📡 Remote stream */
 pc.ontrack = e=>{
   remoteVideo.srcObject = e.streams[0];
 };
 
-/* ❄ ICE */
 pc.onicecandidate = e=>{
   if(e.candidate){
     roomRef.child("candidates").push(e.candidate.toJSON());
   }
 };
 
-/* ☎ START CALL */
-async function startCall(){
-  await roomRef.remove(); // 🔥 clear old data
-  const offer = await pc.createOffer();
-  await pc.setLocalDescription(offer);
-  await roomRef.child("offer").set(offer);
-  alert("Call started, dusre device par Join dabao");
-}
-
-/* 📞 JOIN CALL */
-async function joinCall(){
+/* 🤖 AUTO START LOGIC */
+async function autoStart(){
   const snap = await roomRef.child("offer").get();
+
   if(!snap.exists()){
-    alert("Pehle Start Call karo");
-    return;
+    // 👤 FIRST USER → CALLER
+    statusEl.innerText = "Waiting for another user...";
+    await roomRef.remove(); // clear old data
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+    await roomRef.child("offer").set(offer);
+  }else{
+    // 👤 SECOND USER → JOINER
+    statusEl.innerText = "Connecting...";
+    await pc.setRemoteDescription(new RTCSessionDescription(snap.val()));
+    const answer = await pc.createAnswer();
+    await pc.setLocalDescription(answer);
+    await roomRef.child("answer").set(answer);
   }
-  await pc.setRemoteDescription(new RTCSessionDescription(snap.val()));
-  const answer = await pc.createAnswer();
-  await pc.setLocalDescription(answer);
-  await roomRef.child("answer").set(answer);
 }
 
 /* 🔁 ANSWER LISTENER */
 roomRef.child("answer").on("value", snap=>{
   if(snap.exists() && !pc.currentRemoteDescription){
     pc.setRemoteDescription(new RTCSessionDescription(snap.val()));
+    statusEl.innerText = "Connected ✅";
   }
 });
 
