@@ -1,41 +1,47 @@
-<div id="timer-display" style="font-size: 24px; font-weight: bold; color: red;">
-  30:00
+<div id="timer-display" style="font-size: 2rem; font-family: monospace;">
+  Loading...
 </div>
 
 <script>
-function startTimer() {
-    const duration = 30 * 60 * 1000; // 30 minutes in milliseconds
-    let deadline = localStorage.getItem('timer_deadline');
+function initTimer() {
+    const durationInMinutes = 30;
+    const storageKey = 'my_website_deadline';
+    
+    // Step 1: Check karein ki kya pehle se deadline saved hai
+    let deadline = localStorage.getItem(storageKey);
 
-    // Agar deadline nahi hai (pehli baar load), toh naya set karo
     if (!deadline) {
-        deadline = new Date().getTime() + duration;
-        localStorage.setItem('timer_deadline', deadline);
+        // Agar nahi hai, toh abhi se 30 min aage ka time set karein
+        deadline = new Date().getTime() + (durationInMinutes * 60 * 1000);
+        localStorage.setItem(storageKey, deadline);
+        console.log("Naya timer set kiya gaya.");
+    } else {
+        console.log("Purana timer mil gaya, wahi se continue kar rahe hain.");
     }
 
-    const timerInterval = setInterval(function() {
+    const timerElement = document.getElementById("timer-display");
+
+    const x = setInterval(function() {
         const now = new Date().getTime();
-        const timeLeft = deadline - now;
+        const distance = deadline - now;
 
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            document.getElementById("timer-display").innerHTML = "Time Up!";
-            localStorage.removeItem('timer_deadline'); // Finish hone par reset
-            return;
+        // Time calculations
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Result display karein
+        timerElement.innerHTML = (minutes < 10 ? "0" + minutes : minutes) + ":" + 
+                                 (seconds < 10 ? "0" + seconds : seconds);
+
+        // Agar time khatam ho jaye
+        if (distance < 0) {
+            clearInterval(x);
+            timerElement.innerHTML = "EXPIRED";
+            localStorage.removeItem(storageKey);
         }
-
-        // Minutes aur Seconds calculate karna
-        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-        // Display update karna (00:00 format mein)
-        document.getElementById("timer-display").innerHTML = 
-            (minutes < 10 ? "0" + minutes : minutes) + ":" + 
-            (seconds < 10 ? "0" + seconds : seconds);
-            
     }, 1000);
 }
 
-// Window load hote hi timer start karein
-window.onload = startTimer;
+// Page load hote hi function chalayein
+document.addEventListener('DOMContentLoaded', initTimer);
 </script>
