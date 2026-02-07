@@ -1,0 +1,68 @@
+<div id="timer-display" style="font-size:2rem;font-family:monospace">
+  00:00
+</div>
+
+<script>
+(() => {
+
+  const CONFIG = {
+    durationMinutes: 30,
+    storageKey: 'my_website_deadline_v2',
+    displayId: 'timer-display'
+  };
+
+  function getDeadline() {
+    let deadline = localStorage.getItem(CONFIG.storageKey);
+
+    if (!deadline) {
+      deadline = Date.now() + CONFIG.durationMinutes * 60 * 1000;
+      localStorage.setItem(CONFIG.storageKey, deadline);
+    }
+
+    return parseInt(deadline, 10);
+  }
+
+  function formatTime(ms) {
+    if (ms <= 0) return "00:00";
+
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    return `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+  }
+
+  function startTimer() {
+    const display = document.getElementById(CONFIG.displayId);
+    if (!display) return;
+
+    let deadline = getDeadline();
+
+    function tick() {
+      const now = Date.now();
+      const remaining = deadline - now;
+
+      if (remaining <= 0) {
+        display.textContent = "EXPIRED";
+        localStorage.removeItem(CONFIG.storageKey);
+        return;
+      }
+
+      display.textContent = formatTime(remaining);
+      requestAnimationFrame(tick);
+    }
+
+    tick();
+  }
+
+  // 🔄 Sync across tabs
+  window.addEventListener('storage', e => {
+    if (e.key === CONFIG.storageKey) {
+      startTimer();
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', startTimer);
+
+})();
+</script>

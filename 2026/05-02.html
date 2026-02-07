@@ -1,0 +1,36 @@
+<div id="before-announcement">
+    <h1>Announcement Shuru Hone Wali Hai!</h1>
+    <p>Data saaf ho raha hai... taiyar rahein.</p>
+    <div id="timer" style="font-size: 2rem; color: red;"></div>
+</div>
+
+<div id="after-announcement" style="display: none;">
+    <h1>🎉 Official Announcement!</h1>
+    <p>Ab aap apna task (Tax) shuru kar sakte hain.</p>
+    </div>
+
+<script>
+    // 1. Yahan wo Date aur Time set karein jab announcement karni hai
+    const announcementTime = new Date("February 4, 2026 14:00:00").getTime();
+
+    const checkTime = setInterval(function() {
+        const now = new Date().getTime();
+        const distance = announcementTime - now;
+
+        // Timer dikhane ke liye logic (optional)
+        if (distance > 0) {
+            document.getElementById("timer").innerHTML = "Time Left: " + Math.floor(distance / 1000) + "s";
+        }
+
+        // 2. Jaise hi time khatam ho (0 ya usse kam)
+        if (distance <= 0) {
+            clearInterval(checkTime); // Check karna band karo
+            
+            // 3. Purana data "Clean" karo aur naya data dikhao
+            document.getElementById("before-announcement").style.display = "none";
+            document.getElementById("after-announcement").style.display = "block";
+            
+            console.log("Data cleaned and new info showing!");
+        }
+    }, 1000); // Har 1 second mein check karega
+</script>
