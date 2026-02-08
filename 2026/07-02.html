@@ -1,130 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>Auto WebRTC Call – Stable</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-<style>
-body{font-family:Arial;text-align:center;background:#f4f4f4;padding:10px}
-video{width:45%;background:black;border-radius:10px}
-.videos{display:flex;gap:10px;justify-content:center}
-.status{margin:10px;font-weight:bold}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
 </head>
+
 <body>
 
-<h2>🎥 Auto Connect Video Call</h2>
-<div class="status" id="status">Initializing…</div>
 
-<div class="videos">
-  <video id="local" autoplay muted playsinline></video>
-  <video id="remote" autoplay playsinline></video>
-</div>
-
-<script>
-/* 🔥 FIREBASE CONFIG */
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT.firebaseio.com",
-  projectId: "YOUR_PROJECT_ID"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-/* 🔗 WebRTC */
-const pc = new RTCPeerConnection({
-  iceServers:[{urls:"stun:stun.l.google.com:19302"}]
-});
-
-const roomId = "auto-room";
-const roomRef = db.ref(roomId);
-
-const localVideo = document.getElementById("local");
-const remoteVideo = document.getElementById("remote");
-const statusEl = document.getElementById("status");
-
-let role = null; // caller | joiner
-
-/* 🎤 Media */
-navigator.mediaDevices.getUserMedia({video:true,audio:true})
-.then(stream=>{
-  localVideo.srcObject = stream;
-  stream.getTracks().forEach(t=>pc.addTrack(t,stream));
-  decideRole();
-})
-.catch(()=>alert("Camera/Mic allow karo"));
-
-pc.ontrack = e => remoteVideo.srcObject = e.streams[0];
-
-/* ❄ ICE */
-pc.onicecandidate = e=>{
-  if(!e.candidate) return;
-  const path = role === "caller" ? "callerCandidates" : "joinerCandidates";
-  roomRef.child(path).push(e.candidate.toJSON());
-};
-
-/* 🧠 ROLE DECISION */
-async function decideRole(){
-  const snap = await roomRef.child("caller").get();
-
-  if(!snap.exists()){
-    role = "caller";
-    statusEl.innerText = "Waiting for another user…";
-    await roomRef.set({ caller:true });
-    startAsCaller();
-  }else{
-    role = "joiner";
-    statusEl.innerText = "Connecting…";
-    joinAsJoiner();
-  }
-}
-
-/* ☎ CALLER */
-async function startAsCaller(){
-  const offer = await pc.createOffer();
-  await pc.setLocalDescription(offer);
-  await roomRef.child("offer").set(offer);
-
-  roomRef.child("answer").on("value", snap=>{
-    if(snap.exists() && !pc.currentRemoteDescription){
-      pc.setRemoteDescription(new RTCSessionDescription(snap.val()));
-      statusEl.innerText = "Connected ✅";
-    }
-  });
-
-  roomRef.child("joinerCandidates").on("child_added", snap=>{
-    pc.addIceCandidate(new RTCIceCandidate(snap.val()));
-  });
-}
-
-/* 📞 JOINER */
-async function joinAsJoiner(){
-  const offerSnap = await roomRef.child("offer").get();
-  if(!offerSnap.exists()) return;
-
-  await pc.setRemoteDescription(new RTCSessionDescription(offerSnap.val()));
-  const answer = await pc.createAnswer();
-  await pc.setLocalDescription(answer);
-  await roomRef.child("answer").set(answer);
-
-  roomRef.child("callerCandidates").on("child_added", snap=>{
-    pc.addIceCandidate(new RTCIceCandidate(snap.val()));
-  });
-
-  statusEl.innerText = "Connected ✅";
-}
-
-/* 🧹 CLEANUP ON CLOSE */
-window.addEventListener("beforeunload", ()=>{
-  roomRef.remove();
-});
-</script>
+  <h1>
+    <a href="/Day -7/">Day -7</a>
+  </h1>
 
 </body>
+
 </html>
