@@ -10,6 +10,9 @@
     <meta name="theme-color" content="#2e143a">
 
     <link rel="shortcut icon" href="icon.svg" type="svg/x-icon">
+
+
+</script>
 </head>
 
 <style>
@@ -79,7 +82,9 @@
 <body>
     <header>
         <h1>My Personal Page.. </h1>
-        <p>Important Page connected</p>
+        <b>Important Page connected</b>
+<a id="installBtn" onclick="installApp()">📲 Install App</a>
+
     </header>
 
     <main>
@@ -197,3 +202,58 @@
 </body>
 
 </html>
+
+
+
+<!-- Manifest Link -->
+<link id="manifestLink" rel="manifest">
+
+
+<script>
+/* ================= MANIFEST ================= */
+const manifest = {
+  name: "Pro-susheel-01",
+  short_name: "Pro-susheel-01",
+  start_url: "./",
+  scope: "./",
+  display: "standalone",
+  background_color: "#0a0c10",
+  theme_color: "#00ff9d",
+  icons: [
+    {
+      src: "https://susheelcoder.netlify.app/1.IMG/b.jpg",
+      sizes: "192x192",
+      type: "image/png"
+    },
+    {
+      src: "https://susheelcoder.netlify.app/1.IMG/b.jpg",
+      sizes: "512x512",
+      type: "image/png"
+    }
+  ]
+};
+
+const blob = new Blob([JSON.stringify(manifest)], {
+  type: "application/json"
+});
+document.getElementById("manifestLink").href =
+  URL.createObjectURL(blob);
+
+/* ================= INSTALL FUNCTION ================= */
+let deferredPrompt = null;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+});
+
+async function installApp() {
+  if (!deferredPrompt) {
+    alert("Chrome menu → Install App");
+    return;
+  }
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+}
+</script>
