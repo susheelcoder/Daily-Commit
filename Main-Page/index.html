@@ -10,12 +10,12 @@
     <meta name="theme-color" content="#2e143a">
 
     <!-- Manifest Link -->
-<link id="manifestLink" rel="manifest">
+    <link id="manifestLink" rel="manifest">
 
     <link rel="shortcut icon" href="icon.svg" type="svg/x-icon">
 
 
-</script>
+    </script>
 </head>
 
 <style>
@@ -86,7 +86,7 @@
     <header>
         <h1>My Personal Page.. </h1>
         <b>Important Page connected</b>
-<a id="installBtn" onclick="installApp()">📲 Install App</a>
+        <a id="installBtn" onclick="installApp()">📲 Install App</a>
 
     </header>
 
@@ -211,50 +211,50 @@
 
 
 <script>
-/* ================= MANIFEST ================= */
-const manifest = {
-  name: "Personal Page.",
-  short_name: "Personal Page.",
-  start_url: ".",
-  scope: ".",
-  display: "standalone",
-  background_color: "#fff",
-  theme_color: "#fff",
-  icons: [
-    {
-      src: "icon.svg",
-      sizes: "192x192",
-      type: "image/png"
-    },
-    {
-      src: "icon.svg",
-      sizes: "512x512",
-      type: "image/png"
+    /* ================= MANIFEST ================= */
+    const manifest = {
+        name: "Personal Page.",
+        short_name: "Personal Page.",
+        start_url: ".",
+        scope: ".",
+        display: "standalone",
+        background_color: "#fff",
+        theme_color: "#fff",
+        icons: [
+            {
+                src: "icon.svg",
+                sizes: "192x192",
+                type: "image/png"
+            },
+            {
+                src: "icon.svg",
+                sizes: "512x512",
+                type: "image/png"
+            }
+        ]
+    };
+
+    const blob = new Blob([JSON.stringify(manifest)], {
+        type: "application/json"
+    });
+    document.getElementById("manifestLink").href =
+        URL.createObjectURL(blob);
+
+    /* ================= INSTALL FUNCTION ================= */
+    let deferredPrompt = null;
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+    });
+
+    async function installApp() {
+        if (!deferredPrompt) {
+            alert("Chrome menu → Install App");
+            return;
+        }
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
     }
-  ]
-};
-
-const blob = new Blob([JSON.stringify(manifest)], {
-  type: "application/json"
-});
-document.getElementById("manifestLink").href =
-  URL.createObjectURL(blob);
-
-/* ================= INSTALL FUNCTION ================= */
-let deferredPrompt = null;
-
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-});
-
-async function installApp() {
-  if (!deferredPrompt) {
-    alert("Chrome menu → Install App");
-    return;
-  }
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt = null;
-}
 </script>
