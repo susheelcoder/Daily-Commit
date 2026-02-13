@@ -2,87 +2,140 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>YouTube Clean Autoplay System</title>
+<title>YouTube Button Controlled Video</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-  body {
-    margin: 0;
-    background: #000;
-    color: white;
-    font-family: Arial;
-  }
+body{
+  margin:0;
+  background:#0e0e0e;
+  color:#fff;
+  font-family:Arial, sans-serif;
+  text-align:center;
+}
 
-  h2 {
-    text-align: center;
-    margin-top: 30px;
-  }
+section{
+  padding:40px 20px;
+}
 
-  .section {
-    position: relative;
-    margin: 20px;
-    border-radius: 12px;
-    overflow: hidden;
-  }
+.video-wrap{
+  position:relative;
+  max-width:900px;
+  margin:20px auto;
+  padding-top:56.25%;
+  overflow:hidden;
+  border-radius:14px;
+}
 
-  iframe {
-    width: 100%;
-    height: 320px;
-    pointer-events: none; /* Video पर क्लिक disabled */
-    border: none;
-  }
+/* iframe */
+.video-wrap iframe{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  border:none;
+  pointer-events:none; /* 🔥 video click disabled */
+}
 
-  .btn-box {
-    text-align: center;
-    margin-top: 10px;
-  }
+/* buttons */
+.controls{
+  margin-top:15px;
+}
 
-  button {
-    padding: 12px 25px;
-    border: none;
-    font-size: 17px;
-    border-radius: 10px;
-    cursor: pointer;
-    background: #ff3d3d;
-    color: white;
-  }
+.controls button{
+  margin:8px;
+  padding:12px 22px;
+  border:none;
+  border-radius:30px;
+  background:#ff0000;
+  color:#fff;
+  font-size:15px;
+  cursor:pointer;
+}
+
+.controls button:hover{
+  background:#cc0000;
+}
 </style>
 </head>
+
 <body>
 
-<!-- SECTION 1 -->
-<h2>Video 1 — Autoplay + Mute + No Click</h2>
-<div class="section">
-  <iframe
-    src="https://www.youtube.com/embed/_91ko3WImqo?autoplay=1&mute=1&controls=0&rel=0&modestbranding=1&loop=1&playlist=_91ko3WImqo">
-  </iframe>
-</div>
+<!-- VIDEO 1 -->
+<section>
+  <h2>Video 1 – Autoplay + Mute + No Click</h2>
 
-<!-- SECTION 2 -->
-<h2>Video 2 — Autoplay + Mute + No Click</h2>
-<div class="section">
-  <iframe
-    src="https://www.youtube.com/embed/_91ko3WImqo?autoplay=1&mute=1&controls=0&rel=0&modestbranding=1&loop=1&playlist=_91ko3WImqo">
-  </iframe>
-</div>
+  <div class="video-wrap">
+    <iframe
+      src="https://www.youtube.com/embed/_91ko3WImqo
+      ?autoplay=1
+      &mute=1
+      &controls=0
+      &rel=0
+      &modestbranding=1
+      &loop=1
+      &playlist=_91ko3WImqo"
+      allow="autoplay">
+    </iframe>
+  </div>
+</section>
 
-<!-- SECTION 3 WITH SOUND BUTTON -->
-<h2>Video 3 — Autoplay + Mute + Sound Button</h2>
-<div class="section">
-  <iframe id="soundVideo"
-    src="https://www.youtube.com/embed/_91ko3WImqo?autoplay=1&mute=1&controls=0&rel=0&modestbranding=1&loop=1&playlist=_91ko3WImqo">
-  </iframe>
-</div>
+<!-- VIDEO 2 -->
+<section>
+  <h2>Video 2 – Control Only By Buttons</h2>
 
-<div class="btn-box">
-  <button onclick="playWithSound()">🔊 Play With Sound</button>
-</div>
+  <div class="video-wrap">
+    <iframe
+      id="player"
+      src="https://www.youtube.com/embed/_91ko3WImqo
+      ?autoplay=1
+      &mute=1
+      &controls=0
+      &enablejsapi=1
+      &rel=0
+      &modestbranding=1"
+      allow="autoplay">
+    </iframe>
+  </div>
+
+  <div class="controls">
+    <button onclick="playVideo()">▶ Start</button>
+    <button onclick="pauseVideo()">⏸ Pause</button>
+    <button onclick="toggleSound()">🔊 Sound ON / OFF</button>
+  </div>
+</section>
 
 <script>
-function playWithSound() {
-  document.getElementById("soundVideo").src =
-    "https://www.youtube.com/embed/_91ko3WImqo?autoplay=1&mute=0&controls=1&rel=0&modestbranding=1";
+let player;
+let soundOn = false;
+
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('player');
 }
+
+function playVideo(){
+  player.playVideo();
+}
+
+function pauseVideo(){
+  player.pauseVideo();
+}
+
+function toggleSound(){
+  if(soundOn){
+    player.mute();
+    soundOn = false;
+  } else {
+    player.unMute();
+    soundOn = true;
+  }
+}
+
+/* load youtube api */
+let tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+document.body.appendChild(tag);
 </script>
 
 </body>
