@@ -1,132 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Clean Video Gallery</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>YouTube Clean Autoplay System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f0f0f;
-      color: #fff;
-    }
+<style>
+  body {
+    margin: 0;
+    background: #000;
+    color: white;
+    font-family: Arial;
+  }
 
-    h1 {
-      text-align: center;
-      padding: 20px;
-      font-weight: 600;
-    }
+  h2 {
+    text-align: center;
+    margin-top: 30px;
+  }
 
-    .video-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 15px;
-      padding: 20px;
-    }
+  .section {
+    position: relative;
+    margin: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+  }
 
-    .video-box {
-      position: relative;
-      padding-top: 56.25%; /* 16:9 */
-      overflow: hidden;
-      border-radius: 12px;
-      background: #000;
-    }
+  iframe {
+    width: 100%;
+    height: 320px;
+    pointer-events: none; /* Video पर क्लिक disabled */
+    border: none;
+  }
 
-    .video-box iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
+  .btn-box {
+    text-align: center;
+    margin-top: 10px;
+  }
 
-    /* Hero background video */
-    .hero {
-      position: relative;
-      height: 60vh;
-      overflow: hidden;
-    }
-
-    .hero iframe {
-      width: 100%;
-      height: 100%;
-      pointer-events: none; /* no clicks, no controls */
-    }
-
-    .hero-text {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,0.4);
-      font-size: 2rem;
-      font-weight: bold;
-    }
-  </style>
+  button {
+    padding: 12px 25px;
+    border: none;
+    font-size: 17px;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #ff3d3d;
+    color: white;
+  }
+</style>
 </head>
-
 <body>
 
-  <!-- HERO BACKGROUND VIDEO -->
-  <div class="hero">
-    <iframe
-      src="https://www.youtube.com/embed/ScMzIvxBSi4
-      ?autoplay=1
-      &mute=1
-      &controls=0
-      &rel=0
-      &modestbranding=1
-      &loop=1
-      &playlist=ScMzIvxBSi4"
-      allow="autoplay"
-      allowfullscreen>
-    </iframe>
+<!-- SECTION 1 -->
+<h2>Video 1 — Autoplay + Mute + No Click</h2>
+<div class="section">
+  <iframe
+    src="https://www.youtube.com/embed/_91ko3WImqo?autoplay=1&mute=1&controls=0&rel=0&modestbranding=1&loop=1&playlist=_91ko3WImqo">
+  </iframe>
+</div>
 
-    <div class="hero-text">
-      Clean Video Showcase
-    </div>
-  </div>
+<!-- SECTION 2 -->
+<h2>Video 2 — Autoplay + Mute + No Click</h2>
+<div class="section">
+  <iframe
+    src="https://www.youtube.com/embed/_91ko3WImqo?autoplay=1&mute=1&controls=0&rel=0&modestbranding=1&loop=1&playlist=_91ko3WImqo">
+  </iframe>
+</div>
 
-  <h1>Video Gallery</h1>
+<!-- SECTION 3 WITH SOUND BUTTON -->
+<h2>Video 3 — Autoplay + Mute + Sound Button</h2>
+<div class="section">
+  <iframe id="soundVideo"
+    src="https://www.youtube.com/embed/_91ko3WImqo?autoplay=1&mute=1&controls=0&rel=0&modestbranding=1&loop=1&playlist=_91ko3WImqo">
+  </iframe>
+</div>
 
-  <!-- VIDEO GRID -->
-  <div class="video-grid">
+<div class="btn-box">
+  <button onclick="playWithSound()">🔊 Play With Sound</button>
+</div>
 
-    <div class="video-box">
-      <iframe
-        src="https://www.youtube.com/embed/dQw4w9WgXcQ
-        ?controls=0
-        &rel=0
-        &modestbranding=1"
-        allowfullscreen>
-      </iframe>
-    </div>
-
-    <div class="video-box">
-      <iframe
-        src="https://www.youtube.com/embed/l482T0yNkeo
-        ?controls=0
-        &rel=0
-        &modestbranding=1"
-        allowfullscreen>
-      </iframe>
-    </div>
-
-    <div class="video-box">
-      <iframe
-        src="https://www.youtube.com/embed/9bZkp7q19f0
-        ?controls=0
-        &rel=0
-        &modestbranding=1"
-        allowfullscreen>
-      </iframe>
-    </div>
-
-  </div>
+<script>
+function playWithSound() {
+  document.getElementById("soundVideo").src =
+    "https://www.youtube.com/embed/_91ko3WImqo?autoplay=1&mute=0&controls=1&rel=0&modestbranding=1";
+}
+</script>
 
 </body>
 </html>
