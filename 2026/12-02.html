@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Clean Video Gallery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+    }
+
+    h1 {
+      text-align: center;
+      padding: 20px;
+      font-weight: 600;
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 15px;
+      padding: 20px;
+    }
+
+    .video-box {
+      position: relative;
+      padding-top: 56.25%; /* 16:9 */
+      overflow: hidden;
+      border-radius: 12px;
+      background: #000;
+    }
+
+    .video-box iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Hero background video */
+    .hero {
+      position: relative;
+      height: 60vh;
+      overflow: hidden;
+    }
+
+    .hero iframe {
+      width: 100%;
+      height: 100%;
+      pointer-events: none; /* no clicks, no controls */
+    }
+
+    .hero-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.4);
+      font-size: 2rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HERO BACKGROUND VIDEO -->
+  <div class="hero">
+    <iframe
+      src="https://www.youtube.com/embed/ScMzIvxBSi4
+      ?autoplay=1
+      &mute=1
+      &controls=0
+      &rel=0
+      &modestbranding=1
+      &loop=1
+      &playlist=ScMzIvxBSi4"
+      allow="autoplay"
+      allowfullscreen>
+    </iframe>
+
+    <div class="hero-text">
+      Clean Video Showcase
+    </div>
+  </div>
+
+  <h1>Video Gallery</h1>
+
+  <!-- VIDEO GRID -->
+  <div class="video-grid">
+
+    <div class="video-box">
+      <iframe
+        src="https://www.youtube.com/embed/dQw4w9WgXcQ
+        ?controls=0
+        &rel=0
+        &modestbranding=1"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+    <div class="video-box">
+      <iframe
+        src="https://www.youtube.com/embed/l482T0yNkeo
+        ?controls=0
+        &rel=0
+        &modestbranding=1"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+    <div class="video-box">
+      <iframe
+        src="https://www.youtube.com/embed/9bZkp7q19f0
+        ?controls=0
+        &rel=0
+        &modestbranding=1"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+  </div>
+
+</body>
+</html>
