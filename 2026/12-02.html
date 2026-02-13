@@ -2,15 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>YouTube Button Controlled Video</title>
+<title>YouTube Video Button Control</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
 body{
   margin:0;
-  background:#0e0e0e;
+  background:#0b0b0b;
   color:#fff;
-  font-family:Arial, sans-serif;
+  font-family:Arial,sans-serif;
   text-align:center;
 }
 
@@ -27,7 +26,6 @@ section{
   border-radius:14px;
 }
 
-/* iframe */
 .video-wrap iframe{
   position:absolute;
   top:0;
@@ -35,10 +33,9 @@ section{
   width:100%;
   height:100%;
   border:none;
-  pointer-events:none; /* 🔥 video click disabled */
+  pointer-events:none; /* disable video clicks */
 }
 
-/* buttons */
 .controls{
   margin-top:15px;
 }
@@ -59,80 +56,72 @@ section{
 }
 </style>
 </head>
-
 <body>
 
-<!-- VIDEO 1 -->
+<!-- VIDEO 1: Autoplay + Mute + No Click -->
 <section>
   <h2>Video 1 – Autoplay + Mute + No Click</h2>
-
   <div class="video-wrap">
     <iframe
-      src="https://www.youtube.com/embed/_91ko3WImqo
-      ?autoplay=1
-      &mute=1
-      &controls=0
-      &rel=0
-      &modestbranding=1
-      &loop=1
-      &playlist=_91ko3WImqo"
-      allow="autoplay">
+      src="https://www.youtube.com/embed/_91ko3WImqo?autoplay=1&mute=1&controls=0&rel=0&modestbranding=1&loop=1&playlist=_91ko3WImqo"
+      allow="autoplay"
+      allowfullscreen>
     </iframe>
   </div>
+  <p>Video automatically plays muted. Click has no effect.</p>
 </section>
 
-<!-- VIDEO 2 -->
+<!-- VIDEO 2: Button Controlled -->
 <section>
   <h2>Video 2 – Control Only By Buttons</h2>
-
   <div class="video-wrap">
-    <iframe
-      id="player"
-      src="https://www.youtube.com/embed/_91ko3WImqo
-      ?autoplay=1
-      &mute=1
-      &controls=0
-      &enablejsapi=1
-      &rel=0
-      &modestbranding=1"
-      allow="autoplay">
+    <iframe id="player2" src="https://www.youtube.com/embed/wsi-Cm0cdzc?autoplay=1&mute=1&controls=0&enablejsapi=1&rel=0&modestbranding=1"
+      allow="autoplay"
+      allowfullscreen>
     </iframe>
   </div>
 
   <div class="controls">
-    <button onclick="playVideo()">▶ Start</button>
-    <button onclick="pauseVideo()">⏸ Pause</button>
-    <button onclick="toggleSound()">🔊 Sound ON / OFF</button>
+    <button onclick="playVideo2()">▶ Play</button>
+    <button onclick="pauseVideo2()">⏸ Pause</button>
+    <button onclick="toggleSound2()">🔊 Sound ON / OFF</button>
   </div>
 </section>
 
 <script>
-let player;
-let soundOn = false;
-
-function onYouTubeIframeAPIReady() {
-  player = new YT.Player('player');
+// YouTube API setup
+let player2;
+function onYouTubeIframeAPIReady(){
+  player2 = new YT.Player('player2');
 }
 
-function playVideo(){
-  player.playVideo();
-}
+// Play / Pause / Sound toggle functions
+let soundOn2 = false;
 
-function pauseVideo(){
-  player.pauseVideo();
-}
-
-function toggleSound(){
-  if(soundOn){
-    player.mute();
-    soundOn = false;
-  } else {
-    player.unMute();
-    soundOn = true;
+function playVideo2(){
+  if(player2 && player2.playVideo){
+    player2.playVideo();
   }
 }
 
-/* load youtube api */
+function pauseVideo2(){
+  if(player2 && player2.pauseVideo){
+    player2.pauseVideo();
+  }
+}
+
+function toggleSound2(){
+  if(!player2) return;
+  if(soundOn2){
+    player2.mute();
+    soundOn2 = false;
+  } else {
+    player2.unMute();
+    soundOn2 = true;
+  }
+}
+
+// Load YouTube API
 let tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
 document.body.appendChild(tag);
